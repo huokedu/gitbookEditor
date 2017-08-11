@@ -46,7 +46,7 @@ export default {
       }
     })
     .then(res => {
-      vm.value = res.data.data.article.content
+      if (res.data.status === 200) vm.value = res.data.data.article.content
     })
     Axios.post('http://192.168.1.98:4000/v1/account/login', {
       username: '1111',
@@ -111,9 +111,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
  #mainBook {
-   width: 70%; 
    height: 800px;
-   margin: 100px auto;
+   margin: auto;
    text-align: left;
  }
  #mainBook .v-note-read-content {
