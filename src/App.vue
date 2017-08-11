@@ -1,17 +1,12 @@
 <template>
-  <div id="app">
-    <hello></hello>
+  <div id="APIPlusDocument">
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import Hello from './components/editor'
-
 export default {
-  name: 'app',
-  components: {
-    Hello
-  }
+  name: 'app'
 }
 </script>
 
