@@ -1,6 +1,6 @@
 <template>
   <div id="mainBook"> 
-    <mavon-editor style="height: 100%" v-model="value"  @save="save" @imgAdd="saveImg" @imgDel="imgDel" :toolbars = "toolbars" /> 
+    <mavon-editor style="height: 100%" v-model="value"  @save="save" @imgAdd="saveImg" @imgDel="imgDel" :toolbars = "toolbars" />
   </div>
 </template>
 
