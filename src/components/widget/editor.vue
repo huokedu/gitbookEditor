@@ -112,8 +112,8 @@ export default {
 <style scoped>
  #mainBook {
    height: 800px;
-   margin: auto;
-   text-align: left;
+   min-width: 920px;
+   margin-left: 390px;
  }
  #mainBook .v-note-read-content {
    width: 800px;
