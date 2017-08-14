@@ -1,6 +1,7 @@
 <template>
   <div id="header">
-    <h2 contenteditable="true">APIplus技术文档</h2>
+    <h2 contenteditable="true" ref="title">APIplus技术文档</h2>
+    <i class="el-icon-edit" title="编辑" @click="titleFocus"></i>
     <span>
       <i class="el-icon-document"></i><br>
       保存
@@ -14,6 +15,11 @@ export default {
   name: 'document_header',
   components: {
     Icon
+  },
+  methods: {
+    titleFocus () {
+      this.$refs.title.focus()
+    }
   }
 }
 </script>
@@ -38,7 +44,8 @@ export default {
  #header span:hover {
   color: #f63;
  }
- #header span .el-icon-document{
+ #header .el-icon-document, #header .el-icon-edit{
    font-size: 20px;
+   cursor: pointer;
  }
 </style>
