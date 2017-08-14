@@ -92,7 +92,7 @@ export default {
 #docSearch .article p{
   margin: 0;
   padding:15px 10px;
-  font-size: 22px;
+  font-size: 18px;
   text-align: left;
   cursor: pointer;
 }
@@ -110,7 +110,7 @@ export default {
 }
 #docSearch .article .el-icon-delete2{
   float: right;
-  margin-top: 3px;
+  margin-top: 1px;
   color: #fff;
 }
 </style>

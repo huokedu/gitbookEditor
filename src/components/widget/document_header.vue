@@ -1,6 +1,14 @@
 <template>
   <div id="header">
-    <h2>APIplus技术文档</h2>
+    <h2>{{title}}</h2>
+    <span>
+      <i class="el-icon-upload2"></i><br>
+      发布
+    </span>
+    <span>
+      <i class="el-icon-view"></i><br>
+      预览
+    </span>
     <span>
       <i class="el-icon-document"></i><br>
       保存
@@ -12,6 +20,7 @@
 import {Icon} from 'element-ui'
 export default {
   name: 'document_header',
+  props: ['title'],
   components: {
     Icon
   }
@@ -39,7 +48,7 @@ export default {
  #header span:hover {
   color: #f63;
  }
- #header .el-icon-document, #header .el-icon-edit{
+ #header .el-icon-document, #header .el-icon-upload2, #header .el-icon-view{
    font-size: 20px;
    cursor: pointer;
  }
