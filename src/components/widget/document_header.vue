@@ -1,11 +1,11 @@
 <template>
   <div id="header">
     <h2>{{title}}</h2>
-    <span>
+    <span v-if="pub">
       <i class="el-icon-upload2"></i><br>
       发布
     </span>
-    <span>
+    <span v-if="preview">
       <i class="el-icon-view"></i><br>
       预览
     </span>
@@ -20,7 +20,20 @@
 import {Icon} from 'element-ui'
 export default {
   name: 'document_header',
-  props: ['title'],
+  props: {
+    title: {
+      type: String,
+      required: true
+    },
+    preview: {
+      type: Boolean,
+      default: false
+    },
+    pub: {
+      type: Boolean,
+      default: false
+    }
+  },
   components: {
     Icon
   }

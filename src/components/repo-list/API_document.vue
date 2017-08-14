@@ -1,6 +1,6 @@
 <template>
   <div id="repoDocument">
-    <doc-header title="穿云箭API文档"></doc-header>
+    <doc-header title="穿云箭API文档" pub="true" preview="true"></doc-header>
     <listCol></listCol>
     <search></search>
     <div>
