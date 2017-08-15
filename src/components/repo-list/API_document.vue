@@ -4,7 +4,7 @@
     <drag-list></drag-list>
     <search></search>
     <div>
-      <mk-header></mk-header>
+      <mk-header :showTag="false"></mk-header>
       <editor></editor>    
     </div>
   </div>

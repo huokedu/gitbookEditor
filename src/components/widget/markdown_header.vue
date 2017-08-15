@@ -2,18 +2,20 @@
   <div id="mkHeader">
     <h2 contenteditable="true" ref="title">APIplus技术文档</h2>
     <i class="el-icon-edit" title="编辑" @click="titleFocus"></i>
-    <el-button>
-      添加标签
-    </el-button>
-    <div class="tag">
-      <el-tag
-        v-for="tag in tags"
-        :key="tag.name"
-        :closable="true"
-        :type="tag.type"
-      >
-      {{tag.name}}
-      </el-tag>
+    <div class="wrapper" v-if="showTag">
+      <el-button>
+        添加标签
+      </el-button>
+      <div class="tag">
+        <el-tag
+          v-for="tag in tags"
+          :key="tag.name"
+          :closable="true"
+          :type="tag.type"
+        >
+        {{tag.name}}
+        </el-tag>
+      </div>
     </div>
   </div>
 </template>
@@ -22,6 +24,12 @@
 import {Icon, Button, Tag} from 'element-ui'
 export default {
   name: 'markdown_header',
+  props: {
+    showTag: {
+      type: Boolean,
+      default: true
+    }
+  },
   data () {
     return {
       tags: [
@@ -31,8 +39,9 @@ export default {
         { name: '标签四', type: 'success' },
         { name: '标签五', type: 'warning' },
         { name: '标签六', type: 'danger' },
-         { name: '标签六', type: 'danger' },
-          { name: '标签六', type: 'danger' }, { name: '标签六', type: 'danger' }
+        { name: '标签六', type: 'danger' },
+        { name: '标签六', type: 'danger' },
+        { name: '标签六', type: 'danger' }
       ]
     }
   },
@@ -51,6 +60,7 @@ export default {
 
 <style scoped>
   #mkHeader {
+    position: relative;    
     padding: 1px;
     margin-left: 390px;
     min-width: 920px;
@@ -60,6 +70,14 @@ export default {
     margin: 30px 20px;
     font-size: 24px;
   }
+  #mkHeader .wrapper{
+    position: absolute;
+    right:0;
+    left: 270px;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+  }
   #mkHeader .tag {
     display: inline-flex;
     float: right;
@@ -67,10 +85,9 @@ export default {
     justify-content: flex-end;
     align-items: center;
     align-content: space-around;
-    width: 59%;
+    width: 80%;
     height: 87px;
     text-align: right;
-    vertical-align: top;
   }
   #mkHeader .tag .el-tag {
     margin: 0 10px;

@@ -113,7 +113,7 @@ export default {
   text-overflow:ellipsis;
   vertical-align: top;
 }
-#dragCol .level-two, #dragCol .sortable-chosen>span{
+#dragCol .level-two{
   padding-right: 5px;
 }
 #dragCol .level-two>span{
