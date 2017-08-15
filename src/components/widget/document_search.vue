@@ -18,11 +18,11 @@
     </div>
     <draggable class="article" element="div" v-model="collection" :options="dragOptions"> 
       <transition-group type="transition" name="el-fade-in">
-        <li class="col" v-for="(col, index) of collection" :key="col" @click="delArticle(index)"> 
+        <li class="col" v-for="(col, index) of collection" :key="col"> 
           <span :title="col">
             {{col}}
           </span>
-          <i class="el-icon-delete2" title="删除文档"></i>
+          <i class="el-icon-delete2" title="删除文档" @click="delArticle(index)"></i>
         </li> 
       </transition-group>
     </draggable>
@@ -42,7 +42,8 @@ export default {
   },
   methods: {
     delArticle (index) {
-      this.collection.splice(index, 1)
+      let vm = this
+      vm.collection.splice(index, 1)
     }
   },
   computed: {
