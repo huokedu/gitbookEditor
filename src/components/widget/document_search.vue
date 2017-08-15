@@ -16,31 +16,53 @@
       </el-dropdown>
       <el-button>添加文章</el-button> 
     </div>
-    <div class="article">
-      <p>fasdkfjasdklf
-        <i class="el-icon-delete2"></i>
-      </p>
-      <p>
-        <span>
-          附近的斯科拉法爱撒打开了房间爱撒打开了房间按时打卡了；发按时打卡了就；放假按时打卡里飞非非烦死哒
-        </span><i class="el-icon-delete2"></i></p>
-      <p>fasdkfjasdklf</p>
-      <p>fasdkfjasdklf</p>
-      
-    </div>
+    <draggable class="article" element="div" v-model="collection" :options="dragOptions"> 
+      <transition-group type="transition" :name="'flip-list'">
+        <li class="col" v-for="col of collection" :key="col"> 
+          <span :title="col">
+            {{col}}        
+          </span>
+          <i class="el-icon-delete2" title="删除文档"></i>        
+        </li> 
+      </transition-group>
+    </draggable>
   </div>
 </template>
 
 <script>
 import {Icon, Button, Dropdown, DropdownMenu, DropdownItem} from 'element-ui'
+import draggable from 'vuedraggable'
 export default {
   name: 'document_search',
+  data () {
+    return {
+      collection: ['fasdf', 'asdfasdf', '你是大厦发斯蒂芬'],
+      editable: true
+    }
+  },
+  methods: {
+    lal () {
+      console.log(event.target, event.currentTarget)
+    }
+  },
+  computed: {
+    dragOptions () {
+      return {
+        animation: 0,
+        group: { name: 'levelTwo', pull: 'clone', put: false },
+        disabled: !this.editable,
+        ghostClass: 'ghost',
+        sort: false
+      }
+    }
+  },
   components: {
     Icon,
     elButton: Button,
     elDropdown: Dropdown,
     elDropdownMenu: DropdownMenu,
-    elDropdownItem: DropdownItem
+    elDropdownItem: DropdownItem,
+    draggable
   }
 }
 </script>
@@ -89,14 +111,17 @@ export default {
   color: #f63;
   border-color: #f63;
 }
-#docSearch .article p{
+#docSearch .article {
+  min-height: 600px;
+}
+#docSearch .article li{
   margin: 0;
   padding:15px 10px;
   font-size: 18px;
   text-align: left;
-  cursor: pointer;
+  cursor: move;
 }
-#docSearch .article span{
+#docSearch .article li>span{
   display: inline-block;
   width: 160px;
   overflow:hidden;
@@ -104,7 +129,7 @@ export default {
   text-overflow:ellipsis;
   vertical-align: top;
 }
-#docSearch .article p:hover{
+#docSearch .article li:hover{
   color: #fff;
   background-color: #f63;
 }
@@ -112,5 +137,19 @@ export default {
   float: right;
   margin-top: 1px;
   color: #fff;
+  cursor: pointer;
+}
+#docSearch .ghost {
+  opacity: 0.5;
+}
+#dragCol .sortable-chosen>span{
+  display: inline-block;
+  text-indent: 0;
+  overflow:hidden;
+  text-indent: 35px;
+  width: 145px;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  vertical-align: top;
 }
 </style>
