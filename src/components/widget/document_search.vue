@@ -17,12 +17,12 @@
       <el-button>添加文章</el-button> 
     </div>
     <draggable class="article" element="div" v-model="collection" :options="dragOptions"> 
-      <transition-group type="transition" :name="'flip-list'">
-        <li class="col" v-for="col of collection" :key="col"> 
+      <transition-group type="transition" name="el-fade-in">
+        <li class="col" v-for="(col, index) of collection" :key="col" @click="delArticle(index)"> 
           <span :title="col">
-            {{col}}        
+            {{col}}
           </span>
-          <i class="el-icon-delete2" title="删除文档"></i>        
+          <i class="el-icon-delete2" title="删除文档"></i>
         </li> 
       </transition-group>
     </draggable>
@@ -41,8 +41,8 @@ export default {
     }
   },
   methods: {
-    lal () {
-      console.log(event.target, event.currentTarget)
+    delArticle (index) {
+      this.collection.splice(index, 1)
     }
   },
   computed: {
