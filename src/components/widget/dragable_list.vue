@@ -3,21 +3,23 @@
     <h2><i class="el-icon-plus"></i>&nbsp;&nbsp;新标题</h2>
     <draggable class="wrapper" element="div" v-model="collection" :options="dragOptions" > 
         <li class="col" v-for="(col, index) of collection" :key="col"> 
-          <p class="level-one" :title="col" @click="lal">
-            <span>{{col}}</span>
+          <p class="level-one" :title="col">
+            <span @click="lal(index)">{{col}}</span>
             <i class="el-icon-delete2" title="删除分类"></i>        
             <i class="el-icon-plus" title="添加文档"></i>      
           </p>
-          <draggable element="div" v-model="collection1[collection[index]]" :options="dragOptions1"> 
-            <transition-group type="transition" :name="'flip-list'">
-              <li class="level-two" v-for="co of collection1[collection[index]]" :key="co"> 
-                <span :title="co">
-                  {{co}}        
-                </span>
-                <i class="el-icon-delete2" title="删除分类"></i>        
-              </li> 
-            </transition-group>
-          </draggable>
+          <el-collapse-transition>
+            <draggable element="div" v-model="collection1[collection[index]]" :options="dragOptions1" v-show="!show[index]"> 
+              <transition-group type="transition" :name="'flip-list'">
+                <li class="level-two" v-for="co of collection1[collection[index]]" :key="co">
+                  <span :title="co">
+                    {{co}}        
+                  </span>
+                  <i class="el-icon-delete2" title="删除分类"></i>        
+                </li> 
+              </transition-group>
+            </draggable>
+          </el-collapse-transition>
         </li> 
     </draggable>
   </div>
@@ -26,21 +28,24 @@
 <script>
 import {Icon} from 'element-ui'
 import draggable from 'vuedraggable'
+import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
 export default {
   name: 'list-collection',
   data () {
     return {
       collection: ['fsdf', 'asdfadf', '你是大厦斯蒂芬'],
       collection1: {},
-      editable: true
+      editable: true,
+      show: []
     }
   },
   mounted () {
     this.sec_dir()
   },
   methods: {
-    lal () {
-      event.currentTarget.nextElementSibling.style.height = event.currentTarget.nextElementSibling.style.height === '0px' ? 'auto' : '0px'
+    lal (index) {
+      if (event.target !== event.currentTarget) return
+      this.show.splice(index, 1, !this.show[index])
     },
     sec_dir () {
       let vm = this
@@ -71,7 +76,8 @@ export default {
   },
   components: {
     Icon,
-    draggable
+    draggable,
+    elCollapseTransition: CollapseTransition
   }
 }
 </script>
