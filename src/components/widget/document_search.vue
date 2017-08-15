@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import {Icon, Button, Dropdown, DropdownMenu, DropdownItem} from 'element-ui'
+import {Icon, Button, Dropdown, DropdownMenu, DropdownItem, MessageBox, Message} from 'element-ui'
 import draggable from 'vuedraggable'
 export default {
   name: 'document_search',
@@ -43,7 +43,22 @@ export default {
   methods: {
     delArticle (index) {
       let vm = this
-      vm.collection.splice(index, 1)
+      MessageBox.confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        vm.collection.splice(index, 1)
+        Message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        Message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   },
   computed: {
