@@ -64,7 +64,6 @@ export default {
     },
     makeSelected (key) {
       let vm = this
-      console.log(vm.$refs, key)
       Object.keys(vm.$refs).map(ele => {
         if (!vm.$refs[ele][0]) return
         vm.$refs[ele][0].classList.remove('selected')

@@ -1,17 +1,18 @@
 <template>
   <div id="mkHeader">
     <h2 contenteditable="true" ref="title">APIplus技术文档</h2>
-    <i class="el-icon-edit" title="编辑" @click="titleFocus"></i>
+    <i class="el-icon-edit" title="编辑" @click="$refs.title.focus()"></i>
     <div class="wrapper" v-if="showTag">
       <el-button>
         添加标签
       </el-button>
       <div class="tag">
         <el-tag
-          v-for="tag in tags"
+          v-for="(tag, index) in tags"
           :key="tag.name"
           :closable="true"
           :type="tag.type"
+          @close="delTag(index)"
         >
         {{tag.name}}
         </el-tag>
@@ -51,8 +52,10 @@ export default {
     elTag: Tag
   },
   methods: {
-    titleFocus () {
-      this.$refs.title.focus()
+    delTag (index) {
+      let vm = this
+      console.log(vm.tags[index])
+      vm.tags.splice(index, 1)
     }
   }
 }
