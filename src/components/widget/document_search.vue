@@ -14,11 +14,11 @@
           <el-dropdown-item>更新时间</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-button>添加文章</el-button> 
+      <el-button @click="addArticle">添加文章</el-button> 
     </div>
     <draggable class="article" element="div" v-model="collection" :options="dragOptions"> 
       <transition-group type="transition" name="el-fade-in">
-        <li class="col" v-for="(col, index) of collection" :key="col"> 
+        <li class="col" v-for="(col, index) of collection" :class="{selected: selected[index]}" :key="col" @click="makeSelected(index)"> 
           <span :title="col">
             {{col}}
           </span>
@@ -37,8 +37,13 @@ export default {
   data () {
     return {
       collection: ['fasdf', 'asdfasdf', '你是大厦发斯蒂芬'],
-      editable: true
+      editable: true,
+      selected: []
     }
+  },
+  mounted () {
+    let vm = this
+    vm.selected.length = vm.collection.length
   },
   methods: {
     delArticle (index) {
@@ -59,6 +64,32 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    addArticle () {
+      let vm = this
+      MessageBox.prompt('请输入文档名称', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /[\S]/,
+        inputErrorMessage: '文档名不能为空'
+      }).then(({ value }) => {
+        vm.collection.splice(vm.collection.length, 1, value)
+        Message({
+          type: 'success',
+          message: '添加成功'
+        })
+      }).catch(() => {
+        Message({
+          type: 'info',
+          message: '取消输入'
+        })
+      })
+    },
+    makeSelected (index) {
+      let vm = this
+      vm.selected.length = vm.collection.length
+      vm.selected = vm.selected.map(() => false)
+      vm.selected.splice(index, 1, true)
     }
   },
   computed: {
@@ -123,7 +154,7 @@ export default {
   font-size: 14px;
   padding: 6px;
 }
-#docSearch .el-icon-d-caret:hover, #docSearch button:hover {
+#docSearch .el-icon-d-caret:hover, #docSearch button:hover{
   color: #f63;
   border-color: #f63;
 }
@@ -135,7 +166,7 @@ export default {
   padding:15px 10px;
   font-size: 18px;
   text-align: left;
-  cursor: move;
+  cursor: pointer;
 }
 #docSearch .article li>span{
   display: inline-block;
@@ -145,7 +176,7 @@ export default {
   text-overflow:ellipsis;
   vertical-align: top;
 }
-#docSearch .article li:hover{
+#docSearch .article li:hover, #docSearch .selected {
   color: #fff;
   background-color: #f63;
 }

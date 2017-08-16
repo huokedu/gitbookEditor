@@ -2,7 +2,7 @@
   <div id="listCol">
     <h2 @click="addSort"><i class="el-icon-plus"></i>&nbsp;&nbsp;新分类</h2>
     <div class="collection">
-       <span class="col" v-for="(col,index) of collection" :key="col" >
+       <span class="col" v-for="(col,index) of collection" :class="{selected: selected[index]}" :key="col" @click="makeSelected(index)">
         <span :title="col">
           {{col}}        
         </span>
@@ -18,8 +18,13 @@ export default {
   name: 'list-collection',
   data () {
     return {
-      collection: ['fasdf', 'asdfasdf', '你是大厦发斯蒂芬']
+      collection: ['fasdf', 'asdfasdf', '你是大厦发斯蒂芬'],
+      selected: []
     }
+  },
+  mounted () {
+    let vm = this
+    vm.selected.length = vm.collection.length
   },
   methods: {
     delSort (index) {
@@ -40,6 +45,12 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    makeSelected (index) {
+      let vm = this
+      vm.selected.length = vm.collection.length
+      vm.selected = vm.selected.map(() => false)
+      vm.selected.splice(index, 1, true)
     },
     addSort () {
       let vm = this
@@ -98,7 +109,7 @@ export default {
   text-overflow:ellipsis;
   vertical-align: top;  
 }
-#listCol .col:hover{
+#listCol .col:hover, #listCol .selected{
   color: #f63;
   background-color: #fff;
 }

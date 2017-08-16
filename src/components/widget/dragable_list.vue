@@ -1,21 +1,21 @@
 <template>
   <div id="dragCol">
-    <h2><i class="el-icon-plus"></i>&nbsp;&nbsp;新标题</h2>
-    <draggable class="wrapper" element="div" v-model="collection" :options="dragOptions" > 
+    <h2 @click="addTitle"><i class="el-icon-plus"></i>&nbsp;&nbsp;新标题</h2>
+    <draggable class="wrapper" element="div" v-model="collection" :options="dragOptions"> 
         <li class="col" v-for="(col, index) of collection" :key="col"> 
           <p class="level-one" :title="col">
-            <span @click="lal(index)">{{col}}</span>
-            <i class="el-icon-delete2" title="删除分类"></i>        
-            <i class="el-icon-plus" title="添加文档"></i>      
+            <span>{{col}}</span>
+            <i class="el-icon-delete2" title="删除目录" @click="delTitle(index)"></i>        
+            <i class="el-icon-plus" title="添加文档"　@click="addArticle(collection[index])"></i>      
           </p>
           <el-collapse-transition>
             <draggable element="div" v-model="collection1[collection[index]]" :options="dragOptions1" v-show="!show[index]"> 
               <transition-group type="transition" :name="'flip-list'">
-                <li class="level-two" v-for="co of collection1[collection[index]]" :key="co">
+                <li class="level-two" v-for="(co, index1) of collection1[collection[index]]" :key="co"  :ref="index + '' + index1" @click="makeSelected(index + '' + index1)">
                   <span :title="co">
                     {{co}}        
                   </span>
-                  <i class="el-icon-delete2" title="删除分类"></i>        
+                  <i class="el-icon-delete2" title="删除文章" @click="delArticle(collection[index], index1)"></i>        
                 </li> 
               </transition-group>
             </draggable>
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import {Icon} from 'element-ui'
+import {Icon, MessageBox, Message} from 'element-ui'
 import draggable from 'vuedraggable'
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
 export default {
@@ -43,9 +43,90 @@ export default {
     this.sec_dir()
   },
   methods: {
-    lal (index) {
-      if (event.target !== event.currentTarget) return
-      this.show.splice(index, 1, !this.show[index])
+    delTitle (index) {
+      let vm = this
+      MessageBox.confirm('此操作将删除该目录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        vm.collection.splice(index, 1)
+        Message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        Message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    makeSelected (key) {
+      let vm = this
+      Object.keys(vm.$refs).map(ele => {
+        vm.$refs[ele][0].classList.remove('selected')
+      })
+      vm.$refs[key][0].classList.add('selected')
+    },
+    addTitle () {
+      let vm = this
+      MessageBox.prompt('请输入目录名称', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /\D/,
+        inputErrorMessage: '标题名不能有数字'
+      }).then(({ value }) => {
+        vm.collection.splice(vm.collection.length, 1, value)
+        Message({
+          type: 'success',
+          message: '添加成功'
+        })
+      }).catch(() => {
+        Message({
+          type: 'info',
+          message: '取消输入'
+        })
+      })
+    },
+    addArticle (key) {
+      let vm = this
+      MessageBox.prompt('请输入文档名称', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /[\S]/,
+        inputErrorMessage: '文档名不能为空'
+      }).then(({ value }) => {
+        vm.collection1[key].splice(vm.collection1[key].length, 1, value)
+        Message({
+          type: 'success',
+          message: '添加成功'
+        })
+      }).catch(() => {
+        Message({
+          type: 'info',
+          message: '取消输入'
+        })
+      })
+    },
+    delArticle (key, index) {
+      let vm = this
+      MessageBox.confirm('此操作将删除该目录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        vm.collection1[key].splice(index, 1)
+        Message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        Message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
     sec_dir () {
       let vm = this
@@ -101,7 +182,6 @@ export default {
   font-size: 20px;
   line-height: 45px;
   text-align: left;
-  cursor: pointer;
 }
 #dragCol .level-one {
   margin: 0;
@@ -118,6 +198,7 @@ export default {
   white-space:nowrap;
   text-overflow:ellipsis;
   vertical-align: top;
+  cursor: move;
 }
 #dragCol .level-two{
   padding-right: 5px;
@@ -130,7 +211,7 @@ export default {
     width: 0px;
     height: 0px;
 }
-#dragCol .level-two:hover, #dragCol .level-one:hover{
+#dragCol .level-two:hover, #dragCol .selected{
   color: #f63;
   background-color: #fff;
 }
@@ -140,7 +221,10 @@ export default {
 #dragCol .col .el-icon-delete2, #dragCol .col .el-icon-plus{
   float: right;
   margin: 14px 0 0 6px;
-  color: rgba(255,147,111, 1);
+  cursor: pointer;
+}
+#dragCol .level-two .el-icon-delete2{
+  color: rgba(255, 147, 111, 1);
 }
 .flip-list-move {
   transition: transform 0.5s;
