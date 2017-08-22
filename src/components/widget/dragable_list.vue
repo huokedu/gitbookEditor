@@ -208,10 +208,6 @@ export default {
   text-indent: 35px;
   width: 145px;
 }
-::-webkit-scrollbar {
-    width: 0px;
-    height: 0px;
-}
 #dragCol .level-two:hover, #dragCol .selected{
   color: #f63;
   background-color: #fff;
@@ -229,5 +225,9 @@ export default {
 }
 .flip-list-move {
   transition: transform 0.5s;
+}
+::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
 }
 </style>

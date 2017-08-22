@@ -118,4 +118,8 @@ export default {
   margin: 14px 0 0 6px;
   color: rgba(255,147,111, 1);
 }
+::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+}
 </style>
