@@ -3,26 +3,26 @@
     <div class="header">
       <div class="search">
         <i class="el-icon-search"></i>
-        <input type="text"　placeholder="搜索">
+        <input type="text"　placeholder="搜索" v-model="keyword" @keyup="search">
       </div>
       <el-dropdown menu-align="start">
         <span class="el-dropdown-link">
           <i class="el-icon-d-caret" title="排序"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>创建时间</el-dropdown-item>
-          <el-dropdown-item>更新时间</el-dropdown-item>
+          <el-dropdown-item @click.native="changeOrder('create_time')">创建时间</el-dropdown-item>
+          <el-dropdown-item @click.native="changeOrder('update_time')">更新时间</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
       <el-button @click="addArticle">添加文章</el-button> 
     </div>
     <draggable class="article" element="div" v-model="collection" :options="dragOptions"> 
       <transition-group type="transition" name="el-fade-in">
-        <li class="col" v-for="(col, index) of collection" :class="{selected: selected[index]}" :key="col" @click="makeSelected(index)"> 
-          <span :title="col">
-            {{col}}
+        <li class="col" v-for="(col, index) of collection" :class="{selected: selected[index]}" :key="col._id" @click="makeSelected(index, col)"> 
+          <span :title="col.title">
+            {{col.title}}
           </span>
-          <i class="el-icon-delete2" title="删除文档" @click="delArticle(index)"></i>
+          <i class="el-icon-delete2" title="删除文档" @click="delArticle(index, col._id)"></i>
         </li> 
       </transition-group>
     </draggable>
@@ -32,31 +32,47 @@
 <script>
 import {Icon, Button, Dropdown, DropdownMenu, DropdownItem, MessageBox, Message} from 'element-ui'
 import draggable from 'vuedraggable'
+import { getAPIDoc, delDoc, addDoc } from '../../js/axios.js'
 export default {
   name: 'document_search',
+  props: ['label'],
   data () {
     return {
-      collection: ['fasdf', 'asdfasdf', '你是大厦发斯蒂芬'],
+      collection: [],
       editable: true,
-      selected: []
+      selected: [],
+      keyword: '',
+      order: 1
     }
   },
   mounted () {
     let vm = this
     vm.selected.length = vm.collection.length
+    // 判断文档类型查询文档
+    if (vm.label === 'API') vm.getArticles(1)
   },
   methods: {
-    delArticle (index) {
+    getArticles (page) {
+      let vm = this
+      getAPIDoc({page}).then((res) => {
+        if (res.data.status === 200) vm.collection = res.data.data
+      })
+    },
+    delArticle (index, id) {
       let vm = this
       MessageBox.confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        vm.collection.splice(index, 1)
-        Message({
-          type: 'success',
-          message: '删除成功!'
+        delDoc(id).then((res) => {
+          if (res.data.status === 200) {
+            vm.collection.splice(index, 1)
+            Message({
+              type: 'success',
+              message: '删除成功!'
+            })
+          }
         })
       }).catch(() => {
         Message({
@@ -73,10 +89,14 @@ export default {
         inputPattern: /[\S]/,
         inputErrorMessage: '文档名不能为空'
       }).then(({ value }) => {
-        vm.collection.splice(vm.collection.length, 1, value)
-        Message({
-          type: 'success',
-          message: '添加成功'
+        addDoc({title: value}).then((res) => {
+          if (res.data.status === 200) {
+            vm.collection.splice(0, 0, res.data.data)
+            Message({
+              type: 'success',
+              message: '添加成功'
+            })
+          }
         })
       }).catch(() => {
         Message({
@@ -85,11 +105,27 @@ export default {
         })
       })
     },
-    makeSelected (index) {
+    makeSelected (index, article) {
       let vm = this
       vm.selected.length = vm.collection.length
       vm.selected = vm.selected.map(() => false)
       vm.selected.splice(index, 1, true)
+      vm.$emit('selected', article)
+    },
+    search () {
+      let vm = this
+      getAPIDoc({page: 1, title: vm.keyword}).then((res) => {
+        if (res.data.status === 200) vm.collection = res.data.data
+      })
+    },
+    changeOrder (index) {
+      let vm = this
+      const order = {}
+      order[index] = vm.order
+      vm.order = vm.order === 1 ? -1 : 1
+      getAPIDoc({page: 1, title: vm.keyword, order}).then((res) => {
+        if (res.data.status === 200) vm.collection = res.data.data
+      })
     }
   },
   computed: {
@@ -159,7 +195,8 @@ export default {
   border-color: #f63;
 }
 #docSearch .article {
-  min-height: 600px;
+  height: 820px;
+  overflow: auto;    
 }
 #docSearch .article li{
   margin: 0;
@@ -198,5 +235,9 @@ export default {
   white-space:nowrap;
   text-overflow:ellipsis;
   vertical-align: top;
+}
+::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
 }
 </style>
