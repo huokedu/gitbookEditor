@@ -2,7 +2,7 @@
   <div id="repoDocument">
     <doc-header title="APIplus技术文档"></doc-header>
     <listCol></listCol>
-    <search></search>
+    <search ></search>
     <div>
       <mk-header></mk-header>
       <editor></editor>    
