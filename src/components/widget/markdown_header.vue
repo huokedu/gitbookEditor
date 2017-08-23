@@ -1,6 +1,6 @@
 <template>
   <div id="mkHeader">
-    <h2 contenteditable="true" ref="title">{{title}}</h2>
+    <h2 contenteditable="true" id="mkTitle">{{title}}</h2>
     <i class="el-icon-edit" title="编辑" @click="$refs.title.focus()"></i>
     <div class="wrapper" v-if="showTag">
       <el-button>
@@ -32,7 +32,8 @@ export default {
     },
     title: {
       required: true,
-      type: String
+      type: String,
+      default: ''
     }
   },
   data () {
