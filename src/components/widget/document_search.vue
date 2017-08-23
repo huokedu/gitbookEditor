@@ -22,7 +22,7 @@
           <span :title="col.title">
             {{col.title}}
           </span>
-          <i class="el-icon-delete2" title="删除文档" @click="delArticle(index, col._id)"></i>
+          <i class="el-icon-delete2" title="删除文档" @click.stop="delArticle(index, col)"></i>
         </li> 
       </transition-group>
     </draggable>
@@ -56,18 +56,24 @@ export default {
       let vm = this
       getAPIDoc({page}).then((res) => {
         if (res.data.status === 200) vm.collection = res.data.data
+        vm.makeSelected(0, res.data.data[0])
       })
     },
-    delArticle (index, id) {
+    delArticle (index, article) {
       let vm = this
       MessageBox.confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delDoc(id).then((res) => {
+        delDoc(article._id).then((res) => {
           if (res.data.status === 200) {
             vm.collection.splice(index, 1)
+            if (vm.selected[index]) {
+              vm.makeSelected(0, vm.collection[0])
+            } else {
+              vm.selected.splice(index, 1)
+            }
             Message({
               type: 'success',
               message: '删除成功!'
@@ -92,6 +98,7 @@ export default {
         addDoc({title: value}).then((res) => {
           if (res.data.status === 200) {
             vm.collection.splice(0, 0, res.data.data)
+            vm.makeSelected(0, res.data.data)
             Message({
               type: 'success',
               message: '添加成功'
