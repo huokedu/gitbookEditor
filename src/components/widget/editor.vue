@@ -1,12 +1,12 @@
 <template>
   <div id="mainBook"> 
-    <mavon-editor style="height: 100%" v-model="value"/>
-    <!-- @save="save" @imgAdd="saveImg" @imgDel="imgDel" :toolbars = "toolbars" -->
+    <mavon-editor style="height: 100%" v-model="value" @save="save" @imgAdd="saveImg" @imgDel="imgDel" :toolbars = "toolbars" /> 
   </div>
 </template>
 
 <script>
-import { getContent } from '../../js/axios.js'
+import { getContent, saveContent } from '../../js/axios.js'
+import { Message } from 'element-ui'
 export default {
   name: 'hello',
   props: ['id'],
@@ -40,8 +40,6 @@ export default {
     }
   },
   mounted () {
-    const vm = this
-    vm.getContent()
   },
   methods: {
     // 获取文章详情
@@ -52,52 +50,66 @@ export default {
       }).catch((err) => {
         console.log(err)
       })
+    },
+    save (content) {
+      const vm = this
+      const title = document.querySelector('#mkTitle').textContent
+      saveContent({ id: vm.id, content, pics: vm.img_file, title })
+      .then((res) => {
+        if (res.data.status === 200) {
+          Message({
+            type: 'success',
+            message: '保存成功'
+          })
+        } else {
+          Message({
+            type: 'error',
+            message: '保存失败'
+          })
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+        Message({
+          type: 'error',
+          message: '保存失败'
+        })
+      })
+    },
+    saveImg (name, $file) {
+      const vm = this
+      let tem = name
+      const img = document.querySelector('img[rel="' + name + '"]')
+      const image = new Image()
+      image.onload = () => {
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+        const w = canvas.width = image.width
+        const h = canvas.height = image.height
+        ctx.drawImage(image, 0, 0, w, h, 0, 0, w, h)
+        const data = canvas.toDataURL('image/jpeg', 0.5)
+        // 去重
+        Object.keys(vm.img_file).map((pos) => {
+          if (vm.img_file[pos] === data) {
+            const reg = new RegExp('(!\\[[\\w\\W]+?\\]\\()' + name + '(\\))', 'g')
+            vm.value = vm.value.replace(reg, '$1' + pos + '$2')
+            tem = pos
+            return
+          }
+        })
+        if (tem === name) {
+          console.log(1)
+          vm.img_file[name] = data
+        }
+      }
+      image.src = img.src
+    },
+    imgDel (pos) {
+      const vm = this
+      delete this.img_file[pos]
+      const reg = new RegExp('!\\[[\\w\\W]+?\\]\\(' + pos + '\\)', 'g')
+      vm.value = vm.value.replace(reg, '')
     }
-    // save (input, mk) {
-    //   const vm = this
-    //   Axios.post('http://192.168.1.98:4000/v1/article/edit', {
-    //     id: '598542f7e3995d378ec0b829',
-    //     content: vm.value,
-    //     pics: vm.img_file
-    //   })
-    //   .then(function (res) {
-    //     console.log(res)
-    //   })
-    // },
-    // saveImg (name, $file) {
-    //   const vm = this
-    //   let tem = name
-    //   const img = document.querySelector('img[rel="' + name + '"]')
-    //   const image = new Image()
-    //   image.onload = () => {
-    //     const canvas = document.createElement('canvas')
-    //     const ctx = canvas.getContext('2d')
-    //     const w = canvas.width = image.width
-    //     const h = canvas.height = image.height
-    //     ctx.drawImage(image, 0, 0, w, h, 0, 0, w, h)
-    //     const data = canvas.toDataURL('image/jpeg', 0.5)
-    //     // 去重
-    //     Object.keys(vm.img_file).map((pos) => {
-    //       if (vm.img_file[pos] === data) {
-    //         const reg = new RegExp('(!\\[[\\w\\W]+?\\]\\()' + name + '(\\))', 'g')
-    //         vm.value = vm.value.replace(reg, '$1' + pos + '$2')
-    //         tem = pos
-    //         return
-    //       }
-    //     })
-    //     if (tem === name) {
-    //       console.log(1)
-    //       vm.img_file[name] = data
-    //     }
-    //   }
-    //   image.src = img.src
-    // },
-    // imgDel (pos) {
-    //   const vm = this
-    //   delete this.img_file[pos]
-    //   const reg = new RegExp('!\\[[\\w\\W]+?\\]\\(' + pos + '\\)', 'g')
-    //   vm.value = vm.value.replace(reg, '')
-    // }
   },
   watch: {
     id (value) {
