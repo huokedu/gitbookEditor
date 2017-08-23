@@ -5,7 +5,6 @@ Axios.defaults.withCredentials = true
 
 // 获取文档列表
 function getAPIDoc ({page, title, sort, order}) {
-  console.log(order)
   return Axios.get('/article/list', {
     params: {
       label: 'API',
@@ -33,6 +32,27 @@ function addDoc ({label, title, sort}) {
 }
 // 文档详情
 function getContent (id) {
+  if (!id) return Promise.resolve()
   return Axios.get('/article/query?id=' + id)
 }
-export {getAPIDoc, delDoc, addDoc, getContent}
+// 文档编辑接口
+function saveContent ({ content, id, pics, title }) {
+  return Axios.post('/article/edit', {
+    content, id, pics, title
+  })
+}
+// 获取文档
+function getBook (id) {
+  return Axios.get('/pub/query', {
+    params: {
+      id
+    }
+  })
+}
+// 生成文档目录
+function pubBook ({id, title, levelOne, levelTwo, isSave}) {
+  return Axios.post('/pub/release', {
+    id, title, levelOne, levelTwo, isSave
+  })
+}
+export {getAPIDoc, delDoc, addDoc, getContent, saveContent, getBook, pubBook}
