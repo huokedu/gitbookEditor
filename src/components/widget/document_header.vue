@@ -1,16 +1,16 @@
 <template>
   <div id="header">
-    <h2>{{title}}</h2>
-    <span v-if="pub">
+    <h2 contenteditable="true" ref="title">{{title}}</h2>
+    <span v-if="pub" @click="$emit('pub', $refs.title.textContent, false)">
       <i class="el-icon-upload2"></i><br>
       发布
     </span>
-    <span v-if="preview">
-      <i class="el-icon-view"></i><br>
+    <span v-if="preview" @click="view">
+      <i class="el-icon-view" ></i><br>
       预览
     </span>
     <span>
-      <i class="el-icon-document"></i><br>
+      <i class="el-icon-document" @click="$emit('pub', $refs.title.textContent, true)"></i><br>
       保存
     </span>
   </div>
@@ -32,6 +32,12 @@ export default {
     pub: {
       type: Boolean,
       default: false
+    }
+  },
+  methods: {
+    view () {
+      console.log('fasdf')
+      window.open('http://192.168.1.98:8808/pub/599bd236fa367e6cf141118f')
     }
   },
   components: {
