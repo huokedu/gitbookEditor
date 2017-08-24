@@ -13,7 +13,7 @@ const state = {
   title: '',
   chooseDir: true,
   directory: [],
-  sort: '',
+  sort: undefined,
   APITitle: 'API文档'
 }
 

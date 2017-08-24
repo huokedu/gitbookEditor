@@ -130,7 +130,7 @@ export default {
     },
     search () {
       let vm = this
-      getAPIDoc({page: 1, title: vm.keyword}).then((res) => {
+      getAPIDoc({page: 1, title: vm.keyword, label: vm.label, sort: vm.sort}).then((res) => {
         if (res.data.status === 200) vm.collection = res.data.data
       })
     },
