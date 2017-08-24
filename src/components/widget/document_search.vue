@@ -41,6 +41,7 @@ export default {
       collection: [],
       editable: true,
       selected: [],
+      selectedIndex: 0,
       keyword: '',
       order: 1
     }
@@ -49,12 +50,12 @@ export default {
     let vm = this
     vm.selected.length = vm.collection.length
     // 判断文档类型查询文档
-    if (vm.label === 'API') vm.getArticles(1)
+    if (vm.label === 'API') vm.getArticles(1, vm.label)
   },
   methods: {
     getArticles (page) {
       let vm = this
-      getAPIDoc({page}).then((res) => {
+      getAPIDoc({ page }).then((res) => {
         if (res.data.status === 200) vm.collection = res.data.data
         vm.makeSelected(0, res.data.data[0])
       })
@@ -116,8 +117,11 @@ export default {
       let vm = this
       vm.selected.length = vm.collection.length
       vm.selected = vm.selected.map(() => false)
+      if (index < 0) return
       vm.selected.splice(index, 1, true)
-      vm.$emit('selected', article)
+      vm.selectedIndex = index
+      article.status = false
+      vm.$store.dispatch('article/changeSelected', article)
     },
     search () {
       let vm = this
@@ -144,6 +148,31 @@ export default {
         ghostClass: 'ghost',
         sort: false
       }
+    },
+    title () {
+      return this.$store.state.article.title
+    },
+    checkChoose () {
+      return this.$store.state.article.chooseDir
+    },
+    sort () {
+      return this.$store.state.article.sort
+    }
+  },
+  watch: {
+    title (val) {
+      const vm = this
+      vm.collection[vm.selectedIndex].title = val
+    },
+    checkChoose (val) {
+      if (val) this.makeSelected(-1)
+    },
+    sort (sort) {
+      const vm = this
+      getAPIDoc({page: 1, label: vm.label, sort}).then((res) => {
+        if (res.data.status === 200) vm.collection = res.data.data
+        vm.makeSelected(0, res.data.data[0])
+      })
     }
   },
   components: {
@@ -202,6 +231,7 @@ export default {
   border-color: #f63;
 }
 #docSearch .article {
+  position: relative;
   height: 820px;
   overflow: auto;    
 }
@@ -246,5 +276,8 @@ export default {
 ::-webkit-scrollbar {
     width: 0px;
     height: 0px;
+}
+.el-fade-in-leave-active {
+  display: none;
 }
 </style>

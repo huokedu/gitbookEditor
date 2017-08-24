@@ -2,9 +2,9 @@
   <div id="listCol">
     <h2 @click="addSort"><i class="el-icon-plus"></i>&nbsp;&nbsp;新分类</h2>
     <div class="collection">
-       <span class="col" v-for="(col,index) of collection" :class="{selected: selected[index]}" :key="col" @click="makeSelected(index)">
-        <span :title="col">
-          {{col}}        
+       <span class="col" v-for="(col,index) of collection" :class="{selected: selected[index]}" :key="col._id" @click="makeSelected(index, col._id)">
+        <span :title="col.name">
+          {{col.name}}        
         </span>
         <i class="el-icon-delete2" title="删除分类"　@click="delSort(index)"></i>        
       </span>
@@ -14,19 +14,30 @@
 
 <script>
 import {Icon, MessageBox, Message} from 'element-ui'
+import { getSort } from '../../js/axios.js'
 export default {
   name: 'list-collection',
   data () {
     return {
-      collection: ['fasdf', 'asdfasdf', '你是大厦发斯蒂芬'],
+      collection: [],
       selected: []
     }
   },
   mounted () {
     let vm = this
-    vm.selected.length = vm.collection.length
+    vm.getSort()
   },
   methods: {
+    getSort () {
+      const vm = this
+      getSort().then(res => {
+        if (res.data.status === 200) {
+          vm.collection = res.data.data.sorts
+          vm.selected.length = vm.collection.length
+          vm.makeSelected(0)
+        }
+      })
+    },
     delSort (index) {
       let vm = this
       MessageBox.confirm('此操作将删除该分类下所有文章, 是否继续?', '提示', {
@@ -46,11 +57,12 @@ export default {
         })
       })
     },
-    makeSelected (index) {
+    makeSelected (index, id) {
       let vm = this
       vm.selected.length = vm.collection.length
       vm.selected = vm.selected.map(() => false)
       vm.selected.splice(index, 1, true)
+      vm.$store.dispatch('article/getSort', id)
     },
     addSort () {
       let vm = this
@@ -87,6 +99,7 @@ export default {
   color: #fff;
   background-color: rgba(255,102,51, .7);
   text-align: center;
+  overflow: auto;
 }
 #listCol h2{
   font-size: 24px;

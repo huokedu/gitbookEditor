@@ -31,6 +31,7 @@ import draggable from 'vuedraggable'
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
 import { getBook } from '../../js/axios.js'
 
+import { mapState } from 'vuex'
 export default {
   name: 'list-collection',
   data () {
@@ -42,7 +43,7 @@ export default {
   },
   mounted () {
     const vm = this
-    vm.getDir('599bd236fa367e6cf141118f')
+    vm.getDir('599d52cf433770613ba10f3e')
   },
   methods: {
     // 获取目录
@@ -83,8 +84,10 @@ export default {
         if (!vm.$refs[ele][0]) return
         vm.$refs[ele][0].classList.remove('selected')
       })
+      if (key < 0) return
       vm.$refs[key][0].classList.add('selected')
-      vm.$emit('selected', article)
+      article.status = true
+      vm.$store.dispatch('article/changeSelected', article)
     },
     addTitle () {
       let vm = this
@@ -164,6 +167,32 @@ export default {
         disabled: !this.editable,
         ghostClass: 'ghost'
       }
+    },
+    ...mapState('article', [
+      'title', 'chooseDir', 'article'
+    ])
+  },
+  watch: {
+    title (title) {
+      const vm = this
+      vm.collection.map((dir, index) => {
+        dir.sec_dir.map((seDir, index1) => {
+          if (seDir._id === vm.article._id) {
+            const article = {}
+            article._id = vm.collection[index].sec_dir[index1]._id
+            article.title = title
+            vm.collection[index].sec_dir.splice(index1, 1, article)
+          }
+        })
+      })
+    },
+    chooseDir (val) {
+      if (!val) this.makeSelected(-1)
+    },
+    collection (val) {
+      const vm = this
+      const arr = val.concat()
+      vm.$store.dispatch('article/getDir', arr)
     }
   },
   components: {

@@ -9,7 +9,6 @@ import { getContent, saveContent } from '../../js/axios.js'
 import { Message } from 'element-ui'
 export default {
   name: 'hello',
-  props: ['id'],
   data () {
     return {
       value: '',
@@ -43,9 +42,9 @@ export default {
   },
   methods: {
     // 获取文章详情
-    getContent () {
+    getContent (id) {
       let vm = this
-      getContent(vm.id).then(res => {
+      getContent(id).then(res => {
         if (res.data.status === 200) vm.value = res.data.data.article.content
       }).catch((err) => {
         console.log(err)
@@ -64,7 +63,7 @@ export default {
         } else {
           Message({
             type: 'error',
-            message: '保存失败'
+            message: res.data.message
           })
         }
       })
@@ -111,9 +110,14 @@ export default {
       vm.value = vm.value.replace(reg, '')
     }
   },
+  computed: {
+    id () {
+      return this.$store.state.article.article._id
+    }
+  },
   watch: {
     id (value) {
-      this.getContent()
+      this.getContent(value)
     }
   }
 }

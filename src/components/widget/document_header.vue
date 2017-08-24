@@ -1,7 +1,7 @@
 <template>
   <div id="header">
     <h2 contenteditable="true" ref="title">{{title}}</h2>
-    <span v-if="pub" @click="$emit('pub', $refs.title.textContent, false)">
+    <span v-if="pub" @click="pubBook(false)">
       <i class="el-icon-upload2"></i><br>
       发布
     </span>
@@ -9,21 +9,24 @@
       <i class="el-icon-view" ></i><br>
       预览
     </span>
-    <span>
-      <i class="el-icon-document" @click="$emit('pub', $refs.title.textContent, true)"></i><br>
+    <span @click="pubBook(true)">
+      <i class="el-icon-document"></i><br>
       保存
     </span>
   </div>
 </template>
 
 <script>
-import {Icon} from 'element-ui'
+import {Icon, Message} from 'element-ui'
+import { pubBook } from '../../js/axios.js'
+
 export default {
   name: 'document_header',
   props: {
     title: {
       type: String,
-      required: true
+      required: true,
+      default: 'APIwenfasdf'
     },
     preview: {
       type: Boolean,
@@ -38,6 +41,33 @@ export default {
     view () {
       console.log('fasdf')
       window.open('http://192.168.1.98:8808/pub/599bd236fa367e6cf141118f')
+    },
+    pubBook (isSave) {
+      const vm = this
+      const title = vm.$refs.title.textContent
+      const levelTwo = {}
+      console.log(vm.$store.state.article.directory)
+      const levelOne = vm.$store.state.article.directory.map((dir, index) => {
+        levelTwo[dir.pri_dir] = []
+        dir.sec_dir.map((seDir) => {
+          levelTwo[dir.pri_dir].push(seDir._id)
+        })
+        return dir.pri_dir
+      })
+      pubBook({id: '599d52cf433770613ba10f3e', title, levelOne, levelTwo, isSave})
+      .then((res) => {
+        Message({
+          type: 'success',
+          message: res.data.message
+        })
+      })
+      .catch(err => {
+        console.log(err)
+        Message({
+          type: 'error',
+          message: '保存失败'
+        })
+      })
     }
   },
   components: {

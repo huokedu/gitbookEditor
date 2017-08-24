@@ -29,7 +29,4 @@ export default {
 </script>
 
 <style scoped>
- #repoDocument {
-
- }
 </style>

@@ -7,10 +7,12 @@ import 'mavon-editor/dist/css/index.css'
 import 'normalize.css'
 Vue.use(mavonEditor)
 Vue.config.productionTip = false
-
+// 状态管理
+import store from './store'
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   render: h => h(App)
 })

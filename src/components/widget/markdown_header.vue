@@ -1,6 +1,6 @@
 <template>
   <div id="mkHeader">
-    <h2 contenteditable="true" id="mkTitle">{{title}}</h2>
+    <h2 contenteditable="true" id="mkTitle" @blur="changeTitle">{{$store.state.article.article.title}}</h2>
     <i class="el-icon-edit" title="编辑" @click="$refs.title.focus()"></i>
     <div class="wrapper" v-if="showTag">
       <el-button>
@@ -29,11 +29,6 @@ export default {
     showTag: {
       type: Boolean,
       default: true
-    },
-    title: {
-      required: true,
-      type: String,
-      default: ''
     }
   },
   data () {
@@ -61,6 +56,11 @@ export default {
       let vm = this
       console.log(vm.tags[index])
       vm.tags.splice(index, 1)
+    },
+    changeTitle () {
+      const vm = this
+      const title = document.querySelector('#mkTitle').textContent
+      vm.$store.dispatch('article/changeTitle', title)
     }
   }
 }
