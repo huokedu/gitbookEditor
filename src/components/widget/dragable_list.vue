@@ -52,6 +52,7 @@ export default {
       getBook(id)
       .then((res) => {
         if (res.data.status === 200) {
+          if (!res.data.data.pub) return
           vm.collection = res.data.data.pub.directory
           vm.$store.dispatch('article/getAPITitle', res.data.data.pub.title)
         }

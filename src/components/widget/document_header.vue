@@ -9,7 +9,7 @@
       <i class="el-icon-view" ></i><br>
       预览
     </span>
-    <span @click="pubBook(true)">
+    <span  @click="saveContent">
       <i class="el-icon-document"></i><br>
       保存
     </span>
@@ -40,6 +40,10 @@ export default {
     view () {
       console.log('fasdf')
       window.open('http://192.168.1.98:8808/pub/599bd236fa367e6cf141118f')
+    },
+    saveContent () {
+      document.querySelector('.fa-floppy-o').click()
+      this.pubBook(true)
     },
     pubBook (isSave) {
       const vm = this
