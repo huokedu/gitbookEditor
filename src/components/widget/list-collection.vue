@@ -34,7 +34,7 @@ export default {
         if (res.data.status === 200) {
           vm.collection = res.data.data.sorts
           vm.selected.length = vm.collection.length
-          vm.makeSelected(0)
+          vm.makeSelected(0, res.data.data.sorts[0]._id)
         }
       })
     },

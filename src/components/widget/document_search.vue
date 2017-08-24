@@ -96,13 +96,18 @@ export default {
         inputPattern: /[\S]/,
         inputErrorMessage: '文档名不能为空'
       }).then(({ value }) => {
-        addDoc({title: value}).then((res) => {
+        addDoc({title: value, sort: vm.sort, label: vm.label}).then((res) => {
           if (res.data.status === 200) {
             vm.collection.splice(0, 0, res.data.data)
             vm.makeSelected(0, res.data.data)
             Message({
               type: 'success',
               message: '添加成功'
+            })
+          } else {
+            Message({
+              type: 'error',
+              message: res.data.message
             })
           }
         })
@@ -169,6 +174,7 @@ export default {
     },
     sort (sort) {
       const vm = this
+      console.log(sort)
       getAPIDoc({page: 1, label: vm.label, sort}).then((res) => {
         if (res.data.status === 200) vm.collection = res.data.data
         vm.makeSelected(0, res.data.data[0])
