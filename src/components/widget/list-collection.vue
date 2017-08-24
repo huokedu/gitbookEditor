@@ -49,6 +49,7 @@ export default {
         .then(res => {
           if (res.data.status === 200) {
             vm.collection.splice(index, 1)
+            vm.makeSelected(0, vm.collection[0]._id)
           }
           Message({
             type: 'success',

@@ -174,7 +174,6 @@ export default {
     },
     sort (sort) {
       const vm = this
-      console.log(sort)
       getAPIDoc({page: 1, label: vm.label, sort}).then((res) => {
         if (res.data.status === 200) vm.collection = res.data.data
         vm.makeSelected(0, res.data.data[0])
