@@ -117,7 +117,7 @@ export default {
       let vm = this
       vm.selected.length = vm.collection.length
       vm.selected = vm.selected.map(() => false)
-      if (index < 0) return
+      if (index < 0 || !article) return
       vm.selected.splice(index, 1, true)
       vm.selectedIndex = index
       article.status = false

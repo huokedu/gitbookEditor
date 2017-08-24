@@ -59,4 +59,10 @@ function pubBook ({id, title, levelOne, levelTwo, isSave}) {
 function getSort () {
   return Axios.get('/sort/list')
 }
-export {getAPIDoc, delDoc, addDoc, getContent, saveContent, getBook, pubBook, getSort}
+// 添加分类
+function addSort (name) {
+  return Axios.post('/sort/add', {
+    name
+  })
+}
+export {getAPIDoc, delDoc, addDoc, getContent, saveContent, getBook, pubBook, getSort, addSort}

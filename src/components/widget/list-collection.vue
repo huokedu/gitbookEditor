@@ -14,7 +14,7 @@
 
 <script>
 import {Icon, MessageBox, Message} from 'element-ui'
-import { getSort } from '../../js/axios.js'
+import { getSort, addSort } from '../../js/axios.js'
 export default {
   name: 'list-collection',
   data () {
@@ -72,10 +72,14 @@ export default {
         inputPattern: /\D/,
         inputErrorMessage: '分类名不能有数字'
       }).then(({ value }) => {
-        vm.collection.splice(vm.collection.length, 1, value)
-        Message({
-          type: 'success',
-          message: '添加成功'
+        addSort(value).then(res => {
+          if (res.data.status === 200) {
+            vm.collection.splice(vm.collection.length, 1, res.data.data)
+          }
+          Message({
+            type: 'success',
+            message: res.data.message
+          })
         })
       }).catch(() => {
         Message({
