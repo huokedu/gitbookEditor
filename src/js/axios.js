@@ -4,10 +4,10 @@ Axios.defaults.baseURL = 'http://192.168.1.98:8808'
 Axios.defaults.withCredentials = true
 
 // 获取文档列表
-function getAPIDoc ({page, title, sort, order}) {
+function getAPIDoc ({label = 'API', page, title, sort, order}) {
   return Axios.get('/article/list', {
     params: {
-      label: 'API',
+      label,
       page,
       title,
       sort,
@@ -55,4 +55,8 @@ function pubBook ({id, title, levelOne, levelTwo, isSave}) {
     id, title, levelOne, levelTwo, isSave
   })
 }
-export {getAPIDoc, delDoc, addDoc, getContent, saveContent, getBook, pubBook}
+// 获取技术文章分类
+function getSort () {
+  return Axios.get('/sort/list')
+}
+export {getAPIDoc, delDoc, addDoc, getContent, saveContent, getBook, pubBook, getSort}
