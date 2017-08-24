@@ -14,7 +14,7 @@
 
 <script>
 import {Icon, MessageBox, Message} from 'element-ui'
-import { getSort, addSort } from '../../js/axios.js'
+import { getSort, addSort, delSort } from '../../js/axios.js'
 export default {
   name: 'list-collection',
   data () {
@@ -45,10 +45,15 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        vm.collection.splice(index, 1)
-        Message({
-          type: 'success',
-          message: '删除成功!'
+        delSort(vm.$store.state.article.sort)
+        .then(res => {
+          if (res.data.status === 200) {
+            vm.collection.splice(index, 1)
+          }
+          Message({
+            type: 'success',
+            message: res.data.message
+          })
         })
       }).catch(() => {
         Message({

@@ -65,4 +65,21 @@ function addSort (name) {
     name
   })
 }
-export {getAPIDoc, delDoc, addDoc, getContent, saveContent, getBook, pubBook, getSort, addSort}
+// 删除分类
+function delSort (id) {
+  return Axios.post('/sort/del', {
+    sort_id: id
+  })
+}
+export {
+  getAPIDoc,
+  delDoc,
+  addDoc,
+  getContent,
+  saveContent,
+  getBook,
+  pubBook,
+  getSort,
+  addSort,
+  delSort
+}
