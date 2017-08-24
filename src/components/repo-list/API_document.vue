@@ -1,6 +1,6 @@
 <template>
   <div id="repoDocument">
-    <doc-header :pub="true" :preview="true"></doc-header>
+    <doc-header :pub="true" :preview="true" :editable="true"></doc-header>
     <drag-list></drag-list>
     <search label="API"></search>
     <div>

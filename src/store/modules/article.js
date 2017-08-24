@@ -2,7 +2,8 @@ import {
   CHANGE_TITLE,
   CHANGE_SELECTED,
   GET_DIR,
-  GET_SORT
+  GET_SORT,
+  GET_APITITLE
  } from '../mutations'
 
 // initial state
@@ -12,12 +13,14 @@ const state = {
   title: '',
   chooseDir: true,
   directory: [],
-  sort: ''
+  sort: '',
+  APITitle: 'API文档'
 }
 
 // getters
 
 const getters = {
+
 }
 
 // actions
@@ -37,6 +40,9 @@ const actions = {
   // 获取当前分类
   getSort ({commit}, id) {
     commit('GET_SORT', id)
+  },
+  getAPITitle ({commit}, title) {
+    commit('GET_APITITLE', title)
   }
 }
 
@@ -55,6 +61,9 @@ const mutations = {
   },
   [GET_SORT] (state, id) {
     state.sort = id
+  },
+  [GET_APITITLE] (state, title) {
+    state.docTitle = title
   }
 }
 

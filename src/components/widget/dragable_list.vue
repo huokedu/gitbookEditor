@@ -53,7 +53,7 @@ export default {
       .then((res) => {
         if (res.data.status === 200) {
           vm.collection = res.data.data.pub.directory
-          vm.$emit('getDir', vm.collection)
+          vm.$store.dispatch('article/getAPITitle', res.data.data.pub.title)
         }
       })
     },
@@ -65,7 +65,6 @@ export default {
         type: 'warning'
       }).then(() => {
         vm.collection.splice(index, 1)
-        vm.$emit('getDir', vm.collection)
         Message({
           type: 'success',
           message: '删除成功!'
@@ -98,7 +97,6 @@ export default {
         inputErrorMessage: '标题名不能有数字'
       }).then(({ value }) => {
         vm.collection.splice(vm.collection.length, 1, { pri_dir: value, sec_dir: [] })
-        vm.$emit('getDir', vm.collection)
         Message({
           type: 'success',
           message: '添加成功'
@@ -138,7 +136,6 @@ export default {
         type: 'warning'
       }).then(() => {
         vm.collection[key].sec_dir.splice(index, 1)
-        vm.$emit('getDir', vm.collection)
         Message({
           type: 'success',
           message: '删除成功!'

@@ -1,6 +1,6 @@
 <template>
   <div id="header">
-    <h2 contenteditable="true" ref="title">{{title}}</h2>
+    <h2 :contenteditable="editable" ref="title">{{title}}</h2>
     <span v-if="pub" @click="pubBook(false)">
       <i class="el-icon-upload2"></i><br>
       发布
@@ -23,16 +23,15 @@ import { pubBook } from '../../js/axios.js'
 export default {
   name: 'document_header',
   props: {
-    title: {
-      type: String,
-      required: true,
-      default: 'APIwenfasdf'
-    },
     preview: {
       type: Boolean,
       default: false
     },
     pub: {
+      type: Boolean,
+      default: false
+    },
+    editable: {
       type: Boolean,
       default: false
     }
@@ -68,6 +67,13 @@ export default {
           message: '保存失败'
         })
       })
+    }
+  },
+  computed: {
+    title () {
+      const vm = this
+      if (vm.preview) return vm.$store.state.article.APITitle
+      return 'APIplus技术文档'
     }
   },
   components: {
