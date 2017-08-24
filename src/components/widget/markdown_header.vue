@@ -1,7 +1,9 @@
 <template>
   <div id="mkHeader">
-    <h2 contenteditable="true" id="mkTitle" @blur="changeTitle">{{$store.state.article.article.title}}</h2>
-    <i class="el-icon-edit" title="编辑" @click="$refs.title.focus()"></i>
+    <div class="title">
+      <h2 contenteditable="true" id="mkTitle" @blur="changeTitle">{{$store.state.article.article.title}}</h2>
+      <i class="el-icon-edit" title="编辑" @click="$refs.title.focus()"></i>
+    </div>
     <div class="wrapper" v-if="showTag">
       <el-button>
         添加标签
@@ -73,18 +75,25 @@ export default {
     margin-left: 390px;
     min-width: 920px;
   }
+  #mkHeader .title{
+    display: inline-block;
+  }
+  #mkHeader .wrapper {
+    position: absolute;
+    right:0;
+    left:360px;
+    display: inline-block;
+    overflow: hidden;
+  }
   #mkHeader h2 {
     display: inline-block;
     margin: 30px 20px;
     font-size: 24px;
-  }
-  #mkHeader .wrapper{
-    position: absolute;
-    right:0;
-    left: 270px;
-    display: inline-block;
+    width: 300px;
     overflow: hidden;
-    vertical-align: bottom;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    vertical-align: middle;
   }
   #mkHeader .tag {
     display: inline-flex;
@@ -93,8 +102,8 @@ export default {
     justify-content: flex-end;
     align-items: center;
     align-content: space-around;
-    width: 80%;
     height: 87px;
+    width: 80%;
     text-align: right;
   }
   #mkHeader .tag .el-tag {
