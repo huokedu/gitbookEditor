@@ -1,6 +1,7 @@
 <template>
   <div id="header">
     <h2 :contenteditable="editable" ref="title">{{title}}</h2>
+    <i v-if="editable" class="el-icon-edit" title="编辑" @click="$refs.title.focus()"></i>
     <span v-if="pub" @click="pubBook(false)">
       <i class="el-icon-upload2"></i><br>
       发布
@@ -111,4 +112,11 @@ export default {
    font-size: 20px;
    cursor: pointer;
  }
+  #header .el-icon-edit{
+    font-size: 20px;
+    cursor: pointer;
+  }
+  #header .el-icon-edit:hover{
+    color: #f63;
+  }
 </style>
