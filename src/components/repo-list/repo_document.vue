@@ -13,7 +13,7 @@
 <script>
 import editor from '../widget/editor'
 import docHeader from '../widget/document_header'
-import listCol from '../widget/list-collection'
+import listCol from '../widget/list_collection'
 import search from '../widget/document_search'
 import mkHeader from '../widget/markdown_header'
 export default {
