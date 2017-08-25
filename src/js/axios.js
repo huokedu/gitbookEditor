@@ -71,6 +71,10 @@ function delSort (id) {
     sort_id: id
   })
 }
+// 获取标签列表
+function getTags () {
+  return Axios.get('/project/tag/list')
+}
 export {
   getAPIDoc,
   delDoc,
@@ -81,5 +85,6 @@ export {
   pubBook,
   getSort,
   addSort,
-  delSort
+  delSort,
+  getTags
 }
