@@ -20,7 +20,11 @@
               </transition-group>
             </draggable>
           </el-collapse-transition>
-        </li> 
+        </li>
+        <div class="recycle" :class="[{selected: isRecycle}, '']" title="删除分类"　@click="getRecycle">
+          <i class="el-icon-delete2"></i>
+          <span>回收站</span>
+        </div>
     </draggable>
   </div>
 </template>
@@ -147,6 +151,10 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    getRecycle () {
+      const vm = this
+      vm.$store.dispatch('article/getStatus', 'API')
     }
   },
   computed: {
@@ -162,13 +170,16 @@ export default {
       return {
         animation: 0,
         group: 'levelTwo',
-        disabled: !this.editable,
+        disabled: this.isRecycle,
         ghostClass: 'ghost'
       }
     },
     ...mapState('article', [
       'title', 'chooseDir', 'article'
-    ])
+    ]),
+    isRecycle () {
+      return this.$store.state.article.status
+    }
   },
   watch: {
     title (title) {
@@ -248,9 +259,9 @@ export default {
   text-indent: 35px;
   width: 145px;
 }
-#dragCol .level-two:hover, #dragCol .selected{
+#dragCol .level-two:hover, #dragCol .selected,#dragCol .recycle:hover{
   color: #f63;
-  background-color: #fff;
+  background-color: #fff !important;
 }
 #docSearch .sortable-chose {
   width: 20px !important;
@@ -269,5 +280,15 @@ export default {
 ::-webkit-scrollbar {
     width: 0px;
     height: 0px;
+}
+#dragCol .recycle {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 180px;
+  height: 40px;
+  line-height: 40px;
+  cursor: pointer;
+  background-color: rgba(255,102,51, .7);
 }
 </style>

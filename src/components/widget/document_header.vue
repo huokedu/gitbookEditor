@@ -2,15 +2,15 @@
   <div id="header">
     <h2 :contenteditable="editable" ref="title">{{title}}</h2>
     <i v-if="editable" class="el-icon-edit" title="编辑" @click="$refs.title.focus()"></i>
-    <span v-if="pub" @click="pubBook(false)">
+    <span v-if="pub && !isRecycle" @click="pubBook(false)">
       <i class="el-icon-upload2"></i><br>
       发布
     </span>
-    <span v-if="preview" @click="view">
+    <span v-if="preview && !isRecycle" @click="view">
       <i class="el-icon-view" ></i><br>
       预览
     </span>
-    <span  @click="saveContent">
+    <span v-if="!isRecycle" @click="saveContent">
       <i class="el-icon-document"></i><br>
       保存
     </span>
@@ -79,6 +79,9 @@ export default {
       const vm = this
       if (vm.preview) return vm.$store.state.article.APITitle
       return 'APIplus技术文档'
+    },
+    isRecycle () {
+      return this.$store.state.article.status
     }
   },
   components: {

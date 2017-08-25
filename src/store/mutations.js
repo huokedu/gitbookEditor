@@ -5,3 +5,6 @@ export const GET_SORT = 'GET_SORT'
 export const GET_APITITLE = 'GET_APITITLE'
 export const GET_DOCTITLE = 'GET_DOCTITLE'
 export const GET_TAGS = 'GET_TAGS'
+
+// 回收站
+export const RECYCLE_STATUS = 'RECYCLE_STATUS'

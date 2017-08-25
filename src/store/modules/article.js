@@ -4,7 +4,8 @@ import {
   GET_DIR,
   GET_SORT,
   GET_APITITLE,
-  GET_TAGS
+  GET_TAGS,
+  RECYCLE_STATUS
  } from '../mutations'
 
 // initial state
@@ -16,7 +17,8 @@ const state = {
   directory: [],
   sort: undefined,
   APITitle: 'API文档',
-  tags: []
+  tags: [],
+  status: false
 }
 
 // getters
@@ -58,6 +60,9 @@ const actions = {
       tags = [...set]
     }
     commit('GET_TAGS', tags)
+  },
+  getStatus ({commit}, status) {
+    commit('RECYCLE_STATUS', status)
   }
 }
 
@@ -81,6 +86,9 @@ const mutations = {
   },
   [GET_TAGS] (state, tags) {
     state.tags = tags
+  },
+  [RECYCLE_STATUS] (state, status) {
+    state.status = status
   }
 }
 

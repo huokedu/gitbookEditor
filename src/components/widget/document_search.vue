@@ -14,7 +14,8 @@
           <el-dropdown-item @click.native="changeOrder('update_time')">更新时间</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-button @click="addArticle">添加文章</el-button> 
+      <el-button @click="addArticle" v-if="!isRecycle">添加文章</el-button>
+      <el-button @click="getArticles" v-if="isRecycle === 'API'">返回API</el-button> 
     </div>
     <draggable class="article" element="div" v-model="collection" :options="dragOptions"> 
       <transition-group type="transition" name="el-fade-in">
@@ -22,7 +23,7 @@
           <span :title="col.title">
             {{col.title}}
           </span>
-          <i class="el-icon-delete2" title="删除文档" @click.stop="delArticle(index, col)"></i>
+          <i class="el-icon-delete2" title="删除文档" @click.stop="delArticle(index, col)" v-if="!isRecycle"></i>
         </li> 
       </transition-group>
     </draggable>
@@ -32,7 +33,8 @@
 <script>
 import {Icon, Button, Dropdown, DropdownMenu, DropdownItem, MessageBox, Message} from 'element-ui'
 import draggable from 'vuedraggable'
-import { getAPIDoc, delDoc, addDoc } from '../../js/axios.js'
+import { getAPIDoc, delDoc, addDoc, getRecycleList } from '../../js/axios.js'
+import { mapState } from 'vuex'
 export default {
   name: 'document_search',
   props: ['label'],
@@ -55,6 +57,7 @@ export default {
   methods: {
     getArticles (page) {
       let vm = this
+      vm.$store.dispatch('article/getStatus', false)
       getAPIDoc({ page }).then((res) => {
         if (res.data.status === 200) vm.collection = res.data.data
         vm.makeSelected(0, res.data.data[0])
@@ -154,14 +157,11 @@ export default {
         sort: false
       }
     },
-    title () {
-      return this.$store.state.article.title
-    },
-    checkChoose () {
-      return this.$store.state.article.chooseDir
-    },
-    sort () {
-      return this.$store.state.article.sort
+    ...mapState('article', [
+      'title', 'chooseDir', 'sort'
+    ]),
+    isRecycle () {
+      return this.$store.state.article.status
     }
   },
   watch: {
@@ -169,7 +169,8 @@ export default {
       const vm = this
       vm.collection[vm.selectedIndex].title = val
     },
-    checkChoose (val) {
+    chooseDir (val) {
+      console.log(val)
       if (val) this.makeSelected(-1)
     },
     sort (sort) {
@@ -178,6 +179,24 @@ export default {
         if (res.data.status === 200) vm.collection = res.data.data
         vm.makeSelected(0, res.data.data[0])
       })
+    },
+    isRecycle (status) {
+      // 回收站列表
+      if (status) {
+        const vm = this
+        getRecycleList(status)
+        .then(res => {
+          vm.collection = res.data.data.docs
+          vm.makeSelected(0, res.data.data.docs[0])
+        })
+      } else {
+        // 文章列表
+        const vm = this
+        getAPIDoc({page: 1, label: vm.label, sort: vm.sort}).then((res) => {
+          if (res.data.status === 200) vm.collection = res.data.data
+          vm.makeSelected(0, res.data.data[0])
+        })
+      }
     }
   },
   components: {

@@ -75,6 +75,34 @@ function delSort (id) {
 function getTags () {
   return Axios.get('/project/tag/list')
 }
+// 获取回收站文章列表
+function getRecycleList (label) {
+  return Axios.get('/recycle/list', {
+    params: {
+      label
+    }
+  })
+}
+// 获取已删除文章详情
+function getReArticle (id) {
+  return Axios.get('/recycle/query', {
+    params: {
+      id
+    }
+  })
+}
+// 恢复文章
+function recoverArticle (id) {
+  return Axios.post('/recycle/recover', {
+    id
+  })
+}
+// 彻底删除文章
+function delArticle (id) {
+  return Axios.post('/recycle/del', {
+    id
+  })
+}
 export {
   getAPIDoc,
   delDoc,
@@ -86,5 +114,9 @@ export {
   getSort,
   addSort,
   delSort,
-  getTags
+  getTags,
+  getRecycleList,
+  getReArticle,
+  recoverArticle,
+  delArticle
 }

@@ -1,6 +1,7 @@
 <template>
   <div id="listCol">
     <h2 @click="addSort"><i class="el-icon-plus"></i>&nbsp;&nbsp;新分类</h2>
+    <h2></h2>
     <div class="collection">
        <span class="col" v-for="(col,index) of collection" :class="{selected: selected[index]}" :key="col._id" @click="makeSelected(index, col._id)">
         <span :title="col.name">
@@ -8,6 +9,10 @@
         </span>
         <i class="el-icon-delete2" title="删除分类"　@click="delSort(index)"></i>        
       </span>
+    </div>
+    <div class="recycle" :class="[{selected: isRecycle}, '']" title="删除分类"　@click="getRecycle">
+      <i class="el-icon-delete2"></i>
+      <span>回收站</span>
     </div>
   </div>
 </template>
@@ -67,6 +72,7 @@ export default {
       let vm = this
       vm.selected.length = vm.collection.length
       vm.selected = vm.selected.map(() => false)
+      vm.$store.dispatch('article/getStatus', false)
       vm.selected.splice(index, 1, true)
       vm.$store.dispatch('article/getSort', id)
     },
@@ -93,6 +99,16 @@ export default {
           message: '取消输入'
         })
       })
+    },
+    getRecycle () {
+      const vm = this
+      vm.selected = vm.selected.map(() => false)
+      vm.$store.dispatch('article/getStatus', 'List')
+    }
+  },
+  computed: {
+    isRecycle () {
+      return this.$store.state.article.status
     }
   },
   components: {
@@ -103,6 +119,7 @@ export default {
 
 <style scoped>
 #listCol {
+  position: relative;
   float: left;
   width: 180px;
   height: 889px;
@@ -132,9 +149,9 @@ export default {
   text-overflow:ellipsis;
   vertical-align: top;  
 }
-#listCol .col:hover, #listCol .selected{
+#listCol .col:hover, #listCol .selected, #listCol .recycle:hover{
   color: #f63;
-  background-color: #fff;
+  background-color: #fff !important;
 }
 #listCol .col .el-icon-delete2, #listCol .col .el-icon-plus{
   float: right;
@@ -144,5 +161,15 @@ export default {
 ::-webkit-scrollbar {
     width: 0px;
     height: 0px;
+}
+#listCol .recycle {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 180px;
+  height: 40px;
+  line-height: 40px;
+  cursor: pointer;
+  background-color: rgba(255,102,51, .7);
 }
 </style>

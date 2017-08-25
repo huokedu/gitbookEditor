@@ -1,11 +1,11 @@
 <template>
   <div id="mainBook"> 
-    <mavon-editor style="height: 100%" v-model="value" @save="save" @imgAdd="saveImg" @imgDel="imgDel" :toolbars = "toolbars" /> 
+    <mavon-editor style="height: 100%" v-model="value" @save="save" @imgAdd="saveImg" @imgDel="imgDel" :editable="!isRecycle" :toolbars="isRecycle ? {} : toolbars" /> 
   </div>
 </template>
 
 <script>
-import { getContent, saveContent } from '../../js/axios.js'
+import { getContent, saveContent, getReArticle } from '../../js/axios.js'
 import { Message } from 'element-ui'
 export default {
   name: 'hello',
@@ -35,10 +35,11 @@ export default {
         ul: true, // 无序列表
         link: true,
         quote: true
+      },
+      watchMode: {
+        editable: false
       }
     }
-  },
-  mounted () {
   },
   methods: {
     // 获取文章详情
@@ -116,11 +117,26 @@ export default {
   computed: {
     id () {
       return this.$store.state.article.article._id
+    },
+    isRecycle () {
+      return this.$store.state.article.status
     }
   },
   watch: {
-    id (value) {
-      this.getContent(value)
+    id (id) {
+      const vm = this
+      if (vm.isRecycle) {
+        getReArticle(id).then(res => {
+          if (res.data.status === 200) {
+            vm.value = res.data.data.doc.content
+            vm.$store.dispatch('article/getTags', res.data.data.doc.tags)
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+      } else {
+        vm.getContent(id)
+      }
     }
   }
 }
