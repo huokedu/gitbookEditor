@@ -18,7 +18,7 @@
 
 <script>
 import { Tag } from 'element-ui'
-import { getTags } from '../../js/axios.js'
+import { getTags, saveContent } from '../../js/axios.js'
 export default {
   name: 'tag_select_box',
   data () {
@@ -33,12 +33,13 @@ export default {
     .then(res => {
       if (res.data.status === 200) {
         const set = new Set()
-        res.data.data.map(type => {
-          if (!Array.isArray(vm.tags[type.type])) {
-            vm.tags[type.type] = []
+        res.data.data.map(types => {
+          if (!Array.isArray(vm.tags[types.type])) {
+            vm.tags[types.type] = []
           }
-          set.add(type.type)
-          vm.tags[type.type].push({ name: type.name, id: type._id, type: 'grey' })
+          set.add(types.type)
+          const type = new Set(vm.$store.state.article.tags).has(types.name) ? 'primary' : 'grey'
+          vm.tags[types.type].push({ name: types.name, id: types._id, type })
         })
         vm.tagTypes = [...set]
       }
@@ -46,13 +47,20 @@ export default {
   },
   methods: {
     toggleTags (name, index, tag) {
-      console.log(this.tags[name], tag, index)
       const vm = this
       tag.type = tag.type === 'primary' ? 'grey' : 'primary'
       vm.tags[name].splice(index, 1, tag)
-      const tags = vm.tags
-      vm.tags = {}
-      vm.tags = tags
+      vm.tagTypes.splice(vm.tagTypes.length, 1)
+      vm.$store.dispatch('article/getTags', tag.name)
+      vm.saveContent(tag.name)
+    },
+    saveContent (tag) {
+      const vm = this
+      const id = vm.$store.state.article.article._id
+      const tags = vm.$store.state.article.tags
+      saveContent({id, tags}).then(res => {
+        console.log(res.data)
+      })
     }
   },
   components: {

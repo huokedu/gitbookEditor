@@ -47,7 +47,7 @@ export default {
       getContent(id).then(res => {
         if (res.data.status === 200) {
           vm.value = res.data.data.article.content
-          vm.$store.dispatch('article/getTags', res.data.data.article.tag)
+          vm.$store.dispatch('article/getTags', res.data.data.article.tags)
         }
       }).catch((err) => {
         console.log(err)

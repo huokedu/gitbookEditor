@@ -12,10 +12,7 @@
         <el-tag
           v-for="(tag, index) in tags"
           :key="tag"
-          :closable="true"
           type="primary"
-          :close-transition="true"
-          @close="delTag(index)"
         >
         {{tag}}
         </el-tag>
@@ -51,10 +48,6 @@ export default {
     tags
   },
   methods: {
-    delTag (index) {
-      let vm = this
-      vm.tags.splice(index, 1)
-    },
     changeTitle () {
       const vm = this
       const title = document.querySelector('#mkTitle').textContent

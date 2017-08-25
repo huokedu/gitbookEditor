@@ -36,9 +36,9 @@ function getContent (id) {
   return Axios.get('/article/query?id=' + id)
 }
 // 文档编辑接口
-function saveContent ({ content, id, pics, title }) {
+function saveContent ({ content, id, pics, title, tags }) {
   return Axios.post('/article/edit', {
-    content, id, pics, title
+    content, id, pics, title, tags
   })
 }
 // 获取文档

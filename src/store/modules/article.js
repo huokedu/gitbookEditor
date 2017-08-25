@@ -47,7 +47,16 @@ const actions = {
     commit('GET_APITITLE', title)
   },
   // 获取标签
-  getTags ({commit}, tags) {
+  async getTags ({commit, state}, tags) {
+    if (!Array.isArray(tags)) {
+      const set = new Set(state.tags)
+      if (set.has(tags)) {
+        set.delete(tags)
+      } else {
+        set.add(tags)
+      }
+      tags = [...set]
+    }
     commit('GET_TAGS', tags)
   }
 }
