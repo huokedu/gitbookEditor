@@ -45,7 +45,10 @@ export default {
     getContent (id) {
       let vm = this
       getContent(id).then(res => {
-        if (res.data.status === 200) vm.value = res.data.data.article.content
+        if (res.data.status === 200) {
+          vm.value = res.data.data.article.content
+          vm.$store.dispatch('article/getTags', res.data.data.article.tag)
+        }
       }).catch((err) => {
         console.log(err)
       })

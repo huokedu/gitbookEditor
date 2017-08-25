@@ -1,30 +1,35 @@
 <template>
   <div id="mkHeader">
     <div class="title">
-      <h2 contenteditable="true" id="mkTitle" @blur="changeTitle">{{$store.state.article.article.title}}</h2>
+      <h2 contenteditable="true" id="mkTitle" ref="title" @blur="changeTitle">{{$store.state.article.article.title}}</h2>
       <i class="el-icon-edit" title="编辑" @click="$refs.title.focus()"></i>
     </div>
     <div class="wrapper" v-if="showTag">
-      <el-button>
+      <el-button @click="visible = true">
         添加标签
       </el-button>
       <div class="tag">
         <el-tag
           v-for="(tag, index) in tags"
-          :key="tag.name"
+          :key="tag"
           :closable="true"
-          :type="tag.type"
+          type="primary"
+          :close-transition="true"
           @close="delTag(index)"
         >
-        {{tag.name}}
+        {{tag}}
         </el-tag>
       </div>
+      <el-dialog title="添加标签" :visible.sync="visible">
+        <tags v-if="visible"></tags>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
-import {Icon, Button, Tag} from 'element-ui'
+import {Icon, Button, Tag, Dialog} from 'element-ui'
+import tags from '../widget/tag_select_box'
 export default {
   name: 'markdown_header',
   props: {
@@ -35,34 +40,30 @@ export default {
   },
   data () {
     return {
-      tags: [
-        { name: '标签一', type: '' },
-        { name: '标签二', type: 'gray' },
-        { name: '标签三', type: 'primary' },
-        { name: '标签四', type: 'success' },
-        { name: '标签五', type: 'warning' },
-        { name: '标签六', type: 'danger' },
-        { name: '标签六', type: 'danger' },
-        { name: '标签六', type: 'danger' },
-        { name: '标签六', type: 'danger' }
-      ]
+      visible: false
     }
   },
   components: {
     Icon,
     elButton: Button,
-    elTag: Tag
+    elTag: Tag,
+    elDialog: Dialog,
+    tags
   },
   methods: {
     delTag (index) {
       let vm = this
-      console.log(vm.tags[index])
       vm.tags.splice(index, 1)
     },
     changeTitle () {
       const vm = this
       const title = document.querySelector('#mkTitle').textContent
       vm.$store.dispatch('article/changeTitle', title)
+    }
+  },
+  computed: {
+    tags () {
+      return this.$store.state.article.tags
     }
   }
 }
@@ -81,7 +82,7 @@ export default {
   #mkHeader .wrapper {
     position: absolute;
     right:0;
-    left:360px;
+    left:370px;
     display: inline-block;
     overflow: hidden;
   }
@@ -93,7 +94,7 @@ export default {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    vertical-align: middle;
+    vertical-align: middle;    
   }
   #mkHeader .tag {
     display: inline-flex;
@@ -125,6 +126,7 @@ export default {
   #mkHeader .el-icon-edit{
     font-size: 20px;
     cursor: pointer;
+    vertical-align: middle;    
   }
   #mkHeader .el-icon-edit:hover{
     color: #f63;
