@@ -133,9 +133,18 @@ export default {
     },
     search () {
       let vm = this
-      getAPIDoc({page: 1, title: vm.keyword, label: vm.label, sort: vm.sort}).then((res) => {
-        if (res.data.status === 200) vm.collection = res.data.data
-      })
+      if (vm.isRecycle) {
+        const vm = this
+        getRecycleList({ label: vm.isRecycle, title: vm.keyword })
+        .then(res => {
+          vm.collection = res.data.data.docs
+          vm.makeSelected(0, res.data.data.docs[0])
+        })
+      } else {
+        getAPIDoc({page: 1, title: vm.keyword, label: vm.label, sort: vm.sort}).then((res) => {
+          if (res.data.status === 200) vm.collection = res.data.data
+        })
+      }
     },
     changeOrder (index) {
       let vm = this
@@ -184,7 +193,7 @@ export default {
       // 回收站列表
       if (status) {
         const vm = this
-        getRecycleList(status)
+        getRecycleList({label: status})
         .then(res => {
           vm.collection = res.data.data.docs
           vm.makeSelected(0, res.data.data.docs[0])
