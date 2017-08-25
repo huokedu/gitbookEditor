@@ -3,18 +3,20 @@ import {
   CHANGE_SELECTED,
   GET_DIR,
   GET_SORT,
-  GET_APITITLE
+  GET_APITITLE,
+  GET_TAGS
  } from '../mutations'
 
 // initial state
 // shape: [{ id, quantity }]
 const state = {
-  article: { _id: '', title: '' },
+  article: {},
   title: '',
   chooseDir: true,
   directory: [],
   sort: undefined,
-  APITitle: 'API文档'
+  APITitle: 'API文档',
+  tags: []
 }
 
 // getters
@@ -43,6 +45,10 @@ const actions = {
   },
   getAPITitle ({commit}, title) {
     commit('GET_APITITLE', title)
+  },
+  // 获取标签
+  getTags ({commit}, tags) {
+    commit('GET_TAGS', tags)
   }
 }
 
@@ -52,8 +58,7 @@ const mutations = {
     state.title = title
   },
   [CHANGE_SELECTED] (state, article) {
-    state.article.title = article.title
-    state.article._id = article._id
+    state.article = article
     state.chooseDir = article.status
   },
   [GET_DIR] (state, dir) {
@@ -64,6 +69,9 @@ const mutations = {
   },
   [GET_APITITLE] (state, title) {
     state.docTitle = title
+  },
+  [GET_TAGS] (state, tags) {
+    state.tags = tags
   }
 }
 
