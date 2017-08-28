@@ -11,7 +11,7 @@
           <el-collapse-transition>
             <draggable element="div" v-model="collection[index].sec_dir" :options="dragOptions1" v-show="!show[index]"> 
               <transition-group type="transition" :name="'flip-list'">
-                <li class="level-two" v-for="(co, index1) of collection[index].sec_dir" :key="co._id"  :ref="index + '' + index1" @click="makeSelected(index + '' + index1, co)">
+                <li class="level-two" v-for="(co, index1) of collection[index].sec_dir" :key="co._id"  :ref="index + '-' + index1" @click="makeSelected(index + '-' + index1, co)">
                   <span :title="co.title">
                     {{co.title}}        
                   </span>
@@ -42,7 +42,8 @@ export default {
     return {
       collection: [],
       editable: true,
-      show: []
+      show: [],
+      selectedIndex: ''
     }
   },
   mounted () {
@@ -84,12 +85,11 @@ export default {
     },
     makeSelected (key, article) {
       let vm = this
-      Object.keys(vm.$refs).map(ele => {
-        if (!vm.$refs[ele][0]) return
-        vm.$refs[ele][0].classList.remove('selected')
-      })
-      if (key < 0) return
+      if (vm.selectedIndex) {
+        vm.$refs[vm.selectedIndex][0].classList.remove('selected')
+      }
       vm.$refs[key][0].classList.add('selected')
+      vm.selectedIndex = key
       article.status = true
       vm.$store.dispatch('article/changeSelected', article)
     },
@@ -113,26 +113,6 @@ export default {
         })
       })
     },
-    // addArticle (key) {
-    //   let vm = this
-    //   MessageBox.prompt('请输入文档名称', '提示', {
-    //     confirmButtonText: '确定',
-    //     cancelButtonText: '取消',
-    //     inputPattern: /[\S]/,
-    //     inputErrorMessage: '文档名不能为空'
-    //   }).then(({ value }) => {
-    //     vm.collection1[key].splice(vm.collection1[key].length, 1, value)
-    //     Message({
-    //       type: 'success',
-    //       message: '添加成功'
-    //     })
-    //   }).catch(() => {
-    //     Message({
-    //       type: 'info',
-    //       message: '取消输入'
-    //     })
-    //   })
-    // },
     delArticle (key, index) {
       let vm = this
       MessageBox.confirm('此操作将从目录下删除该文档, 是否继续?', '提示', {
