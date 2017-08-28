@@ -5,11 +5,11 @@
         <i class="el-icon-search"></i>
         <input type="text"　placeholder="搜索" v-model="keyword" @keyup="search">
       </div>
-      <el-dropdown menu-align="start">
+      <el-dropdown menu-align="start" @command="changeOrder">
         <span class="el-dropdown-link">
           <i class="el-icon-d-caret" title="排序"></i>
         </span>
-        <el-dropdown-menu slot="dropdown" @command="changeOrder">
+        <el-dropdown-menu slot="dropdown">
           <el-dropdown-item　command="create_time">创建时间</el-dropdown-item>
           <el-dropdown-item v-if="!isRecycle" command="update_time">更新时间</el-dropdown-item>
           <el-dropdown-item v-else command="delete_time">删除时间</el-dropdown-item>
@@ -149,6 +149,7 @@ export default {
     },
     changeOrder (index) {
       let vm = this
+      console.log(index)
       const order = {}
       order[index] = vm.order
       vm.order = vm.order === 1 ? -1 : 1
@@ -157,7 +158,7 @@ export default {
           if (res.data.status === 200) vm.$store.commit('article/GET_LIST', res.data.data)
         })
       } else {
-        getRecycleList({ label: vm.isRecycle })
+        getRecycleList({ label: vm.isRecycle, order })
         .then(res => {
           vm.$store.commit('article/GET_LIST', res.data.data.docs)
           vm.makeSelected(0, res.data.data.docs[0])

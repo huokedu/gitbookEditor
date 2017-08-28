@@ -76,11 +76,12 @@ function getTags () {
   return Axios.get('/project/tag/list')
 }
 // 获取回收站文章列表
-function getRecycleList ({ label, title }) {
+function getRecycleList ({ label, title, order }) {
   return Axios.get('/recycle/list', {
     params: {
       label,
-      title
+      title,
+      order
     }
   })
 }
