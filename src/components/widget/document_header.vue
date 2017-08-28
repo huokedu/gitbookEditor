@@ -1,7 +1,7 @@
 <template>
   <div id="header">
-    <h2 :contenteditable="editable" ref="title">{{title}}</h2>
-    <i v-if="editable" class="el-icon-edit" title="编辑" @click="$refs.title.focus()"></i>
+    <h2 :contenteditable="editable && !isRecycle" ref="title">{{title}}</h2>
+    <i v-if="editable" class="el-icon-edit" title="编辑" @click="$refs.title.focus()"  v-show="!isRecycle"></i>
     <span v-if="pub && !isRecycle" @click="pubBook(false)">
       <i class="el-icon-upload2"></i><br>
       发布
@@ -20,6 +20,7 @@
 <script>
 import {Icon, Message} from 'element-ui'
 import { pubBook } from '../../js/axios.js'
+import { mapState } from 'vuex'
 
 export default {
   name: 'document_header',
@@ -49,16 +50,7 @@ export default {
     pubBook (isSave) {
       const vm = this
       const title = vm.$refs.title.textContent
-      const levelTwo = {}
-      console.log(vm.$store.state.article.directory)
-      const levelOne = vm.$store.state.article.directory.map((dir, index) => {
-        levelTwo[dir.pri_dir] = []
-        dir.sec_dir.map((seDir) => {
-          levelTwo[dir.pri_dir].push(seDir._id)
-        })
-        return dir.pri_dir
-      })
-      pubBook({id: '599d52cf433770613ba10f3e', title, levelOne, levelTwo, isSave})
+      pubBook({id: '59a378dea68bc013966da696', title, levelOne: vm.levelOne, levelTwo: vm.levelTwo, isSave})
       .then((res) => {
         Message({
           type: 'success',
@@ -80,9 +72,9 @@ export default {
       if (vm.preview) return vm.$store.state.article.APITitle
       return 'APIplus技术文档'
     },
-    isRecycle () {
-      return this.$store.state.article.status
-    }
+    ...mapState('article', [
+      'levelOne', 'levelTwo', 'isRecycle'
+    ])
   },
   components: {
     Icon

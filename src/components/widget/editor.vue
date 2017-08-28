@@ -119,7 +119,7 @@ export default {
       return this.$store.state.article.article._id
     },
     isRecycle () {
-      return this.$store.state.article.status
+      return this.$store.state.article.isRecycle
     }
   },
   watch: {

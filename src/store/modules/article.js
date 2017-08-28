@@ -2,10 +2,17 @@ import {
   CHANGE_TITLE,
   CHANGE_SELECTED,
   GET_DIR,
+  GET_SEC_DIR,
+  ADD_DIR,
+  DEL_DIR,
+  UPDATE_DIRECTORY,
   GET_SORT,
   GET_APITITLE,
   GET_TAGS,
-  RECYCLE_STATUS
+  RECYCLE_STATUS,
+  GET_LIST,
+  CHANGE_LIST,
+  ADD_LIST
  } from '../mutations'
 
 // initial state
@@ -14,11 +21,13 @@ const state = {
   article: {},
   title: '',
   chooseDir: true,
-  directory: [],
+  levelOne: [],
+  levelTwo: {},
   sort: undefined,
   APITitle: 'API文档',
   tags: [],
-  status: false
+  isRecycle: false,
+  list: []
 }
 
 // getters
@@ -30,7 +39,7 @@ const getters = {
 // actions
 const actions = {
   // 修改标题
-  changeTitle ({commit, state}, title) {
+  changeTitle ({commit}, title) {
     commit('CHANGE_TITLE', title)
   },
   // 修改选中
@@ -40,6 +49,17 @@ const actions = {
   // 获取目录
   getDir ({commit}, dir) {
     commit('GET_DIR', dir)
+  },
+  modifyDir ({commit}, { index, title, key, secDir }) {
+    if (key) {
+      commit('DEL_SEC_DIR', { index, key })
+      return
+    }
+    if (title) {
+      commit('ADD_DIR', { index, title })
+      return
+    }
+    commit('DEL_DIR', index)
   },
   // 获取当前分类
   getSort ({commit}, id) {
@@ -69,14 +89,33 @@ const actions = {
 // mutations
 const mutations = {
   [CHANGE_TITLE] (state, title) {
+    state.article.title = title
     state.title = title
+    state.list.map((article, index) => {
+      if (state.article._id === article._id) {
+        state.list.splice(index, 1, { _id: article._id, title: state.article.title })
+      }
+    })
   },
   [CHANGE_SELECTED] (state, article) {
     state.article = article
+    state.title = article.title
     state.chooseDir = article.status
   },
-  [GET_DIR] (state, dir) {
-    state.directory = dir
+  [GET_DIR] (state, {levelOne}) {
+    state.levelOne = levelOne
+  },
+  [ADD_DIR] (state, { index, title }) {
+    state.levelOne.splice(index, 1, title)
+  },
+  [DEL_DIR] (state, index) {
+    state.levelOne.splice(index, 1)
+  },
+  [UPDATE_DIRECTORY] (state, { dir, secDir }) {
+    state.levelOne = dir
+  },
+  [GET_SEC_DIR] (state, {levelTwo}) {
+    state.levelTwo = levelTwo
   },
   [GET_SORT] (state, id) {
     state.sort = id
@@ -88,7 +127,16 @@ const mutations = {
     state.tags = tags
   },
   [RECYCLE_STATUS] (state, status) {
-    state.status = status
+    state.isRecycle = status
+  },
+  [GET_LIST] (state, list) {
+    state.list = list
+  },
+  [CHANGE_LIST] (state, index) {
+    state.list.splice(index, 1)
+  },
+  [ADD_LIST] (state, item) {
+    state.list.splice(0, 0, item)
   }
 }
 

@@ -18,9 +18,9 @@
       <el-button @click="addArticle" v-if="!isRecycle">添加文章</el-button>
       <el-button @click="getArticles" v-if="isRecycle === 'API'">返回API</el-button> 
     </div>
-    <draggable class="article" element="div" v-model="collection" :options="dragOptions"> 
+    <draggable class="article" element="div" v-model="list" :options="dragOptions" > 
       <transition-group type="transition" name="el-fade-in">
-        <li class="col" v-for="(col, index) of collection" :class="{selected: selected[index]}" :key="col._id" @click="makeSelected(index, col)"> 
+        <li class="col" v-for="(col, index) of list" :class="{selected: selected[index]}" :key="col._id" @click="makeSelected(index, col)"> 
           <span :title="col.title">
             {{col.title}}
           </span>
@@ -41,17 +41,17 @@ export default {
   props: ['label'],
   data () {
     return {
-      collection: [],
       editable: true,
       selected: [],
       selectedIndex: 0,
       keyword: '',
-      order: 1
+      order: 1,
+      secDir: []
     }
   },
   mounted () {
     let vm = this
-    vm.selected.length = vm.collection.length
+    vm.selected.length = vm.list.length
     // 判断文档类型查询文档
     if (vm.label === 'API') vm.getArticles(1, vm.label)
   },
@@ -60,22 +60,22 @@ export default {
       let vm = this
       vm.$store.dispatch('article/getStatus', false)
       getAPIDoc({ page }).then((res) => {
-        if (res.data.status === 200) vm.collection = res.data.data
+        if (res.data.status === 200) vm.$store.commit('article/GET_LIST', res.data.data)
         vm.makeSelected(0, res.data.data[0])
       })
     },
     delArticle (index, article) {
       let vm = this
-      MessageBox.confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+      MessageBox.confirm('删除文档到回收站, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         delDoc(article._id).then((res) => {
           if (res.data.status === 200) {
-            vm.collection.splice(index, 1)
+            vm.$store.commit('article/CHANGE_LIST', index)
             if (vm.selected[index]) {
-              vm.makeSelected(0, vm.collection[0])
+              vm.makeSelected(0, vm.list[0])
             } else {
               vm.selected.splice(index, 1)
             }
@@ -102,7 +102,7 @@ export default {
       }).then(({ value }) => {
         addDoc({title: value, sort: vm.sort, label: vm.label}).then((res) => {
           if (res.data.status === 200) {
-            vm.collection.splice(0, 0, res.data.data)
+            vm.$store.commit('article/ADD_LIST', res.data.data)
             vm.makeSelected(0, res.data.data)
             Message({
               type: 'success',
@@ -124,7 +124,7 @@ export default {
     },
     makeSelected (index, article) {
       let vm = this
-      vm.selected.length = vm.collection.length
+      vm.selected.length = vm.list.length
       vm.selected = vm.selected.map(() => false)
       if (index < 0 || !article) return
       vm.selected.splice(index, 1, true)
@@ -138,12 +138,12 @@ export default {
         const vm = this
         getRecycleList({ label: vm.isRecycle, title: vm.keyword })
         .then(res => {
-          vm.collection = res.data.data.docs
+          vm.$store.commit('article/GET_LIST', res.data.data.docs)
           vm.makeSelected(0, res.data.data.docs[0])
         })
       } else {
         getAPIDoc({page: 1, title: vm.keyword, label: vm.label, sort: vm.sort}).then((res) => {
-          if (res.data.status === 200) vm.collection = res.data.data
+          if (res.data.status === 200) vm.$store.commit('article/GET_LIST', res.data.data)
         })
       }
     },
@@ -154,12 +154,12 @@ export default {
       vm.order = vm.order === 1 ? -1 : 1
       if (!vm.isRecycle) {
         getAPIDoc({page: 1, title: vm.keyword, order}).then((res) => {
-          if (res.data.status === 200) vm.collection = res.data.data
+          if (res.data.status === 200) vm.$store.commit('article/GET_LIST', res.data.data)
         })
       } else {
         getRecycleList({ label: vm.isRecycle })
         .then(res => {
-          vm.collection = res.data.data.docs
+          vm.$store.commit('article/GET_LIST', res.data.data.docs)
           vm.makeSelected(0, res.data.data.docs[0])
         })
       }
@@ -176,17 +176,10 @@ export default {
       }
     },
     ...mapState('article', [
-      'title', 'chooseDir', 'sort'
-    ]),
-    isRecycle () {
-      return this.$store.state.article.status
-    }
+      'chooseDir', 'sort', 'isRecycle', 'list'
+    ])
   },
   watch: {
-    title (val) {
-      const vm = this
-      vm.collection[vm.selectedIndex].title = val
-    },
     chooseDir (val) {
       console.log(val)
       if (val) this.makeSelected(-1)
@@ -194,7 +187,7 @@ export default {
     sort (sort) {
       const vm = this
       getAPIDoc({page: 1, label: vm.label, sort}).then((res) => {
-        if (res.data.status === 200) vm.collection = res.data.data
+        if (res.data.status === 200) vm.$store.commit('article/GET_LIST', res.data.data)
         vm.makeSelected(0, res.data.data[0])
       })
     },
@@ -204,14 +197,14 @@ export default {
         const vm = this
         getRecycleList({label: status})
         .then(res => {
-          vm.collection = res.data.data.docs
+          vm.$store.commit('article/GET_LIST', res.data.data.docs)
           vm.makeSelected(0, res.data.data.docs[0])
         })
       } else {
         // 文章列表
         const vm = this
         getAPIDoc({page: 1, label: vm.label, sort: vm.sort}).then((res) => {
-          if (res.data.status === 200) vm.collection = res.data.data
+          if (res.data.status === 200) vm.$store.commit('article/GET_LIST', res.data.data)
           vm.makeSelected(0, res.data.data[0])
         })
       }

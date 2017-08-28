@@ -34,6 +34,7 @@
 import { Icon, Button, Tag, Dialog, Message, MessageBox } from 'element-ui'
 import tags from '../widget/tag_select_box'
 import { recoverArticle, delArticle } from '../../js/axios.js'
+import { mapState } from 'vuex'
 export default {
   name: 'markdown_header',
   props: {
@@ -87,7 +88,6 @@ export default {
         const id = vm.$store.state.article.article._id
         delArticle(id).then(res => {
           if (res.data.status === 200) {
-            window.location.reload()
             Message({
               type: 'success',
               message: res.data.message
@@ -108,15 +108,9 @@ export default {
     }
   },
   computed: {
-    tags () {
-      return this.$store.state.article.tags
-    },
-    isRecycle () {
-      return this.$store.state.article.status
-    },
-    title () {
-      return this.$store.state.article.article.title
-    }
+    ...mapState('article', [
+      'tags', 'isRecycle', 'title'
+    ])
   }
 }
 </script>

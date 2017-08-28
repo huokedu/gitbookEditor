@@ -25,15 +25,17 @@ export default {
   data () {
     return {
       collection: [],
-      selected: []
+      selected: [],
+      selectedIndex: 0
     }
   },
   mounted () {
-    let vm = this
+    const vm = this
     vm.getSort()
   },
   methods: {
     getSort () {
+      // 获取文章分类列表
       const vm = this
       getSort().then(res => {
         if (res.data.status === 200) {
@@ -44,6 +46,7 @@ export default {
       })
     },
     delSort (index) {
+      // 删除文章分类
       let vm = this
       MessageBox.confirm('此操作将删除该分类下所有文章, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -69,14 +72,16 @@ export default {
       })
     },
     makeSelected (index, id) {
+      // 选中状态
       let vm = this
-      vm.selected.length = vm.collection.length
-      vm.selected = vm.selected.map(() => false)
       vm.$store.dispatch('article/getStatus', false)
+      vm.selected.splice(vm.selectedIndex, 1, false)
+      vm.selectedIndex = index
       vm.selected.splice(index, 1, true)
       vm.$store.dispatch('article/getSort', id)
     },
     addSort () {
+      // 添加新分类
       let vm = this
       MessageBox.prompt('请输入分类名称', '提示', {
         confirmButtonText: '确定',
@@ -102,7 +107,7 @@ export default {
     },
     getRecycle () {
       const vm = this
-      vm.selected = vm.selected.map(() => false)
+      vm.selected.splice(vm.selectedIndex, 1, false)
       vm.$store.dispatch('article/getStatus', 'List')
     }
   },

@@ -1,27 +1,31 @@
 <template>
   <div id="dragCol">
-    <h2 @click="addTitle"><i class="el-icon-plus"></i>&nbsp;&nbsp;新标题</h2>
-    <draggable class="wrapper" element="div" v-model="collection" :options="dragOptions"> 
-        <li class="col" v-for="(col, index) of collection" :key="col.pri_dir"> 
-          <p class="level-one" :title="col.pri_dir">
-            <span>{{col.pri_dir}}</span>
-            <i class="el-icon-delete2" title="删除目录" @click="delTitle(index)"></i>        
-            <!-- <i class="el-icon-plus" title="添加文档"　@click="addArticle(collection[index])"></i>       -->
+    <h2 @click="addDir"><i class="el-icon-plus"></i>&nbsp;&nbsp;新标题</h2>
+    <draggable class="wrapper" element="div" v-model="levelOne" :options="dragOptions"> 
+        <li class="col" v-for="(col, index) of levelOne" :key="col"> 
+          <p class="level-one" :title="col">
+            <span>{{col}}</span>
+            <i class="el-icon-delete2" title="删除目录" @click="delDir(index)"></i>        
+            <!-- <i class="el-icon-plus" title="添加文档"　@click="addArticle(levelOne[index])"></i>       -->
           </p>
           <el-collapse-transition>
-            <draggable element="div" v-model="collection[index].sec_dir" :options="dragOptions1" v-show="!show[index]"> 
+            <draggable element="div" v-model="levelTwo[col]" :options="dragOptions1" @sort="saveDir"> 
               <transition-group type="transition" :name="'flip-list'">
-                <li class="level-two" v-for="(co, index1) of collection[index].sec_dir" :key="co._id"  :ref="index + '-' + index1" @click="makeSelected(index + '-' + index1, co)">
+                <li class="level-two" v-for="(co, index1) of levelTwo[col]" 
+                :key="co._id"  
+                :ref="index + '-' + index1"
+                @click="makeSelected(index + '-' + index1, co)"
+                >
                   <span :title="co.title">
                     {{co.title}}        
                   </span>
-                  <i class="el-icon-delete2" title="删除文章" @click="delArticle(index, index1)"></i> 
+                  <i class="el-icon-delete2" title="删除文章" @click="delArticle(col, index1)"></i> 
                 </li> 
               </transition-group>
             </draggable>
           </el-collapse-transition>
         </li>
-        <div class="recycle" :class="[{selected: isRecycle}, '']" title="删除分类"　@click="getRecycle">
+        <div :class="[{selected: isRecycle}, 'recycle']" title="删除分类"　@click="getRecycle">
           <i class="el-icon-delete2"></i>
           <span>回收站</span>
         </div>
@@ -40,15 +44,14 @@ export default {
   name: 'list-collection',
   data () {
     return {
-      collection: [],
       editable: true,
-      show: [],
-      selectedIndex: ''
+      selectedIndex: '',
+      levelTwo: {}
     }
   },
   mounted () {
     const vm = this
-    vm.getDir('599d52cf433770613ba10f3e')
+    vm.getDir('59a378dea68bc013966da696')
   },
   methods: {
     // 获取目录
@@ -58,19 +61,30 @@ export default {
       .then((res) => {
         if (res.data.status === 200) {
           if (!res.data.data.pub) return
-          vm.collection = res.data.data.pub.directory
+          const levelTwo = {}
+          const levelOne = res.data.data.pub.directory.map((dir, index) => {
+            levelTwo[dir.pri_dir] = []
+            dir.sec_dir.map((seDir) => {
+              levelTwo[dir.pri_dir].push(seDir._id)
+            })
+            return dir.pri_dir
+          })
+          vm.$store.dispatch('article/getDir', {levelOne})
+          vm.levelTwo = levelTwo
+          vm.saveDir()
           vm.$store.dispatch('article/getAPITitle', res.data.data.pub.title)
         }
       })
     },
-    delTitle (index) {
+    delDir (index) {
+      // 删除目录
       let vm = this
       MessageBox.confirm('此操作将删除该目录, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        vm.collection.splice(index, 1)
+        vm.$store.dispatch('article/modifyDir', { index })
         Message({
           type: 'success',
           message: '删除成功!'
@@ -84,16 +98,20 @@ export default {
       })
     },
     makeSelected (key, article) {
+      // 选中状态
       let vm = this
-      if (vm.selectedIndex) {
-        vm.$refs[vm.selectedIndex][0].classList.remove('selected')
-      }
+      // 取消所有选中状态
+      Object.keys(vm.$refs).map(key => {
+        if (vm.$refs[key].length === 0) return
+        vm.$refs[key][0].classList.remove('selected')
+      })
+      if (key < 0) return
       vm.$refs[key][0].classList.add('selected')
-      vm.selectedIndex = key
       article.status = true
       vm.$store.dispatch('article/changeSelected', article)
     },
-    addTitle () {
+    addDir () {
+      // 添加目录
       let vm = this
       MessageBox.prompt('请输入目录名称', '提示', {
         confirmButtonText: '确定',
@@ -101,12 +119,13 @@ export default {
         inputPattern: /\D/,
         inputErrorMessage: '标题名不能有数字'
       }).then(({ value }) => {
-        vm.collection.splice(vm.collection.length, 1, { pri_dir: value, sec_dir: [] })
+        vm.$store.dispatch('article/modifyDir', { index: vm.levelOne.length, title: value })
         Message({
           type: 'success',
           message: '添加成功'
         })
-      }).catch(() => {
+      }).catch((err) => {
+        console.log(err)
         Message({
           type: 'info',
           message: '取消输入'
@@ -114,13 +133,15 @@ export default {
       })
     },
     delArticle (key, index) {
+      // 删除二级目录
       let vm = this
       MessageBox.confirm('此操作将从目录下删除该文档, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        vm.collection[key].sec_dir.splice(index, 1)
+        vm.levelTwo[key].splice(index, 1)
+        vm.saveDir()
         Message({
           type: 'success',
           message: '删除成功!'
@@ -131,6 +152,12 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    saveDir () {
+      const vm = this
+      const levelTwoStr = JSON.stringify(vm.levelTwo)
+      const dir = JSON.parse(levelTwoStr)
+      vm.$store.commit('article/GET_SEC_DIR', { levelTwo: dir })
     },
     getRecycle () {
       const vm = this
@@ -155,33 +182,35 @@ export default {
       }
     },
     ...mapState('article', [
-      'title', 'chooseDir', 'article'
+      'title', 'chooseDir', 'article', 'isRecycle'
     ]),
-    isRecycle () {
-      return this.$store.state.article.status
+    levelOne: {
+      get () {
+        return this.$store.state.article.levelOne
+      },
+      set (value) {
+        console.log(value)
+        this.$store.commit('article/UPDATE_DIRECTORY', { dir: value })
+      }
     }
   },
   watch: {
     title (title) {
       const vm = this
-      vm.collection.map((dir, index) => {
-        dir.sec_dir.map((seDir, index1) => {
-          if (seDir._id === vm.article._id) {
-            const article = {}
-            article._id = vm.collection[index].sec_dir[index1]._id
-            article.title = title
-            vm.collection[index].sec_dir.splice(index1, 1, article)
+      Object.keys(vm.levelTwo).map(path => {
+        vm.levelTwo[path].map((article, index) => {
+          if (vm.article._id === article._id) {
+            vm.levelTwo[path].splice(index, 1, { _id: vm.article._id, title })
           }
         })
       })
     },
     chooseDir (val) {
-      if (!val) this.makeSelected(-1)
-    },
-    collection (val) {
-      const vm = this
-      const arr = val.concat()
-      vm.$store.dispatch('article/getDir', arr)
+      if (!val) {
+        this.makeSelected(-1)
+      } else {
+        this.$store.dispatch('article/getStatus', false)
+      }
     }
   },
   components: {
