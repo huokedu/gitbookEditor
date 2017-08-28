@@ -9,9 +9,10 @@
         <span class="el-dropdown-link">
           <i class="el-icon-d-caret" title="排序"></i>
         </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item @click.native="changeOrder('create_time')">创建时间</el-dropdown-item>
-          <el-dropdown-item @click.native="changeOrder('update_time')">更新时间</el-dropdown-item>
+        <el-dropdown-menu slot="dropdown" @command="changeOrder">
+          <el-dropdown-item　command="create_time">创建时间</el-dropdown-item>
+          <el-dropdown-item v-if="!isRecycle" command="update_time">更新时间</el-dropdown-item>
+          <el-dropdown-item v-else command="delete_time">删除时间</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
       <el-button @click="addArticle" v-if="!isRecycle">添加文章</el-button>
@@ -151,9 +152,17 @@ export default {
       const order = {}
       order[index] = vm.order
       vm.order = vm.order === 1 ? -1 : 1
-      getAPIDoc({page: 1, title: vm.keyword, order}).then((res) => {
-        if (res.data.status === 200) vm.collection = res.data.data
-      })
+      if (!vm.isRecycle) {
+        getAPIDoc({page: 1, title: vm.keyword, order}).then((res) => {
+          if (res.data.status === 200) vm.collection = res.data.data
+        })
+      } else {
+        getRecycleList({ label: vm.isRecycle })
+        .then(res => {
+          vm.collection = res.data.data.docs
+          vm.makeSelected(0, res.data.data.docs[0])
+        })
+      }
     }
   },
   computed: {
