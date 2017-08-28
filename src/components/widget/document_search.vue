@@ -43,7 +43,6 @@ export default {
     return {
       editable: true,
       selected: [],
-      selectedIndex: 0,
       keyword: '',
       order: 1,
       secDir: []
@@ -128,7 +127,7 @@ export default {
       vm.selected = vm.selected.map(() => false)
       if (index < 0 || !article) return
       vm.selected.splice(index, 1, true)
-      vm.selectedIndex = index
+      vm.$store.commit('article/GET_SELECTED', index)
       article.status = false
       vm.$store.dispatch('article/changeSelected', article)
     },

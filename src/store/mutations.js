@@ -12,7 +12,7 @@ export const GET_TAGS = 'GET_TAGS'
 export const GET_LIST = 'GET_LIST'
 export const ADD_LIST = 'ADD_LIST'
 export const CHANGE_LIST = 'CHANGE_LIST'
-
+export const GET_SELECTED = 'GET_SELECTED'
 // 回收站
 export const RECYCLE_STATUS = 'RECYCLE_STATUS'
 

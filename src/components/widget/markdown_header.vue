@@ -66,6 +66,7 @@ export default {
       const id = vm.$store.state.article.article._id
       recoverArticle(id).then(res => {
         if (res.data.status === 200) {
+          vm.$store.commit('article/CHANGE_LIST')
           Message({
             type: 'success',
             message: '恢复成功'
@@ -88,6 +89,7 @@ export default {
         const id = vm.$store.state.article.article._id
         delArticle(id).then(res => {
           if (res.data.status === 200) {
+            vm.$store.commit('article/CHANGE_LIST')
             Message({
               type: 'success',
               message: res.data.message

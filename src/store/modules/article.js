@@ -12,7 +12,8 @@ import {
   RECYCLE_STATUS,
   GET_LIST,
   CHANGE_LIST,
-  ADD_LIST
+  ADD_LIST,
+  GET_SELECTED
  } from '../mutations'
 
 // initial state
@@ -27,7 +28,8 @@ const state = {
   APITitle: 'API文档',
   tags: [],
   isRecycle: false,
-  list: []
+  list: [],
+  selectedIndex: ''
 }
 
 // getters
@@ -133,10 +135,17 @@ const mutations = {
     state.list = list
   },
   [CHANGE_LIST] (state, index) {
+    if (!index) {
+      state.list.splice(state.selectedIndex, 1)
+      return
+    }
     state.list.splice(index, 1)
   },
   [ADD_LIST] (state, item) {
     state.list.splice(0, 0, item)
+  },
+  [GET_SELECTED] (state, index) {
+    state.selectedIndex = index
   }
 }
 
