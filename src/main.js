@@ -9,6 +9,9 @@ Vue.use(mavonEditor)
 Vue.config.productionTip = false
 // 状态管理
 import store from './store'
+// element
+import { Tooltip } from 'element-ui'
+Vue.use(Tooltip)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

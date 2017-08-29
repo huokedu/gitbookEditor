@@ -293,7 +293,7 @@ export default {
 #dragCol .recycle {
   position: fixed;
   bottom: 0;
-  left: 0;
+  left: 40px;
   width: 180px;
   height: 40px;
   line-height: 40px;
