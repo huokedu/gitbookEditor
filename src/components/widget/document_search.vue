@@ -34,7 +34,7 @@
 <script>
 import {Icon, Button, Dropdown, DropdownMenu, DropdownItem, MessageBox, Message} from 'element-ui'
 import draggable from 'vuedraggable'
-import { getAPIDoc, delDoc, addDoc, getRecycleList } from '../../js/axios.js'
+import { getAPIDoc, delDoc, addDoc, getRecycleList } from '../../api/articles.js'
 import { mapState } from 'vuex'
 export default {
   name: 'document_search',

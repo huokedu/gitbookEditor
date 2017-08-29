@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { getContent, saveContent, getReArticle } from '../../js/axios.js'
+import { getContent, saveContent, getReArticle } from '../../api/articles.js'
 import { Message } from 'element-ui'
 export default {
   name: 'hello',

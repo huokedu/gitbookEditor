@@ -33,7 +33,7 @@
 <script>
 import { Icon, Button, Tag, Dialog, Message, MessageBox } from 'element-ui'
 import tags from '../widget/tag_select_box'
-import { recoverArticle, delArticle } from '../../js/axios.js'
+import { recoverArticle, delArticle } from '../../api/articles.js'
 import { mapState } from 'vuex'
 export default {
   name: 'markdown_header',

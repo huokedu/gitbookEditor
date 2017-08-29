@@ -19,7 +19,7 @@
 
 <script>
 import {Icon, Message} from 'element-ui'
-import { pubBook } from '../../js/axios.js'
+import { pubBook } from '../../api/articles.js'
 import { mapState } from 'vuex'
 
 export default {

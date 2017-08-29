@@ -37,7 +37,7 @@
 import {Icon, MessageBox, Message} from 'element-ui'
 import draggable from 'vuedraggable'
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
-import { getBook } from '../../js/axios.js'
+import { getBook } from '../../api/articles.js'
 
 import { mapState } from 'vuex'
 export default {

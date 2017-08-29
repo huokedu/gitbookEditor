@@ -18,7 +18,7 @@
 
 <script>
 import { Tag } from 'element-ui'
-import { getTags, saveContent } from '../../js/axios.js'
+import { getTags, saveContent } from '../../api/articles.js'
 export default {
   name: 'tag_select_box',
   data () {

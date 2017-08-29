@@ -19,7 +19,7 @@
 
 <script>
 import {Icon, MessageBox, Message} from 'element-ui'
-import { getSort, addSort, delSort } from '../../js/axios.js'
+import { getSort, addSort, delSort } from '../../api/articles.js'
 export default {
   name: 'list_collection',
   data () {
