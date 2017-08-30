@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import repoDocument from '../components/repo-list/repo_document.vue'
 import APIDocument from '../components/repo-list/API_document.vue'
 import repoList from '../components/repo-list/repo_list.vue'
+import repoAdd from '../components/repo-list/repo_add.vue'
 Vue.use(Router)
 export default new Router({
   routes: [{
@@ -19,6 +20,11 @@ export default new Router({
     path: '/repo/repo_list',
     name: '项目/项目列表',
     component: repoList
+  },
+  {
+    path: 'repo/repo_add',
+    name: '项目/添加项目',
+    component: repoAdd
   }
   ]
 })

@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import { Menu, Dropdown, DropdownMenu, DropdownItem, Breadcrumb, BreadcrumbItem } from 'element-ui'
 export default {
   name: 'nav_menu',
   data () {
@@ -32,14 +31,6 @@ export default {
     routeList () {
       return this.$route.name.split('/')
     }
-  },
-  components: {
-    elMenu: Menu,
-    elBreadcrumb: Breadcrumb,
-    elBreadcrumbItem: BreadcrumbItem,
-    elDropdown: Dropdown,
-    elDropdownMenu: DropdownMenu,
-    elDropdownItem: DropdownItem
   }
 }
 </script>

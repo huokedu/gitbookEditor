@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import {Icon, MessageBox, Message} from 'element-ui'
 import { getSort, addSort, delSort } from '../../api/articles.js'
 export default {
   name: 'list_collection',
@@ -48,7 +47,7 @@ export default {
     delSort (index) {
       // 删除文章分类
       let vm = this
-      MessageBox.confirm('此操作将删除该分类下所有文章, 是否继续?', '提示', {
+      vm.$msgbox.confirm('此操作将删除该分类下所有文章, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -59,13 +58,13 @@ export default {
             vm.collection.splice(index, 1)
             vm.makeSelected(0, vm.collection[0]._id)
           }
-          Message({
+          vm.$message({
             type: 'success',
             message: res.data.message
           })
         })
       }).catch(() => {
-        Message({
+        vm.$message({
           type: 'info',
           message: '已取消删除'
         })
@@ -83,7 +82,7 @@ export default {
     addSort () {
       // 添加新分类
       let vm = this
-      MessageBox.prompt('请输入分类名称', '提示', {
+      vm.$msgbox.prompt('请输入分类名称', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputPattern: /\D/,
@@ -93,13 +92,13 @@ export default {
           if (res.data.status === 200) {
             vm.collection.splice(vm.collection.length, 1, res.data.data)
           }
-          Message({
+          vm.$message({
             type: 'success',
             message: res.data.message
           })
         })
       }).catch(() => {
-        Message({
+        vm.$message({
           type: 'info',
           message: '取消输入'
         })
@@ -115,9 +114,6 @@ export default {
     isRecycle () {
       return this.$store.state.article.status
     }
-  },
-  components: {
-    Icon
   }
 }
 </script>

@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import {Icon, Button, Dropdown, DropdownMenu, DropdownItem, MessageBox, Message} from 'element-ui'
 import draggable from 'vuedraggable'
 import { getAPIDoc, delDoc, addDoc, getRecycleList } from '../../api/articles.js'
 import { mapState } from 'vuex'
@@ -65,7 +64,7 @@ export default {
     },
     delArticle (index, article) {
       let vm = this
-      MessageBox.confirm('删除文档到回收站, 是否继续?', '提示', {
+      vm.$msgbox.confirm('删除文档到回收站, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -78,14 +77,14 @@ export default {
             } else {
               vm.selected.splice(index, 1)
             }
-            Message({
+            vm.$message({
               type: 'success',
               message: '删除成功!'
             })
           }
         })
       }).catch(() => {
-        Message({
+        vm.$message({
           type: 'info',
           message: '已取消删除'
         })
@@ -93,7 +92,7 @@ export default {
     },
     addArticle () {
       let vm = this
-      MessageBox.prompt('请输入文档名称', '提示', {
+      vm.$msgbox.prompt('请输入文档名称', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputPattern: /[\S]/,
@@ -103,19 +102,19 @@ export default {
           if (res.data.status === 200) {
             vm.$store.commit('article/ADD_LIST', res.data.data)
             vm.makeSelected(0, res.data.data)
-            Message({
+            vm.$message({
               type: 'success',
               message: '添加成功'
             })
           } else {
-            Message({
+            vm.$message({
               type: 'error',
               message: res.data.message
             })
           }
         })
       }).catch(() => {
-        Message({
+        vm.$message({
           type: 'info',
           message: '取消输入'
         })
@@ -211,11 +210,6 @@ export default {
     }
   },
   components: {
-    Icon,
-    elButton: Button,
-    elDropdown: Dropdown,
-    elDropdownMenu: DropdownMenu,
-    elDropdownItem: DropdownItem,
     draggable
   }
 }

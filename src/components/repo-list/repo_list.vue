@@ -38,7 +38,7 @@
         >
       </el-table-column>
       <el-table-column
-        prop="price"
+        prop="part"
         label="价格"
         >
       </el-table-column>
@@ -84,7 +84,6 @@
 </template>
 
 <script>
-import { Table, TableColumn, Button, Pagination, Input, Cascader } from 'element-ui'
 import { getProjectList } from '../../api/projects.js'
 export default {
   name: 'repo_list',
@@ -125,14 +124,6 @@ export default {
     },
     handleIconClick () {
     }
-  },
-  components: {
-    elTable: Table,
-    elTableColumn: TableColumn,
-    elButton: Button,
-    elPagination: Pagination,
-    elCascader: Cascader,
-    elInput: Input
   }
 }
 </script>

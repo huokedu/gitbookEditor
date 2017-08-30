@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import { Tag } from 'element-ui'
 import { getTags, saveContent } from '../../api/articles.js'
 export default {
   name: 'tag_select_box',
@@ -62,9 +61,6 @@ export default {
         console.log(res.data)
       })
     }
-  },
-  components: {
-    elTag: Tag
   }
 }
 </script>

@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import { Icon, Button, Tag, Dialog, Message, MessageBox } from 'element-ui'
 import tags from '../widget/tag_select_box'
 import { recoverArticle, delArticle } from '../../api/articles.js'
 import { mapState } from 'vuex'
@@ -49,10 +48,6 @@ export default {
     }
   },
   components: {
-    Icon,
-    elButton: Button,
-    elTag: Tag,
-    elDialog: Dialog,
     tags
   },
   methods: {
@@ -67,12 +62,12 @@ export default {
       recoverArticle(id).then(res => {
         if (res.data.status === 200) {
           vm.$store.commit('article/CHANGE_LIST')
-          Message({
+          vm.$message({
             type: 'success',
             message: '恢复成功'
           })
         } else {
-          Message({
+          vm.$message({
             type: 'error',
             message: res.data.message
           })
@@ -81,7 +76,7 @@ export default {
     },
     delArticle () {
       const vm = this
-      MessageBox.confirm('此操作将永久删除该文章, 是否继续?', '提示', {
+      vm.$msgbox.confirm('此操作将永久删除该文章, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -90,19 +85,19 @@ export default {
         delArticle(id).then(res => {
           if (res.data.status === 200) {
             vm.$store.commit('article/CHANGE_LIST')
-            Message({
+            vm.$message({
               type: 'success',
               message: res.data.message
             })
           } else {
-            Message({
+            vm.$message({
               type: 'error',
               message: res.data.message
             })
           }
         })
       }).catch(() => {
-        Message({
+        vm.$message({
           type: 'info',
           message: '已取消删除'
         })

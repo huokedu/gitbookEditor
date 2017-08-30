@@ -71,7 +71,6 @@
 </template>
 
 <script>
-import { Menu, Submenu, MenuItem, MenuItemGroup } from 'element-ui'
 export default {
   name: 'nav_menu',
   data () {
@@ -88,12 +87,6 @@ export default {
     changeView (index) {
       this.$router.push(index)
     }
-  },
-  components: {
-    elMenu: Menu,
-    elSubmenu: Submenu,
-    elMenuItem: MenuItem,
-    elMenuItemGroup: MenuItemGroup
   }
 }
 </script>

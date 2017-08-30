@@ -10,8 +10,9 @@ Vue.config.productionTip = false
 // 状态管理
 import store from './store'
 // element
-import { Tooltip } from 'element-ui'
-Vue.use(Tooltip)
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-default/index.css'
+Vue.use(ElementUI)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

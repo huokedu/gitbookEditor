@@ -6,7 +6,6 @@
 
 <script>
 import { getContent, saveContent, getReArticle } from '../../api/articles.js'
-import { Message } from 'element-ui'
 export default {
   name: 'hello',
   data () {
@@ -60,12 +59,12 @@ export default {
       saveContent({ id: vm.id, content, pics: vm.img_file, title })
       .then((res) => {
         if (res.data.status === 200) {
-          Message({
+          vm.$message({
             type: 'success',
             message: '保存成功'
           })
         } else {
-          Message({
+          vm.$message({
             type: 'error',
             message: res.data.message
           })
@@ -73,7 +72,7 @@ export default {
       })
       .catch((err) => {
         console.log(err)
-        Message({
+        vm.$message({
           type: 'error',
           message: '保存失败'
         })

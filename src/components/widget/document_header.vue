@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import {Icon, Message} from 'element-ui'
 import { pubBook } from '../../api/articles.js'
 import { mapState } from 'vuex'
 
@@ -52,14 +51,14 @@ export default {
       const title = vm.$refs.title.textContent
       pubBook({id: '59a378dea68bc013966da696', title, levelOne: vm.levelOne, levelTwo: vm.levelTwo, isSave})
       .then((res) => {
-        Message({
+        vm.$message({
           type: 'success',
           message: res.data.message
         })
       })
       .catch(err => {
         console.log(err)
-        Message({
+        vm.$message({
           type: 'error',
           message: '保存失败'
         })
@@ -75,9 +74,6 @@ export default {
     ...mapState('article', [
       'levelOne', 'levelTwo', 'isRecycle'
     ])
-  },
-  components: {
-    Icon
   }
 }
 </script>

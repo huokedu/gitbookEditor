@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import {Icon, MessageBox, Message} from 'element-ui'
 import draggable from 'vuedraggable'
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
 import { getBook } from '../../api/articles.js'
@@ -79,19 +78,19 @@ export default {
     delDir (index) {
       // 删除目录
       let vm = this
-      MessageBox.confirm('此操作将删除该目录, 是否继续?', '提示', {
+      vm.$msgbox.confirm('此操作将删除该目录, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         vm.$store.dispatch('article/modifyDir', { index })
-        Message({
+        vm.$message({
           type: 'success',
           message: '删除成功!'
         })
       }).catch((err) => {
         console.log(err)
-        Message({
+        vm.$message({
           type: 'info',
           message: '已取消删除'
         })
@@ -113,20 +112,20 @@ export default {
     addDir () {
       // 添加目录
       let vm = this
-      MessageBox.prompt('请输入目录名称', '提示', {
+      vm.$msgbox.prompt('请输入目录名称', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputPattern: /\D/,
         inputErrorMessage: '标题名不能有数字'
       }).then(({ value }) => {
         vm.$store.dispatch('article/modifyDir', { index: vm.levelOne.length, title: value })
-        Message({
+        vm.$message({
           type: 'success',
           message: '添加成功'
         })
       }).catch((err) => {
         console.log(err)
-        Message({
+        vm.$message({
           type: 'info',
           message: '取消输入'
         })
@@ -135,19 +134,19 @@ export default {
     delArticle (key, index) {
       // 删除二级目录
       let vm = this
-      MessageBox.confirm('此操作将从目录下删除该文档, 是否继续?', '提示', {
+      vm.$msgbox.confirm('此操作将从目录下删除该文档, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         vm.levelTwo[key].splice(index, 1)
         vm.saveDir()
-        Message({
+        vm.$message({
           type: 'success',
           message: '删除成功!'
         })
       }).catch(() => {
-        Message({
+        vm.$message({
           type: 'info',
           message: '已取消删除'
         })
@@ -214,7 +213,6 @@ export default {
     }
   },
   components: {
-    Icon,
     draggable,
     elCollapseTransition: CollapseTransition
   }
