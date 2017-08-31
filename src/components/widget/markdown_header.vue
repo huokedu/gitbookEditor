@@ -16,15 +16,15 @@
       </el-button>  
       <div class="tag" :style="{width: isRecycle ? '476px' : '550px'}" v-if="showTag">
         <el-tag
-          v-for="(tag, index) in tags"
-          :key="tag"
+          v-for="tag in tags"
+          :key="tag._id"
           type="primary"
         >
-        {{tag}}
+        {{tag.name}}
         </el-tag>
       </div>
       <el-dialog title="添加标签" :visible.sync="visible">
-        <tags v-if="visible"></tags>
+        <tags v-show="visible"></tags>
       </el-dialog>
     </div>
   </div>

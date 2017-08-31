@@ -71,7 +71,7 @@ const actions = {
     commit('GET_APITITLE', title)
   },
   // 获取标签
-  async getTags ({commit, state}, tags) {
+  getTags ({commit, state}, tags) {
     if (!Array.isArray(tags)) {
       const set = new Set(state.tags)
       if (set.has(tags)) {

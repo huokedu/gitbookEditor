@@ -20,6 +20,7 @@
 import { getTags, saveContent } from '../../api/articles.js'
 export default {
   name: 'tag_select_box',
+  props: ['label'],
   data () {
     return {
       tags: {},
@@ -37,7 +38,11 @@ export default {
             vm.tags[types.type] = []
           }
           set.add(types.type)
-          const type = new Set(vm.$store.state.article.tags).has(types.name) ? 'primary' : 'grey'
+          const isChosen = vm.$store.state.article.tags.some(tag => {
+            return tag._id === types._id
+          })
+          const type = isChosen ? 'primary' : 'grey'
+
           vm.tags[types.type].push({ name: types.name, id: types._id, type })
         })
         vm.tagTypes = [...set]
@@ -50,10 +55,11 @@ export default {
       tag.type = tag.type === 'primary' ? 'grey' : 'primary'
       vm.tags[name].splice(index, 1, tag)
       vm.tagTypes.splice(vm.tagTypes.length, 1)
-      vm.$store.dispatch('article/getTags', tag.name)
-      vm.saveContent(tag.name)
+      vm.$store.dispatch('article/getTags', {name: tag.name, _id: tag.id})
+      if (vm.label === 'project') return
+      vm.saveContent()
     },
-    saveContent (tag) {
+    saveContent () {
       const vm = this
       const id = vm.$store.state.article.article._id
       const tags = vm.$store.state.article.tags
