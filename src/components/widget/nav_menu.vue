@@ -14,7 +14,7 @@
       <span slot="title">项目</span>
     </template>
     <el-menu-item index="/repo/repo_list">项目列表</el-menu-item>
-    <el-menu-item index="2-2">添加项目</el-menu-item>
+    <el-menu-item index="/repo/repo_add">添加项目</el-menu-item>
     <el-menu-item index="2-3">标签</el-menu-item>    
   </el-submenu>
 

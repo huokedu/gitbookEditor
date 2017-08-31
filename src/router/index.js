@@ -22,7 +22,7 @@ export default new Router({
     component: repoList
   },
   {
-    path: 'repo/repo_add',
+    path: '/repo/repo_add',
     name: '项目/添加项目',
     component: repoAdd
   }
