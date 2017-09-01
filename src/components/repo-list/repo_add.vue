@@ -296,6 +296,9 @@ export default {
   components: {
     tags,
     parts
+  },
+  beforeDestroy () {
+    this.$store.dispatch('article/getTags', [])
   }
 }
 </script>
