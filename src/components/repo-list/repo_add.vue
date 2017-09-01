@@ -65,8 +65,8 @@
           <div class="handdle">
             <span>是否试用：</span>
             <el-switch
-              v-model="part.trail"
-              @change="checkTryStatus(index, part.trail)"
+              v-model="part.trial"
+              @change="checkTryStatus(index, part.trial)"
               on-text=""
               off-text="">
             </el-switch>
@@ -91,7 +91,7 @@
         <el-button @click="save('project')">保存</el-button>        
       </div>
       <el-dialog title="添加套餐" :visible.sync="visiblePart" size="tiny" style="min-width: 1200px">
-        <parts v-if="visiblePart" @addPart="addPart"></parts>
+        <parts v-if="visiblePart" @addPart="editPart"></parts>
       </el-dialog>
     </section>
   </div>
@@ -100,7 +100,7 @@
 <script>
 import tags from '../widget/tag_select_box'
 import parts from '../widget/part_add'
-import { addProject } from '../../api/projects.js'
+import { addProject, addPart, getDetails, editProject, editPart } from '../../api/projects.js'
 export default {
   name: 'repo_add',
   data () {
@@ -127,23 +127,26 @@ export default {
         ]
       },
       parts: [
-        {
-          name: '套餐A',
-          count: '1000',
-          price: '4324',
-          status: 'online',
-          trail: false
-        },
-        {
-          name: '套餐B',
-          count: '100',
-          price: '424',
-          status: 'offline',
-          trail: true
+      ]
+    }
+  },
+  mounted () {
+    const vm = this
+    if (vm.$route.path === '/repo/repo_edit' && vm.$route.query.id) {
+      getDetails(vm.$route.query.id)
+      .then(res => {
+        if (res.data.status === 200) {
+          const dt = res.data.data.project
+          vm.form.name = dt.name
+          vm.form.serverUrl = dt.server.host
+          vm.imageUrl = dt.cover.indexOf('http') === -1 ? `http://192.168.1.98:8808/${dt.cover}` : dt.cover
+          vm.form.details = dt.details
+          // 获取标签
+          vm.$store.dispatch('article/getTags', dt.tag)
+          // 填充套餐
+          vm.parts = dt.part
         }
-      ],
-      isTry: false,
-      isOnline: true
+      })
     }
   },
   methods: {
@@ -154,11 +157,12 @@ export default {
     toggleTags (tag) {
       this.$store.dispatch('article/getTags', {name: tag.name, _id: tag._id})
     },
+    // 确保只有一个试用套餐
     checkTryStatus (index, val) {
       if (val) {
         this.parts.map((part, sort) => {
           if (sort === index) return
-          part.trail = false
+          part.trial = false
         })
       }
     },
@@ -166,11 +170,18 @@ export default {
     save (formName) {
       const vm = this
       vm.$refs[formName].validate((valid) => {
-        if (!valid || !vm.form.cover || !vm.tags.length) return false
-        vm.addProject()
+        if (!valid || !vm.tags.length) return false
+        // 判断处于什么路由
+        console.log(1)
+        if (vm.$route.path === '/repo/repo_edit' && vm.$route.query.id) {
+          vm.editProject(vm.$route.query.id)
+        } else {
+          if (!vm.form.cover) return false
+          vm.addProject()
+        }
       })
     },
-    addPart (part) {
+    editPart (part) {
       const vm = this
       vm.visiblePart = false
       vm.parts.push(part)
@@ -183,13 +194,75 @@ export default {
       })
       addProject(vm.form).then(res => {
         if (res.data.status === 200) {
-          vm.$router.push('/repo/repo_list')
+          if (vm.parts.length) {
+            vm.addPart(res.data.data.project._id)
+          } else {
+            vm.$router.push('/repo/repo_list')
+          }
         } else {
           vm.$message({
             type: 'error',
-            message: res.data.data.message
+            message: res.data.message
           })
         }
+      })
+    },
+    // 编辑项目
+    editProject (id) {
+      const vm = this
+      vm.form.tag = vm.tags.map(tag => {
+        return tag._id
+      })
+      vm.form.id = id
+      editProject(vm.form).then(res => {
+        if (res.data.status === 200) {
+          if (vm.parts.length) {
+            vm.addPart(id)
+          }
+        } else {
+          vm.$message({
+            type: 'error',
+            message: res.data.message
+          })
+        }
+      })
+    },
+    // 添加套餐
+    addPart (id) {
+      const vm = this
+      vm.parts.map(part => {
+        if (part._id) {
+          part.id = part._id
+          editPart(part).then(res => {
+            if (res.data.status === 200) {
+              vm.$message({
+                type: 'success',
+                message: '保存成功'
+              })
+              return
+            }
+          })
+          return
+        }
+        part.salePrice = part.price
+        part.id = id
+        addPart(part).then(res => {
+          if (res.data.status === 200) {
+            if (vm.$route.path === '/repo/repo_edit') {
+              vm.$message({
+                type: 'success',
+                message: '保存成功'
+              })
+              return
+            }
+            vm.$router.push('/repo/repo_list')
+          } else {
+            vm.$message({
+              type: 'error',
+              message: '保存失败'
+            })
+          }
+        })
       })
     }
   },
@@ -252,6 +325,7 @@ export default {
     cursor: pointer;
   }
   #repoAdd .clearfix {
+    text-align: left;
     line-height: 36px;    
   }
   #repoAdd .clearfix .head {

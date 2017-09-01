@@ -1,7 +1,7 @@
 <template>
   <div id="repoList">
     <div class="handdle">
-      <el-button>添加项目</el-button>
+      <el-button　@click="$router.push('/repo/repo_add')">添加项目</el-button>
       <el-cascader
         :options="options"
         v-model="selected"
@@ -63,7 +63,9 @@
           </el-button>
           <el-button
             type="text"
-            size="small">
+            size="small"
+            @click="$router.push({path:'/repo/repo_edit', query: {id: scope.row._id }})"
+            >
             编辑
           </el-button>
           <el-button
@@ -93,18 +95,19 @@ export default {
   data () {
     return {
       tableData: [],
-      options: [{
-        value: '',
-        label: '全部项目'
-      },
-      {
-        value: 'online',
-        label: '销售中'
-      },
-      {
-        value: 'offline',
-        label: '已下架'
-      }
+      options: [
+        {
+          value: '',
+          label: '全部项目'
+        },
+        {
+          value: 'online',
+          label: '销售中'
+        },
+        {
+          value: 'offline',
+          label: '已下架'
+        }
       ],
       count: 50,
       currentPage: 1,
