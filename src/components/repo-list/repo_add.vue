@@ -76,7 +76,7 @@
               on-text=""
               off-text="">
             </el-switch>
-            <el-button>
+            <el-button @click.native="changePart(index)">
               编辑
             </el-button>
             <el-button>
@@ -84,14 +84,14 @@
             </el-button>
           </div>
         </el-card>
-        <el-card class="box-card add" @click.native="visiblePart = true" >
+        <el-card class="box-card add" @click.native="changePart(-1)" >
           <i class="el-icon-plus"></i>
           <h3>添加套餐</h3>
         </el-card><br>
         <el-button @click="save('project')">保存</el-button>        
       </div>
       <el-dialog title="添加套餐" :visible.sync="visiblePart" size="tiny" style="min-width: 1200px">
-        <parts v-if="visiblePart" @addPart="editPart"></parts>
+        <parts v-if="visiblePart" @addPart="editPart" :part="choosePart"></parts>
       </el-dialog>
     </section>
   </div>
@@ -127,7 +127,8 @@ export default {
         ]
       },
       parts: [
-      ]
+      ],
+      choosePart: {}
     }
   },
   mounted () {
@@ -183,17 +184,29 @@ export default {
     },
     editPart (part) {
       const vm = this
-      const isDuplicate = vm.parts.some(savedPart => {
-        return savedPart.name === part.name
-      })
-      if (isDuplicate) {
-        return vm.$message({
-          type: 'warning',
-          message: '套餐名重复'
+      if (!part._id) {
+        const isDuplicate = vm.parts.some(savedPart => {
+          return savedPart.name === part.name
         })
+        // 检查标题重复
+        if (isDuplicate) {
+          return vm.$message({
+            type: 'warning',
+            message: '套餐名重复'
+          })
+        }
+        vm.parts.push(part)
       }
       vm.visiblePart = false
-      vm.parts.push(part)
+    },
+    changePart (index) {
+      const vm = this
+      if (index === -1) {
+        vm.choosePart = ''
+      } else {
+        vm.choosePart = vm.parts[index]
+      }
+      vm.visiblePart = true
     },
     // 添加项目
     addProject () {

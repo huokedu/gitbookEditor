@@ -20,14 +20,16 @@
 <script>
 export default {
   name: 'part_add',
+  props: ['part'],
   data () {
     var checkNum = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('内容不能为空'))
       }
       setTimeout(() => {
-        if (!Number.isInteger(value)) {
-          callback(new Error('请输入整数'))
+        console.log(value)
+        if (isNaN(value)) {
+          callback(new Error('请输入数字'))
         } else {
           callback()
         }
@@ -38,7 +40,7 @@ export default {
         name: '',
         count: '',
         price: '',
-        status: 'offline',
+        status: false,
         trial: false
       },
       rules: {
@@ -52,6 +54,12 @@ export default {
           { validator: checkNum, trigger: 'blur' }
         ]
       }
+    }
+  },
+  mounted () {
+    const vm = this
+    if (vm.part) {
+      vm.form = vm.part
     }
   },
   methods: {
