@@ -128,6 +128,7 @@ export default {
         if (res.data.status === 200) {
           res.data.data.projects.map(data => {
             data.statusText = data.status === 'online' ? '上架中' : '已下架'
+            if (!data.part) data.part = 'N/A'
           })
           vm.tableData = res.data.data.projects
           vm.count = res.data.data.count
