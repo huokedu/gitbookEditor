@@ -1,9 +1,9 @@
 import Axios from './index'
 
 // 获取项目列表
-function getProjectList ({page, limit = 10}) {
+function getProjectList ({page, limit = 10, status}) {
   return Axios.post('/project/query', {
-    page, limit
+    page, limit, status
   })
 }
 // 添加新项目

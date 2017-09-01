@@ -2,15 +2,19 @@
   <div id="repoList">
     <div class="handdle">
       <el-button　@click="$router.push('/repo/repo_add')">添加项目</el-button>
-      <el-cascader
-        :options="options"
-        v-model="selected"
-      ></el-cascader>
+      <el-select v-model="selected" placeholder="请选择">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
       <el-input
         placeholder="搜索"
         icon="search"
         v-model="search"
-        :on-icon-click="handleIconClick"
+        :on-icon-click="search"
         >
       </el-input>
     </div>
@@ -112,20 +116,25 @@ export default {
       count: 50,
       currentPage: 1,
       search: '',
-      selected: ['']
+      selected: ''
     }
   },
   methods: {
     getProjectList (page) {
       const vm = this
-      getProjectList({page}).then(res => {
+      getProjectList({page, status: vm.selected}).then(res => {
         if (res.data.status === 200) {
           vm.tableData = res.data.data.projects
           vm.count = res.data.data.count
         }
       })
     },
-    handleIconClick () {
+    search () {
+    }
+  },
+  watch: {
+    selected () {
+      this.getProjectList(this.currentPage)
     }
   }
 }
@@ -158,7 +167,7 @@ export default {
   vertical-align: text-bottom;
   float: left;
 }
-#repoList .el-cascader {
+#repoList .el-select {
   margin-right: 10px;
 }
 </style>
