@@ -57,7 +57,9 @@
         <template scope="scope">
           <el-button
             type="text"
-            size="small">
+            size="small"
+            @click="$router.push({path:'/repo/API_document', query: {API_id: scope.row.API }})"
+            >
             API
           </el-button>
           <el-button

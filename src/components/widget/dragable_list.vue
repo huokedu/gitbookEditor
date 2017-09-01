@@ -50,7 +50,7 @@ export default {
   },
   mounted () {
     const vm = this
-    vm.getDir('59a378dea68bc013966da696')
+    vm.getDir(vm.$route.query.API_id)
   },
   methods: {
     // 获取目录
@@ -118,6 +118,7 @@ export default {
         inputPattern: /\D/,
         inputErrorMessage: '标题名不能有数字'
       }).then(({ value }) => {
+        vm.$set(vm.levelTwo, value, [])
         vm.$store.dispatch('article/modifyDir', { index: vm.levelOne.length, title: value })
         vm.$message({
           type: 'success',
@@ -188,7 +189,6 @@ export default {
         return this.$store.state.article.levelOne
       },
       set (value) {
-        console.log(value)
         this.$store.commit('article/UPDATE_DIRECTORY', { dir: value })
       }
     }

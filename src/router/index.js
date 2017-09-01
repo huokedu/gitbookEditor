@@ -13,7 +13,7 @@ export default new Router({
   },
   {
     path: '/repo/API_document',
-    name: 'API_document',
+    name: '项目/API文档',
     component: APIDocument
   },
   {

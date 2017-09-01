@@ -49,7 +49,7 @@ export default {
     pubBook (isSave) {
       const vm = this
       const title = vm.$refs.title.textContent
-      pubBook({id: '59a378dea68bc013966da696', title, levelOne: vm.levelOne, levelTwo: vm.levelTwo, isSave})
+      pubBook({id: vm.$route.query.API_id, title, levelOne: vm.levelOne, levelTwo: vm.levelTwo, isSave})
       .then((res) => {
         vm.$message({
           type: 'success',
