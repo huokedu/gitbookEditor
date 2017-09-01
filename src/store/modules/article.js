@@ -13,7 +13,9 @@ import {
   GET_LIST,
   CHANGE_LIST,
   ADD_LIST,
-  GET_SELECTED
+  GET_SELECTED,
+  DELETE_TAG,
+  ADD_TAG
  } from '../mutations'
 
 // initial state
@@ -73,13 +75,14 @@ const actions = {
   // 获取标签
   getTags ({commit, state}, tags) {
     if (!Array.isArray(tags)) {
-      const set = new Set(state.tags)
-      if (set.has(tags)) {
-        set.delete(tags)
-      } else {
-        set.add(tags)
-      }
-      tags = [...set]
+      const status = state.tags.some((tag, index) => {
+        if (tag._id === tags._id) {
+          commit('DELETE_TAG', index)
+          return true
+        }
+      })
+      if (!status) commit('ADD_TAG', tags)
+      return
     }
     commit('GET_TAGS', tags)
   },
@@ -127,6 +130,12 @@ const mutations = {
   },
   [GET_TAGS] (state, tags) {
     state.tags = tags
+  },
+  [DELETE_TAG] (state, index) {
+    state.tags.splice(index, 1)
+  },
+  [ADD_TAG] (state, tag) {
+    state.tags.splice(state.tags.length, 1, tag)
   },
   [RECYCLE_STATUS] (state, status) {
     state.isRecycle = status
