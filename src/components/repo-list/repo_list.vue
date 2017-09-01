@@ -13,7 +13,7 @@
       <el-input
         placeholder="搜索"
         icon="search"
-        v-model="search"
+        v-model="keyWord"
         :on-icon-click="search"
         >
       </el-input>
@@ -37,7 +37,7 @@
         >
       </el-table-column>
       <el-table-column
-        prop="status"
+        prop="statusText"
         label="状态"
         >
       </el-table-column>
@@ -74,8 +74,10 @@
           </el-button>
           <el-button
             type="text"
-            size="small">
-            下架
+            size="small"
+            @click="changeStatus(scope.row._id, scope.row.status, scope.$index)"
+            >
+            {{scope.row.status === 'online' ? '下架' : '上架'}}
           </el-button>
         </template>
       </el-table-column>
@@ -90,7 +92,7 @@
 </template>
 
 <script>
-import { getProjectList } from '../../api/projects.js'
+import { getProjectList, editProject } from '../../api/projects.js'
 export default {
   name: 'repo_list',
   mounted () {
@@ -115,21 +117,43 @@ export default {
       ],
       count: 50,
       currentPage: 1,
-      search: '',
+      keyWord: '',
       selected: ''
     }
   },
   methods: {
-    getProjectList (page) {
+    getProjectList (page, name) {
       const vm = this
-      getProjectList({page, status: vm.selected}).then(res => {
+      getProjectList({ page, status: vm.selected, name }).then(res => {
         if (res.data.status === 200) {
+          res.data.data.projects.map(data => {
+            data.statusText = data.status === 'online' ? '上架中' : '已下架'
+          })
           vm.tableData = res.data.data.projects
           vm.count = res.data.data.count
         }
       })
     },
+    // 搜索
     search () {
+      const vm = this
+      vm.getProjectList(vm.currentPage, vm.keyWord)
+    },
+    // 切换上下架功能
+    changeStatus (id, status, index) {
+      console.log(index)
+      status = status === 'online' ? 'offline' : 'online'
+      const vm = this
+      editProject({id, status}).then(res => {
+        if (res.data.status === 200) {
+          vm.$set(vm.tableData[index], 'statusText', status === 'online' ? '上架中' : '已下架')
+          vm.$set(vm.tableData[index], 'status', status)
+          vm.$message({
+            type: 'success',
+            message: status === 'online' ? '上架成功' : '下架成功'
+          })
+        }
+      })
     }
   },
   watch: {
