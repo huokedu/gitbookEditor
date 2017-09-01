@@ -56,34 +56,36 @@
         <h2>项目套餐</h2> <div class="bar"></div>
       </div>
       <div class="part">
-        <el-card class="box-card" v-for="(part, index) of parts" :key="part.name">
-          <div slot="header" class="clearfix">
-            <span class="head">{{part.name}}</span>
-            <span>接口次数： {{part.count}}次</span><br>
-            <span>销售价格： &yen; {{part.price}}</span>
-          </div>
-          <div class="handdle">
-            <span>是否试用：</span>
-            <el-switch
-              v-model="part.trial"
-              @change="checkTryStatus(index, part.trial)"
-              on-text=""
-              off-text="">
-            </el-switch>
-            <span>是否启用</span>
-            <el-switch
-              v-model="part.status"
-              on-text=""
-              off-text="">
-            </el-switch>
-            <el-button @click.native="changePart(index)">
-              编辑
-            </el-button>
-            <el-button>
-              删除
-            </el-button>
-          </div>
-        </el-card>
+        <transition-group name="el-zoom-in-center">
+          <el-card class="box-card" v-for="(part, index) of parts" :key="part.name">
+            <div slot="header" class="clearfix">
+              <span class="head">{{part.name}}</span>
+              <span>接口次数： {{part.count}}次</span><br>
+              <span>销售价格： &yen; {{part.price}}</span>
+            </div>
+            <div class="handdle">
+              <span>是否试用：</span>
+              <el-switch
+                v-model="part.trial"
+                @change="checkTryStatus(index, part.trial)"
+                on-text=""
+                off-text="">
+              </el-switch>
+              <span>是否启用</span>
+              <el-switch
+                v-model="part.status"
+                on-text=""
+                off-text="">
+              </el-switch>
+              <el-button @click="changePart(index)">
+                编辑
+              </el-button>
+              <el-button　@click="delPart(index)">
+                删除
+              </el-button>
+            </div>
+          </el-card>
+        </transition-group>
         <el-card class="box-card add" @click.native="changePart(-1)" >
           <i class="el-icon-plus"></i>
           <h3>添加套餐</h3>
@@ -128,6 +130,7 @@ export default {
       },
       parts: [
       ],
+      delId: [],
       choosePart: {}
     }
   },
@@ -229,6 +232,13 @@ export default {
         }
       })
     },
+    // 删除套餐
+    delPart (index) {
+      console.log(index)
+      const vm = this
+      vm.delId.push(vm.parts[index]._id)
+      vm.parts.splice(index, 1)
+    },
     // 编辑项目
     editProject (id) {
       const vm = this
@@ -238,7 +248,7 @@ export default {
       vm.form.id = id
       editProject(vm.form).then(res => {
         if (res.data.status === 200) {
-          if (vm.parts.length) {
+          if (vm.parts.length || vm.delId.length) {
             vm.addPart(id)
           }
         } else {
@@ -252,6 +262,13 @@ export default {
     // 添加套餐
     addPart (id) {
       const vm = this
+      // 删除套餐
+      if (vm.delId.length) {
+        vm.delId.map(delId => {
+          editPart({delId})
+        })
+      }
+      // 修改套餐
       vm.parts.map(part => {
         if (part._id) {
           part.id = part._id
@@ -268,6 +285,7 @@ export default {
         }
         part.salePrice = part.price
         part.id = id
+        // 添加套餐
         addPart(part).then(res => {
           if (res.data.status === 200) {
             if (vm.$route.path === '/repo/repo_edit') {
