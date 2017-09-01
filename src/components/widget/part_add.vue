@@ -39,7 +39,7 @@ export default {
         count: '',
         price: '',
         status: 'offline',
-        trail: false
+        trial: false
       },
       rules: {
         name: [
