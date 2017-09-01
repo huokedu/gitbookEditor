@@ -183,6 +183,15 @@ export default {
     },
     editPart (part) {
       const vm = this
+      const isDuplicate = vm.parts.some(savedPart => {
+        return savedPart.name === part.name
+      })
+      if (isDuplicate) {
+        return vm.$message({
+          type: 'warning',
+          message: '套餐名重复'
+        })
+      }
       vm.visiblePart = false
       vm.parts.push(part)
     },
