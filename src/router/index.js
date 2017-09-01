@@ -25,6 +25,11 @@ export default new Router({
     path: '/repo/repo_add',
     name: '项目/添加项目',
     component: repoAdd
+  },
+  {
+    path: '/repo/repo_edit',
+    name: '项目/编辑项目',
+    component: repoAdd
   }
   ]
 })
