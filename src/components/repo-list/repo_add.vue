@@ -5,7 +5,7 @@
         <h2>项目信息</h2> <div class="bar"></div>
       </div>
       <el-form ref="project" :rules="rules" :model="form" label-width="120px">
-        <el-form-item label="项目封面" prop="name">
+        <el-form-item label="项目封面">
           <el-upload
             class="avatar-uploader"
             action="https://jsonplaceholder.typicode.com/posts/"
@@ -174,13 +174,25 @@ export default {
     save (formName) {
       const vm = this
       vm.$refs[formName].validate((valid) => {
-        if (!valid || !vm.tags.length) return false
+        if (!valid) return false
+        if (!vm.tags.length) {
+          vm.$message({
+            type: 'warning',
+            message: '请选择至少一个标签'
+          })
+          return false
+        }
         // 判断处于什么路由
-        console.log(1)
         if (vm.$route.path === '/repo/repo_edit' && vm.$route.query.id) {
           vm.editProject(vm.$route.query.id)
         } else {
-          if (!vm.form.cover) return false
+          if (!vm.form.cover) {
+            vm.$message({
+              type: 'warning',
+              message: '请选择项目封面'
+            })
+            return false
+          }
           vm.addProject()
         }
       })
