@@ -118,12 +118,17 @@ export default {
         inputPattern: /\D/,
         inputErrorMessage: '标题名不能有数字'
       }).then(({ value }) => {
+        const dulpliate = vm.levelOne.some(dir => {
+          return dir === value
+        })
+        const message = dulpliate ? '标题重复' : '添加成功'
+        const type = dulpliate ? 'warning' : 'success'
+        vm.$message({
+          type, message
+        })
+        if (dulpliate) return vm.addDir()
         vm.$set(vm.levelTwo, value, [])
         vm.$store.dispatch('article/modifyDir', { index: vm.levelOne.length, title: value })
-        vm.$message({
-          type: 'success',
-          message: '添加成功'
-        })
       }).catch((err) => {
         console.log(err)
         vm.$message({
