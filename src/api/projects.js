@@ -52,11 +52,18 @@ function editProject ({ id, name, details, tag, serverUrl, cover, status }) {
     }
   })
 }
+// 获取项目客户端详情
+function getClientDetials (id) {
+  return Axios.get('/project/client/query', {
+    params: {id}
+  })
+}
 export {
   getProjectList,
   addProject,
   addPart,
   editPart,
   getDetails,
-  editProject
+  editProject,
+  getClientDetials
 }
