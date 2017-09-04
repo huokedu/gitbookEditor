@@ -64,7 +64,9 @@
           </el-button>
           <el-button
             type="text"
-            size="small">
+            size="small"
+            @click="$router.push({path:'/repo/repoPlatform', query: {platform: scope.row._id }})"
+            >
             客户端
           </el-button>
           <el-button
