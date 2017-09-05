@@ -49,7 +49,7 @@
             </el-upload>
           </el-form-item>
           <el-form-item　label="技术清单:">
-            <el-button>添加/编辑</el-button>
+            <el-button @click="$router.push({path: '/repo/pepo_edit/list', query:{API_id: client.List}})">添加/编辑</el-button>
           </el-form-item>
         </el-form>
       </el-tab-pane>
