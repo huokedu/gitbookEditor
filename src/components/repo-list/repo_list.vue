@@ -65,7 +65,7 @@
           <el-button
             type="text"
             size="small"
-            @click="$router.push({path:'/repo/repoPlatform', query: {platform: scope.row._id }})"
+            @click="$router.push({path:'/repo/repo_edit/repoPlatform', query: {platform: scope.row._id }})"
             >
             客户端
           </el-button>
