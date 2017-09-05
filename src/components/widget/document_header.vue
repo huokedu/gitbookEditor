@@ -2,7 +2,10 @@
   <div id="header">
     <h2 :contenteditable="editable && !isRecycle" ref="title">{{title}}</h2>
     <i v-if="editable" class="el-icon-edit" title="编辑" @click="$refs.title.focus()"  v-show="!isRecycle"></i>
-    <span v-if="pub && !isRecycle" @click="pubBook(false)">
+    <span v-if="pub && !isRecycle" @click="pubBook(false)" 
+    v-loading.fullscreen.lock="fullscreenLoading"
+    element-loading-text="拼命发布中,等等我。。。。。"
+    >
       <i class="el-icon-upload2"></i><br>
       发布
     </span>
@@ -24,6 +27,11 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'document_header',
+  data () {
+    return {
+      fullscreenLoading: false
+    }
+  },
   props: {
     preview: {
       type: Boolean,
@@ -66,8 +74,10 @@ export default {
     pubBook (isSave) {
       const vm = this
       const title = vm.$refs.title.textContent
+      vm.fullscreenLoading = true
       pubBook({id: vm.id, title, levelOne: vm.levelOne, levelTwo: vm.levelTwo, isSave})
       .then((res) => {
+        vm.fullscreenLoading = false
         vm.$message({
           type: 'success',
           message: res.data.message
