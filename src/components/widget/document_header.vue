@@ -19,6 +19,7 @@
 
 <script>
 import { pubBook } from '../../api/articles.js'
+import checkPub from '../../api/pub.js'
 import { mapState } from 'vuex'
 
 export default {
@@ -39,17 +40,33 @@ export default {
   },
   methods: {
     view () {
-      console.log('fasdf')
-      window.open('http://192.168.1.98:8808/pub/599bd236fa367e6cf141118f')
+      const vm = this
+      checkPub(vm.id).then(res => {
+        if (res.status === 200) {
+          window.open(`http://192.168.1.98:8808/pub/${vm.id}`)
+        } else {
+          vm.$message({
+            type: 'warning',
+            message: '文档尚未发布，请先发布文档'
+          })
+        }
+      })
+      .catch(e => {
+        console.log(e)
+        vm.$message({
+          type: 'warning',
+          message: '文档尚未发布，请先发布文档'
+        })
+      })
     },
     saveContent () {
-      document.querySelector('.fa-floppy-o').click()
+      if (document.querySelector('.fa-floppy-o')) document.querySelector('.fa-floppy-o').click()
       this.pubBook(true)
     },
     pubBook (isSave) {
       const vm = this
       const title = vm.$refs.title.textContent
-      pubBook({id: vm.$route.query.API_id, title, levelOne: vm.levelOne, levelTwo: vm.levelTwo, isSave})
+      pubBook({id: vm.id, title, levelOne: vm.levelOne, levelTwo: vm.levelTwo, isSave})
       .then((res) => {
         vm.$message({
           type: 'success',
@@ -73,7 +90,10 @@ export default {
     },
     ...mapState('article', [
       'levelOne', 'levelTwo', 'isRecycle'
-    ])
+    ]),
+    id () {
+      return this.$route.query.API_id
+    }
   }
 }
 </script>
