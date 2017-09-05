@@ -18,7 +18,7 @@
       <el-button @click="addArticle" v-if="!isRecycle">添加文章</el-button>
       <el-button @click="getArticles" v-if="isRecycle === 'API'">返回API</el-button> 
     </div>
-    <draggable class="article" element="div" v-model="list" :options="dragOptions" > 
+    <draggable class="article" element="div" v-model="list" :options="dragOptions" >
       <transition-group type="transition" name="el-fade-in">
         <li class="col" v-for="(col, index) of list" :class="{selected: selected[index]}" :key="col._id" @click="makeSelected(index, col)"> 
           <span :title="col.title">

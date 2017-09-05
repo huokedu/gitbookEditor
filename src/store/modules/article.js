@@ -126,7 +126,7 @@ const mutations = {
     state.sort = id
   },
   [GET_APITITLE] (state, title) {
-    state.docTitle = title
+    state.APITitle = title
   },
   [GET_TAGS] (state, tags) {
     state.tags = tags
