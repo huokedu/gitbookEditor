@@ -6,6 +6,7 @@ import repoList from '../components/repo-list/repo_list.vue'
 import repoAdd from '../components/repo-list/repo_add.vue'
 import repoPlatform from '../components/repo-list/repo_platform.vue'
 import techList from '../components/repo-list/tech_list.vue'
+import repoTag from '../components/repo-list/repo_tag.vue'
 Vue.use(Router)
 export default new Router({
   routes: [{
@@ -42,6 +43,11 @@ export default new Router({
     name: '项目/编辑项目/客户端/技术清单',
     path: '/repo/pepo_edit/list',
     component: techList
+  },
+  {
+    name: '项目/标签',
+    path: '/repo/tag',
+    component: repoTag
   }
   ]
 })
