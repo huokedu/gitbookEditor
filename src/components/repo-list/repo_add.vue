@@ -263,6 +263,10 @@ export default {
           if (vm.parts.length || vm.delId.length) {
             vm.addPart(id)
           }
+          vm.$message({
+            type: 'success',
+            message: res.data.message
+          })
         } else {
           vm.$message({
             type: 'error',

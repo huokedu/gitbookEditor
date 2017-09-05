@@ -20,9 +20,10 @@
           </el-form-item>
           <el-form-item label="项目展示:">
             <el-upload
-              action="https://jsonplaceholder.typicode.com/posts/"
+              action="https://11"
               list-type="picture-card"
               :auto-upload= "false"
+              :multiple="true"
               :file-list="client.show"
               :on-change="saveFileList"
               :on-remove="saveDel"              
@@ -127,6 +128,7 @@ export default {
     // 保存封面
     beforeAvatarUpload (file) {
       const vm = this
+      console.log(file)
       vm.client.file = file.raw
       vm.client.cover = URL.createObjectURL(file.raw)
     },
@@ -135,9 +137,10 @@ export default {
       this.client.show = arguments[1]
     },
     // 保存删除文件
-    saveDel (file) {
-      if (file.name) return
+    saveDel (file, fileList) {
       const vm = this
+      vm.client.show = fileList
+      if (file.name) return
       vm.delShow.push(file.url)
     },
     // 保存UI组件
@@ -178,7 +181,10 @@ export default {
       const ui = vm.UIfile.raw
       const modelUrl = vm.client.link.model
       editClient({id, Cover, show, ui, modelUrl, delShow}).then(res => {
-        console.log(res.data)
+        vm.$message({
+          type: 'success',
+          message: res.data.message
+        })
       })
     }
   }
