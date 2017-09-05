@@ -4,6 +4,7 @@ import repoDocument from '../components/repo-list/repo_document.vue'
 import APIDocument from '../components/repo-list/API_document.vue'
 import repoList from '../components/repo-list/repo_list.vue'
 import repoAdd from '../components/repo-list/repo_add.vue'
+import repoPlatform from '../components/repo-list/repo_platform.vue'
 Vue.use(Router)
 export default new Router({
   routes: [{
@@ -30,6 +31,11 @@ export default new Router({
     path: '/repo/repo_edit',
     name: '项目/编辑项目',
     component: repoAdd
+  },
+  {
+    name: '项目/编辑项目/客户端',
+    path: '/repo/repoPlatform',
+    component: repoPlatform
   }
   ]
 })

@@ -58,6 +58,28 @@ function getClientDetials (id) {
     params: {id}
   })
 }
+// 修改客户端信息
+function editClient ({
+  id, name, list, Cover, show, ui, modelUrl, delShow
+}) {
+  const formData = new FormData()
+  formData.append('id', id)
+  if (list) formData.append('list', list)
+  if (Cover) formData.append('Cover', Cover)
+  if (show) {
+    show.map(pic => {
+      formData.append('show', pic)
+    })
+  }
+  if (ui) formData.append('ui', ui)
+  if (modelUrl) formData.append('modelUrl', modelUrl)
+  if (delShow) formData.append('delShow', JSON.stringify(delShow))
+  return Axios.post('/project/client/edit', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
 export {
   getProjectList,
   addProject,
@@ -65,5 +87,6 @@ export {
   editPart,
   getDetails,
   editProject,
-  getClientDetials
+  getClientDetials,
+  editClient
 }
