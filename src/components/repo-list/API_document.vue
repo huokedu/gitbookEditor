@@ -18,8 +18,6 @@ import dragList from '../widget/dragable_list'
 import search from '../widget/document_search'
 import mkHeader from '../widget/markdown_header'
 
-import draggable from 'vuedraggable'
-
 export default {
   name: 'repo_document',
   components: {
@@ -27,8 +25,7 @@ export default {
     docHeader,
     dragList,
     search,
-    mkHeader,
-    draggable
+    mkHeader
   }
 }
 </script>
