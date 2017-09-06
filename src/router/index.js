@@ -1,20 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import repoDocument from '../components/repo-list/repo_document.vue'
 import APIDocument from '../components/repo-list/API_document.vue'
 import repoList from '../components/repo-list/repo_list.vue'
 import repoAdd from '../components/repo-list/repo_add.vue'
 import repoPlatform from '../components/repo-list/repo_platform.vue'
 import techList from '../components/repo-list/tech_list.vue'
 import repoTag from '../components/repo-list/repo_tag.vue'
+import repoDoc from '../components/tech-list/repo_document.vue'
 Vue.use(Router)
 export default new Router({
   routes: [{
-    path: '/repo/repo_document',
-    name: 'repo_document',
-    component: repoDocument
-  },
-  {
     path: '/repo/API_document',
     name: '项目/API文档',
     component: APIDocument
@@ -48,6 +43,11 @@ export default new Router({
     name: '项目/标签',
     path: '/repo/tag',
     component: repoTag
+  },
+  {
+    name: '技术文档/添加文档',
+    path: '/tech_list/add',
+    component: repoDoc
   }
   ]
 })

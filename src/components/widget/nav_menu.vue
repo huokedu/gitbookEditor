@@ -23,8 +23,8 @@
       <i class="el-icon-message"></i>
       <span slot="title">技术文档</span>
     </template>
-    <el-menu-item index="3-1">文档列表</el-menu-item>
-    <el-menu-item index="3-2">添加文档</el-menu-item>
+    <el-menu-item index="/tech_list/list">文档列表</el-menu-item>
+    <el-menu-item index="/tech_list/add">添加文档</el-menu-item>
   </el-submenu>
 
   <el-menu-item index="4">
