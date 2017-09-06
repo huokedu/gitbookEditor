@@ -56,7 +56,10 @@ export default {
     save (content) {
       const vm = this
       const title = document.querySelector('#mkTitle').textContent
-      saveContent({ id: vm.id, content, pics: vm.img_file, title })
+      const tags = vm.tags.map(tag => {
+        return tag._id
+      })
+      saveContent({ id: vm.id, content, pics: vm.img_file, title, tags })
       .then((res) => {
         if (res.data.status === 200) {
           vm.$message({
@@ -119,6 +122,9 @@ export default {
     },
     isRecycle () {
       return this.$store.state.article.isRecycle
+    },
+    tags () {
+      return this.$store.state.article.tags
     }
   },
   watch: {

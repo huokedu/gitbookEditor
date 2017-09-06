@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { getTags, saveContent } from '../../api/articles.js'
+import { getTags } from '../../api/articles.js'
 export default {
   name: 'tag_select_box',
   props: ['label'],
@@ -56,16 +56,6 @@ export default {
       vm.tags[name].splice(index, 1, tag)
       vm.tagTypes.splice(vm.tagTypes.length, 1)
       vm.$store.dispatch('article/getTags', {name: tag.name, _id: tag.id})
-      if (vm.label === 'project') return
-      vm.saveContent()
-    },
-    saveContent () {
-      const vm = this
-      const id = vm.$store.state.article.article._id
-      const tags = vm.$store.state.article.tags
-      saveContent({id, tags}).then(res => {
-        console.log(res.data)
-      })
     }
   }
 }

@@ -69,6 +69,7 @@ export default {
     },
     saveContent () {
       if (document.querySelector('.fa-floppy-o')) document.querySelector('.fa-floppy-o').click()
+      if (this.$route.path === '/tech_list/add') return
       this.pubBook(true)
     },
     pubBook (isSave) {
