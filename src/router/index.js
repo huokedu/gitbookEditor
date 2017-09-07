@@ -7,6 +7,7 @@ import repoPlatform from '../components/repo-list/repo_platform.vue'
 import techList from '../components/repo-list/tech_list.vue'
 import repoTag from '../components/repo-list/repo_tag.vue'
 import repoDoc from '../components/tech-list/repo_document.vue'
+import docList from '../components/tech-list/doc_list.vue'
 Vue.use(Router)
 export default new Router({
   routes: [{
@@ -48,6 +49,16 @@ export default new Router({
     name: '技术文档/添加文档',
     path: '/tech_list/add',
     component: repoDoc
+  },
+  {
+    name: '技术文档/编辑文档',
+    path: '/tech_list/edit',
+    component: repoDoc
+  },
+  {
+    name: '技术文档/文档列表',
+    path: '/tech_list/list',
+    component: docList
   }
   ]
 })

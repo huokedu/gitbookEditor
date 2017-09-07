@@ -29,30 +29,36 @@
       <el-table-column
         prop="name"
         label="项目"
+        header-align="center"      
         width="150">
       </el-table-column>
       <el-table-column
         prop="server.host"
+        header-align="center"
         label="服务器地址"
         >
       </el-table-column>
       <el-table-column
         prop="statusText"
+        header-align="center"
         label="状态"
         >
       </el-table-column>
       <el-table-column
         prop="part"
+        header-align="center"
         label="价格"
         >
       </el-table-column>
       <el-table-column
         prop="count"
+        header-align="center"
         label="总销量"
         >
       </el-table-column>    
       <el-table-column
         label="操作"
+        header-align="center"
         width="200">
         <template scope="scope">
           <el-button
@@ -169,7 +175,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #repoList {
   width: 1200px;
   margin: 40px auto;
@@ -179,9 +185,6 @@ export default {
   padding: 20px;
   font-size: 0;
   text-align: right;
-}
-#repoList .cell {
-  text-align: center;
 }
 #repoList .el-pagination {
   margin: 30px;

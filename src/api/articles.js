@@ -1,12 +1,13 @@
 import Axios from './index'
 // 获取文档列表
-function getAPIDoc ({label = 'API', page, title, sort, order}) {
+function getAPIDoc ({label = 'API', page, title, sort, order, tags}) {
   return Axios.get('/article/list', {
     params: {
       label,
       page,
       title,
       sort,
+      tags,
       order: order || { create_time: -1 },
       limit: 10
     }
