@@ -8,6 +8,8 @@ import techList from '../components/repo-list/tech_list.vue'
 import repoTag from '../components/repo-list/repo_tag.vue'
 import repoDoc from '../components/tech-list/repo_document.vue'
 import docList from '../components/tech-list/doc_list.vue'
+
+import orderList from '../components/order/order_list.vue'
 Vue.use(Router)
 export default new Router({
   routes: [{
@@ -59,6 +61,11 @@ export default new Router({
     name: '技术文档/文档列表',
     path: '/tech_list/list',
     component: docList
+  },
+  {
+    name: '订单/订单列表',
+    path: '/order/order_list',
+    component: orderList
   }
   ]
 })

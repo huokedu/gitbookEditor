@@ -27,7 +27,7 @@
     <el-menu-item index="/tech_list/add">添加文档</el-menu-item>
   </el-submenu>
 
-  <el-menu-item index="4">
+  <el-menu-item index="/order/order_list">
     <i class="el-icon-message"></i>
     <span slot="title">订单</span>
   </el-menu-item>
