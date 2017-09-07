@@ -30,7 +30,8 @@ export default {
   },
   mounted () {
     const vm = this
-    vm.getSort()
+    vm.selected.length = vm.collection.length
+    if (!vm.$route.query._id) vm.getSort()
   },
   methods: {
     getSort () {
@@ -39,8 +40,18 @@ export default {
       getSort().then(res => {
         if (res.data.status === 200) {
           vm.collection = res.data.data.sorts
-          vm.selected.length = vm.collection.length
-          vm.makeSelected(0, res.data.data.sorts[0]._id)
+          if (vm.$route.query._id) {
+            vm.collection.some((sort, index) => {
+              // 返回第一个分类id相等的分类
+              if (sort._id === vm.article.sort) {
+                console.log(vm.article)
+                vm.makeSelected(index, sort._id)
+                return true
+              }
+            })
+          } else {
+            vm.makeSelected(0, vm.collection[0]._id)
+          }
         }
       })
     },
@@ -56,7 +67,7 @@ export default {
         .then(res => {
           if (res.data.status === 200) {
             vm.collection.splice(index, 1)
-            vm.makeSelected(0, vm.collection[0]._id)
+            vm.makeSelected(0, res.data.data.sorts[0]._id)
           }
           vm.$message({
             type: 'success',
@@ -73,8 +84,10 @@ export default {
     makeSelected (index, id) {
       // 选中状态
       let vm = this
+      console.log(index, id)
       vm.$store.dispatch('article/getStatus', false)
-      vm.selected.splice(vm.selectedIndex, 1, false)
+      vm.selected = []
+      vm.selected.length = vm.collection.length
       vm.selectedIndex = index
       vm.selected.splice(index, 1, true)
       vm.$store.dispatch('article/getSort', id)
@@ -113,7 +126,19 @@ export default {
   computed: {
     isRecycle () {
       return this.$store.state.article.status
+    },
+    article () {
+      return this.$store.state.article.article
     }
+  },
+  watch: {
+    article (article, val) {
+      this.getSort()
+    }
+  },
+  beforeDestroy () {
+    const vm = this
+    vm.$store.dispatch('article/getSort', '')
   }
 }
 </script>
@@ -166,7 +191,7 @@ export default {
 #listCol .recycle {
   position: fixed;
   bottom: 0;
-  left: 0;
+  left: 40px;
   width: 180px;
   height: 40px;
   line-height: 40px;

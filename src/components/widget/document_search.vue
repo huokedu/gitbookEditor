@@ -152,7 +152,7 @@ export default {
       order[index] = vm.order
       vm.order = vm.order === 1 ? -1 : 1
       if (!vm.isRecycle) {
-        getAPIDoc({page: 1, title: vm.keyword, order}).then((res) => {
+        getAPIDoc({page: 1, title: vm.keyword, order, label: vm.label, sort: vm.sort}).then((res) => {
           if (res.data.status === 200) vm.$store.commit('article/GET_LIST', res.data.data)
         })
       } else {
@@ -185,9 +185,24 @@ export default {
     },
     sort (sort) {
       const vm = this
+      if (sort === '') return
       getAPIDoc({page: 1, label: vm.label, sort}).then((res) => {
-        if (res.data.status === 200) vm.$store.commit('article/GET_LIST', res.data.data)
-        vm.makeSelected(0, res.data.data[0])
+        if (res.data.status === 200) {
+          vm.$store.commit('article/GET_LIST', res.data.data)
+          // 判断编辑文章时选中状态
+          if (vm.$route.query._id) {
+            vm.selected.length = vm.list.length
+            res.data.data.map((article, index) => {
+              if (article._id === vm.$route.query._id) {
+                console.log(article._id, vm.$route.query._id)
+                console.log(index, vm.selected)
+                vm.selected.splice(index, 1, true)
+              }
+            })
+          } else {
+            vm.makeSelected(0, res.data.data[0])
+          }
+        }
       })
     },
     isRecycle (status) {

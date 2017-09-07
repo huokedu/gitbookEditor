@@ -40,6 +40,12 @@ export default {
       }
     }
   },
+  mounted () {
+    const vm = this
+    console.log(vm.$route.query._id)
+    if (vm.$route.query._id) return vm.getContent(vm.$route.query._id)
+    vm.getContent(vm.id)
+  },
   methods: {
     // 获取文章详情
     getContent (id) {
@@ -48,6 +54,7 @@ export default {
         if (res.data.status === 200) {
           vm.value = res.data.data.article.content
           vm.$store.dispatch('article/getTags', res.data.data.article.tags)
+          if (vm.$route.query._id) vm.$store.dispatch('article/changeSelected', res.data.data.article)
         }
       }).catch((err) => {
         console.log(err)
