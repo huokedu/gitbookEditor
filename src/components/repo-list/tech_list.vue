@@ -34,7 +34,7 @@
             {{col.author ? col.author.username : ''}}
           </span>
           <span>
-            {{col.update_time}}
+            {{formatter(col.update_time)}}
           </span>
         </li> 
       </draggable>
@@ -55,6 +55,8 @@ import docHeader from '../widget/document_header'
 import dragList from '../widget/dragable_list'
 import draggable from 'vuedraggable'
 import { getAPIDoc, getSort } from '../../api/articles.js'
+import { formatTime } from '../../utils/index.js'
+
 export default {
   title: 'tech_list',
   data () {
@@ -99,6 +101,10 @@ export default {
     },
     search () {
       this.getDoc(1)
+    },
+    // 格式化时间
+    formatter (time) {
+      return formatTime(new Date(time).getTime() / 1000)
     }
   },
   computed: {

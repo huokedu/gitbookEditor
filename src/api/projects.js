@@ -80,6 +80,18 @@ function editClient ({
     }
   })
 }
+// 添加标签分类
+function addTags ({type, name}) {
+  return Axios.post('/project/tag/add', {
+    type,
+    name
+  })
+}
+function delTags (id) {
+  return Axios.post('/project/tag/del', {
+    id
+  })
+}
 export {
   getProjectList,
   addProject,
@@ -88,5 +100,7 @@ export {
   getDetails,
   editProject,
   getClientDetials,
-  editClient
+  editClient,
+  addTags,
+  delTags
 }
