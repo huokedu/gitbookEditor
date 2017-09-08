@@ -92,6 +92,18 @@ function delTags (id) {
     id
   })
 }
+function getOrderList ({page, orderId, username, isTrial}) {
+  console.log(page)
+  return Axios.get('/order/query', {
+    params: {
+      page,
+      orderId,
+      username,
+      isTrial,
+      limit: 10
+    }
+  })
+}
 export {
   getProjectList,
   addProject,
@@ -102,5 +114,6 @@ export {
   getClientDetials,
   editClient,
   addTags,
-  delTags
+  delTags,
+  getOrderList
 }
