@@ -11,6 +11,8 @@ import docList from '../components/tech-list/doc_list.vue'
 
 import orderList from '../components/order/order_list.vue'
 import orderDetails from '../components/order/order_details.vue'
+
+import commentList from '../components/comment/comment_list.vue'
 Vue.use(Router)
 export default new Router({
   routes: [{
@@ -72,6 +74,11 @@ export default new Router({
     name: '订单/订单详情/订单详情',
     path: '/order/order_details',
     component: orderDetails
+  },
+  {
+    name: '评论/评论列表',
+    path: '/comment/comment_list',
+    component: commentList
   }
   ]
 })

@@ -32,7 +32,7 @@
     <span slot="title">订单</span>
   </el-menu-item>
 
-  <el-menu-item index="5">
+  <el-menu-item index="/comment/comment_list">
     <i class="el-icon-message"></i>
     <span slot="title">评论</span>
   </el-menu-item>
