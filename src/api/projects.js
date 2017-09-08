@@ -87,13 +87,14 @@ function addTags ({type, name}) {
     name
   })
 }
+// 删除标签
 function delTags (id) {
   return Axios.post('/project/tag/del', {
     id
   })
 }
+// 获取订单列表
 function getOrderList ({page, orderId, username, isTrial}) {
-  console.log(page)
   return Axios.get('/order/query', {
     params: {
       page,
@@ -101,6 +102,14 @@ function getOrderList ({page, orderId, username, isTrial}) {
       username,
       isTrial,
       limit: 10
+    }
+  })
+}
+// 获取订单详情
+function getOrderDetails ({id}) {
+  return Axios.get('/order/details', {
+    params: {
+      id
     }
   })
 }
@@ -115,5 +124,6 @@ export {
   editClient,
   addTags,
   delTags,
-  getOrderList
+  getOrderList,
+  getOrderDetails
 }

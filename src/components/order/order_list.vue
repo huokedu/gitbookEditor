@@ -89,7 +89,7 @@
           width="120">
           <template scope="scope">
             <el-button
-              @click.native.prevent="deleteRow(scope.$index, tableData4)"
+              @click.native.prevent="$router.push({path: '/order/order_details', query: {_id: scope.row._id}})"
               type="text"
               size="small">
               查看详情
@@ -155,7 +155,7 @@ export default {
     // 搜索
     // 格式化购买时间
     formatTime (row) {
-      return formatTime(row.update_time / 1000)
+      return formatTime(row.update_time / 1000).split('日')[0] + '日'
     },
     // 格式化订单类型
     formatOrderType (row) {
