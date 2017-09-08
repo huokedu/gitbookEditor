@@ -10,7 +10,7 @@
         <span class="title">下单时间：</span><span class="content">{{formatTime[0]}}&nbsp;&nbsp;&nbsp;{{formatTime[1]}}</span>
       </div>
       <div class="line">
-        <span class="title">订单类型：</span><span class="content">{{details.content.trial ? '试用订单' : '正式订单'}}</span>
+        <span class="title">订单类型：</span><span class="content">{{orderType}}</span>
       </div>
       <div class="line">
         <span class="title">支付方式：</span><span class="content">{{details.payment === 'wechat' ? '微信支付' : '支付宝支付'}}</span>
@@ -21,10 +21,10 @@
     <h2>用户信息</h2> <div class="bar"></div>
     <div class="order-content">
       <div class="line">
-        <span class="title">会员姓名：</span><span class="content">{{details.user.name}}</span>
+        <span class="title">会员姓名：</span><span class="content">{{details.user ? details.user.name : ''}}</span>
       </div>
       <div class="line">
-        <span class="title">手机号：</span><span class="content">{{details.user.phone}}</span>
+        <span class="title">手机号：</span><span class="content">{{details.user ? details.user.phone : ''}}</span>
       </div>
     </div>
   </div>
@@ -42,10 +42,10 @@
         </thead>
         <tbody>
           <tr>
-            <td>{{details.project.name}}</td>
-            <td>{{details.content.name}}</td>
+            <td>{{details.project ? details.project.name : ''}}</td>
+            <td>{{details.content ? details.content.name : ''}}</td>
             <td>{{details.price}}</td>
-            <td>{{details.content.count}}</td>
+            <td>{{details.content ? details.content.count : ''}}</td>
           </tr>
         </tbody>
       </table>
@@ -76,6 +76,10 @@ export default {
     formatTime () {
       const time = formatTime(this.details.update_time / 1000).split('日')
       return [time[0] + '日', time[1]]
+    },
+    orderType () {
+      if (this.details.content) return this.details.content.trial ? '试用订单' : '正式订单'
+      return ''
     }
   }
 }
