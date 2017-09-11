@@ -6,10 +6,11 @@
         placeholder="来呀"
         v-model="orderId"
         @keyup.enter.native="getOrderList(1)"
+        :on-icon-click="getOrderList(1)"
         icon="search"
         >
       </el-input>
-      <span>评论状态：</span>
+      <span>订单类型：</span>
       <el-select 
       v-model="value"
       @change="fuzzySearch"      
@@ -25,6 +26,7 @@
       <el-input
         placeholder="来呀"
         @keyup.enter.native="fuzzySearch"
+        :on-icon-click="fuzzySearch"
         v-model="username"
         icon="search"
         >
