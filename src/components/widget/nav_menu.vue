@@ -37,7 +37,7 @@
     <span slot="title">评论</span>
   </el-menu-item>
 
-  <el-menu-item index="6">
+  <el-menu-item index="/member/member_list">
       <i class="el-icon-message"></i>
       <span slot="title">会员</span>
   </el-menu-item>

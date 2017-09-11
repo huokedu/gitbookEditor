@@ -13,6 +13,8 @@ import orderList from '../components/order/order_list.vue'
 import orderDetails from '../components/order/order_details.vue'
 
 import commentList from '../components/comment/comment_list.vue'
+
+import memberList from '../components/member/member_list.vue'
 Vue.use(Router)
 export default new Router({
   routes: [{
@@ -79,6 +81,11 @@ export default new Router({
     name: '评论/评论列表',
     path: '/comment/comment_list',
     component: commentList
+  },
+  {
+    name: '会员/会员列表',
+    path: '/member/member_list',
+    component: memberList
   }
   ]
 })
