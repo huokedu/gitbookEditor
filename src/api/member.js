@@ -11,7 +11,7 @@ function getMemberList ({name, page}) {
 }
 // 获取用户项目信息
 function getUserProject (id) {
-  return Axios.get('/member/member/project', {
+  return Axios.get('/member/project', {
     params: {
       id
     }
@@ -25,8 +25,20 @@ function setKeyStatus ({userId, proId, status}) {
     status
   })
 }
+// 获取各个路由调用情况
+function getRouters ({id, page, router}) {
+  return Axios.get('/member/router/query', {
+    params: {
+      id,
+      page,
+      limit: 10,
+      router
+    }
+  })
+}
 export {
   getMemberList,
   getUserProject,
-  setKeyStatus
+  setKeyStatus,
+  getRouters
 }
