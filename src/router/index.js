@@ -15,6 +15,8 @@ import orderDetails from '../components/order/order_details.vue'
 import commentList from '../components/comment/comment_list.vue'
 
 import memberList from '../components/member/member_list.vue'
+import memberAPI from '../components/member/member_api.vue'
+import memberProject from '../components/member/member_project.vue'
 Vue.use(Router)
 export default new Router({
   routes: [{
@@ -86,6 +88,16 @@ export default new Router({
     name: '会员/会员列表',
     path: '/member/member_list',
     component: memberList
+  },
+  {
+    name: '会员/会员列表/查看项目',
+    path: '/member/member_api',
+    component: memberAPI
+  },
+  {
+    name: '会员/会员列表/查看项目/查看接口',
+    path: '/member/member_project',
+    component: memberProject
   }
   ]
 })
