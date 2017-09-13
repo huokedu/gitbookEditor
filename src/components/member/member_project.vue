@@ -82,7 +82,7 @@ export default {
   methods: {
     getRouters (page) {
       const vm = this
-      getRouters({id: vm.$route.query.userId, page, router: vm.value}).then(res => {
+      getRouters({id: vm.$route.query.userId, page, router: vm.value, proId: vm.$route.query.proId}).then(res => {
         if (res.data.status === 200) {
           vm.list = res.data.data.routers
           vm.count = res.data.data.count
