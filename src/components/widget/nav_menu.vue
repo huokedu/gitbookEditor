@@ -52,10 +52,10 @@
       <i class="el-icon-d-arrow-left"></i>
       <span slot="title">经营数据</span>
     </template>
-    <el-menu-item index="8-1">收入统计</el-menu-item>
-    <el-menu-item index="8-2">接口调用统计</el-menu-item>
-    <el-menu-item index="8-3">IP统计</el-menu-item>
-    <el-menu-item index="8-4">调用日志</el-menu-item>
+    <el-menu-item index="/statistics/incoming_statistics">收入统计</el-menu-item>
+    <el-menu-item index="/statistics/api_statistics">接口调用统计</el-menu-item>
+    <el-menu-item index="/statistics/ip_statistics">IP统计</el-menu-item>
+    <!-- <el-menu-item index="8-4">调用日志</el-menu-item> -->
   </el-submenu>
   
   <el-submenu index="9">
