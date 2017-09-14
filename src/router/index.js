@@ -106,17 +106,17 @@ export default new Router({
   {
     name: '统计/收入统计',
     path: '/statistics/incoming_statistics',
-    componet: incomingStatistics
+    component: incomingStatistics
   },
   {
     name: '统计/IP统计',
     path: '/statistics/ip_statistics',
-    componet: ipStatistics
+    component: ipStatistics
   },
   {
     name: '统计/接口统计',
     path: '/statistics/api_statistics',
-    componet: apiStatistics
+    component: apiStatistics
   }
   ]
 })
