@@ -6,7 +6,7 @@
         placeholder="来呀"
         v-model="orderId"
         @keyup.enter.native="getOrderList(1)"
-        :on-icon-click="getOrderList(1)"
+        :on-icon-click="() => {getOrderList(1)}"
         icon="search"
         >
       </el-input>
@@ -147,6 +147,7 @@ export default {
   methods: {
     getOrderList (page) {
       const vm = this
+      console.log(page)
       getOrderList({page, username: vm.username, orderId: vm.orderId, isTrial: vm.value}).then(res => {
         if (res.data.status === 200) {
           vm.count = res.data.data.count
