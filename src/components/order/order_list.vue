@@ -158,7 +158,7 @@ export default {
     // 搜索
     // 格式化购买时间
     formatTime (row) {
-      return formatTime(row.update_time / 1000).split('日')[0] + '日'
+      return formatTime(row.update_time / 1000, '{y}-{m}-{d}')
     },
     // 格式化订单类型
     formatOrderType (row) {

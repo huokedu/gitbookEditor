@@ -26,14 +26,17 @@ function setKeyStatus ({userId, proId, status}) {
   })
 }
 // 获取各个路由调用情况
-function getRouters ({id, page, router, proId}) {
+function getRouters ({id, page, router, proId, proName, start, end}) {
   return Axios.get('/member/router/query', {
     params: {
       id,
       proId,
       page,
       limit: 10,
-      router
+      router,
+      proName,
+      start,
+      end
     }
   })
 }
