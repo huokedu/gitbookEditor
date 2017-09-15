@@ -21,10 +21,17 @@ function delUser (id) {
     id
   })
 }
+// 添加影子评论
+function addComment ({uid, projId, content}) {
+  return Axios.post('/shadow/generate/comment', {
+    uid, projId, content
+  })
+}
 
 export {
   generateName,
   generateAvatar,
   generateUser,
-  delUser
+  delUser,
+  addComment
 }
