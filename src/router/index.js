@@ -21,6 +21,7 @@ import memberProject from '../components/member/member_project.vue'
 import incomingStatistics from '../components/statistics/incoming_statistics.vue'
 import ipStatistics from '../components/statistics/ip_statistics.vue'
 import apiStatistics from '../components/statistics/api_statistics.vue'
+import ipDetails from '../components/statistics/ip_details.vue'
 Vue.use(Router)
 export default new Router({
   routes: [{
@@ -117,6 +118,11 @@ export default new Router({
     name: '统计/接口统计',
     path: '/statistics/api_statistics',
     component: apiStatistics
+  },
+  {
+    name: '统计/ip统计/用户详情',
+    path: '/statistics/ip_statistics/details',
+    component: ipDetails
   }
   ]
 })
