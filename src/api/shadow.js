@@ -22,9 +22,9 @@ function delUser (id) {
   })
 }
 // 添加影子评论
-function addComment ({uid, projId, content}) {
+function addComment ({uid, projId, content, isBuy}) {
   return Axios.post('/shadow/generate/comment', {
-    uid, projId, content
+    uid, projId, content, isBuy
   })
 }
 

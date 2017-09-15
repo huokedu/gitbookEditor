@@ -24,6 +24,11 @@
       <el-button>添加用户</el-button>
     </div>
     <div class="line">
+      <span class="title">是否购买：</span>
+      <el-radio class="radio" v-model="radio" :label="true">购买</el-radio>
+      <el-radio class="radio" v-model="radio" :label="false">未购买</el-radio>
+    </div>
+    <div class="line">
       <span class="title">评论内容：</span>
       <el-input
         type="textarea"
@@ -49,6 +54,7 @@ export default {
     return {
       proList: [],
       userList: [],
+      radio: false,
       proId: '',
       userId: '',
       textarea: ''
@@ -84,7 +90,7 @@ export default {
           message: '您未选择用户、项目或评论内容不全'
         })
       }
-      addComment({uid: vm.userId, projId: vm.proId, content: vm.textarea}).then(res => {
+      addComment({uid: vm.userId, projId: vm.proId, content: vm.textarea, isBuy: vm.radio}).then(res => {
         if (res.data.status === 200) {
           vm.$message({
             type: 'success',
@@ -120,5 +126,8 @@ export default {
 #addComment .el-textarea {
   width: 60%;
   padding: 0 30px;
+}
+#addComment .el-radio {
+  padding: 0 40px;
 }
 </style>
