@@ -63,8 +63,8 @@
       <i class="el-icon-message"></i>
       <span slot="title">影子</span>
     </template>
-    <el-menu-item index="9-1">用户列表</el-menu-item>
-    <el-menu-item index="9-2">评论列表</el-menu-item>
+    <el-menu-item index="/shadow/member_list">用户列表</el-menu-item>
+    <el-menu-item index="/shadow/comment_list">评论列表</el-menu-item>
   </el-submenu>
   </el-menu>
 </div>

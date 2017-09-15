@@ -1,11 +1,12 @@
 import Axios from './index'
 // 获取评论列表
-function getMemberList ({name, page}) {
+function getMemberList ({name, page, shadow}) {
   return Axios.get('/member/list', {
     params: {
       name,
       limit: 10,
-      page
+      page,
+      shadow
     }
   })
 }

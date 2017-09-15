@@ -22,6 +22,9 @@ import incomingStatistics from '../components/statistics/incoming_statistics.vue
 import ipStatistics from '../components/statistics/ip_statistics.vue'
 import apiStatistics from '../components/statistics/api_statistics.vue'
 import ipDetails from '../components/statistics/ip_details.vue'
+
+import shadowMemberList from '../components/shadow/shadow_member_list.vue'
+import shadowCommentList from '../components/shadow/shadow_comment_list.vue'
 Vue.use(Router)
 export default new Router({
   routes: [{
@@ -123,6 +126,16 @@ export default new Router({
     name: '统计/ip统计/用户详情',
     path: '/statistics/ip_statistics/details',
     component: ipDetails
+  },
+  {
+    name: '影子/用户列表',
+    path: '/shadow/member_list',
+    component: shadowMemberList
+  },
+  {
+    name: '影子/评论列表',
+    path: '/shadow/comment_list',
+    component: shadowCommentList
   }
   ]
 })
