@@ -1,11 +1,12 @@
 import Axios from './index'
 // 获取评论列表
-function getComments ({page, state, project}) {
+function getComments ({page, state, project, user}) {
   return Axios.get('/project/comment/query', {
     params: {
       page,
       state,
       project,
+      user,
       limit: 10
     }
   })
