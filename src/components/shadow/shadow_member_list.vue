@@ -45,7 +45,7 @@
           >
         </el-table-column>
         <el-table-column
-          property="create_time"
+          property="update_time"
           header-align="center"
           :formatter="formatTime"
           label="注册时间">
@@ -121,10 +121,11 @@ export default {
       })
     },
     // 更新列表
-    updateMemberList () {
+    updateMemberList (user) {
       const vm = this
       vm.show = false
-      vm.getMemberList(1)
+      vm.list.pop()
+      vm.list.unshift(user)
     },
     fuzzySearch () {
       this.getMemberList(1)

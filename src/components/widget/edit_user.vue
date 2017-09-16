@@ -94,7 +94,7 @@ export default {
       generateUser({name: vm.name, avatar: vm.avatar, id: vm.id}).then(res => {
         if (res.data.status === 200) {
           const message = vm.id ? '修改成功' : '创建成功'
-          vm.$emit('update')
+          vm.$emit('update', res.data.data.user)
           vm.$message({
             type: 'success',
             message

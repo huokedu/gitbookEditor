@@ -109,12 +109,18 @@
     <el-dialog
       :visible.sync="addVisible"
       >
-      <add-comment @close="addVisible = false"></add-comment>
+      <add-comment @close="addVisible = false" @addUser="editVisible = true" :user="addUser"></add-comment>
+    </el-dialog>
+    <el-dialog
+      :visible.sync="editVisible"
+      >
+       <add-user v-if="editVisible" @update="updateUser" user=""></add-user>   
     </el-dialog>
   </div>
 </template>
 <script>
 import { getComments, setComment } from '../../api/comments.js'
+import addUser from '../widget/edit_user'
 import { formatTime } from '../../utils/index.js'
 import addComment from '../widget/shadow_comment_add'
 export default {
@@ -130,8 +136,10 @@ export default {
       user: '',
       content: '',
       dialogVisible: false,
+      editVisible: false,
       addVisible: false,
-      textarea: ''
+      textarea: '',
+      addUser: {}
     }
   },
   mounted () {
@@ -222,10 +230,17 @@ export default {
           })
         }
       })
+    },
+    // 添加新用户后刷新用户列表
+    updateUser (user) {
+      const vm = this
+      vm.editVisible = false
+      vm.addUser = user
     }
   },
   components: {
-    addComment
+    addComment,
+    addUser
   }
 }
 </script>

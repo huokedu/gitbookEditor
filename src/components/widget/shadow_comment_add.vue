@@ -21,7 +21,7 @@
           :value="item._id">
         </el-option>
       </el-select>
-      <el-button>添加用户</el-button>
+      <el-button @click="$emit('addUser')">添加用户</el-button>
     </div>
     <div class="line">
       <span class="title">是否购买：</span>
@@ -60,10 +60,12 @@ export default {
       textarea: ''
     }
   },
+  props: ['user'],
   mounted () {
     const vm = this
     vm.getProjectList()
     vm.getMemberList()
+    console.log(vm.user)
   },
   methods: {
     getProjectList () {
@@ -102,6 +104,13 @@ export default {
           vm.$emit('close')
         }
       })
+    }
+  },
+  watch: {
+    user (val) {
+      const vm = this
+      vm.userList.push(val)
+      vm.userId = val._id
     }
   }
 }
