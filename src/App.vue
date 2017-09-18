@@ -1,11 +1,12 @@
 <template>
-  <div id="APIPlusDocument">
+  <div id="APIPlusDocument" v-if="$route.path !== '/login'">
     <nav-bar></nav-bar>
     <div class="main-content">
       <nav-title></nav-title>
       <router-view></router-view>
     </div>
   </div>
+  <router-view v-else></router-view>
 </template>
 
 <script>

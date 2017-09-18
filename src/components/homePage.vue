@@ -52,6 +52,7 @@
 <script>
 import { getGeneralData } from '../api/statistics.js'
 import lineChart from './widget/line_chart'
+import { mapState } from 'vuex'
 export default {
   name: 'home',
   data () {
@@ -60,7 +61,15 @@ export default {
     }
   },
   mounted () {
-    this.getGeneralData()
+    const vm = this
+    if (vm.firstLogin) {
+      vm.$message({
+        type: 'success',
+        message: `欢迎回来，${vm.name}`
+      })
+      vm.$store.commit('power/CHANGE_LOGIN', false)
+    }
+    vm.getGeneralData()
   },
   computed: {
     PV () {
@@ -70,7 +79,10 @@ export default {
     UV () {
       if (this.generalData.newView) return this.generalData.newView.UV
       return ''
-    }
+    },
+    ...mapState('power', [
+      'firstLogin', 'name'
+    ])
   },
   methods: {
     tabTo () {

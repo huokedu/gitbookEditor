@@ -3,34 +3,61 @@
   class="el-menu-vertical-demo"
   mode="horizontal"
   :unique-opened="true">
-    <el-dropdown>
+    <el-dropdown trigger="click" style="cursor: pointer" @command="quitLogin">
       <span class="el-dropdown-link">
         <img src="../../assets/logo.png" alt="">
         <span>下拉菜单</span>
         <i class="el-icon-caret-bottom el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item>退出登录</el-dropdown-item>
+        <el-dropdown-item command="edit">编辑个人资料</el-dropdown-item>
+        <el-dropdown-item command="quit">退出登录</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
     <el-breadcrumb separator="/">
       <el-breadcrumb-item v-for="(route, index) in routeList" :key="index">{{route}}</el-breadcrumb-item>
-    </el-breadcrumb>   
+    </el-breadcrumb>
+    <el-dialog
+      :visible.sync="editVisible"
+      size="tiny"
+      >
+       <edit-user v-if="editVisible" user=""></edit-user>   
+    </el-dialog> 
   </el-menu>
 </template>
 
 <script>
+import editUser from '../widget/edit_user'
 export default {
   name: 'nav_menu',
   data () {
     return {
-      isCollapse: false
+      isCollapse: false,
+      editVisible: false
     }
   },
   computed: {
     routeList () {
       return this.$route.name.split('/')
     }
+  },
+  methods: {
+    quitLogin (status) {
+      const vm = this
+      if (status === 'quit') {
+        vm.$store.commit('power/QUIT_LOGIN')
+        vm.$router.push('/login')
+      } else {
+        vm.editUser()
+      }
+    },
+    editUser () {
+      const vm = this
+      vm.editVisible = true
+    }
+  },
+  components: {
+    editUser
   }
 }
 </script>
