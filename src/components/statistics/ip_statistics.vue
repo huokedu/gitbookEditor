@@ -87,7 +87,7 @@ export default {
         },
         series: [
           {
-            name: '发生的不能开了房间爱上',
+            name: 'IP',
             type: 'map',
             mapType: 'china',
             label: {
