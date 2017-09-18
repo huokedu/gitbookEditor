@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import homePage from '../components/homePage.vue'
 
+import Login from '../components/login.vue'
 import APIDocument from '../components/repo-list/API_document.vue'
 import repoList from '../components/repo-list/repo_list.vue'
 import repoAdd from '../components/repo-list/repo_add.vue'
@@ -34,6 +35,11 @@ export default new Router({
     path: '/',
     name: '首页',
     component: homePage
+  },
+  {
+    path: '/login',
+    name: '登录',
+    component: Login
   },
   {
     path: '/repo/API_document',
