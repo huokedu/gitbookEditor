@@ -120,7 +120,7 @@
 </template>
 <script>
 import { getComments, setComment } from '../../api/comments.js'
-import addUser from '../widget/edit_user'
+import addUser from '../widget/edit_shadow_user'
 import { formatTime } from '../../utils/index.js'
 import addComment from '../widget/shadow_comment_add'
 export default {

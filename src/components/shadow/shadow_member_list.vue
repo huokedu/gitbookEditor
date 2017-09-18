@@ -90,7 +90,7 @@
 import { getMemberList } from '../../api/member.js'
 import { delUser } from '../../api/shadow.js'
 import { formatTime } from '../../utils/index.js'
-import editUser from '../widget/edit_user'
+import editUser from '../widget/edit_shadow_user'
 export default {
   name: 'member_list',
   data () {
