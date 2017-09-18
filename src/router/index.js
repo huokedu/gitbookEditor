@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
+import homePage from '../components/homePage.vue'
+
 import APIDocument from '../components/repo-list/API_document.vue'
 import repoList from '../components/repo-list/repo_list.vue'
 import repoAdd from '../components/repo-list/repo_add.vue'
@@ -28,6 +31,11 @@ import shadowCommentList from '../components/shadow/shadow_comment_list.vue'
 Vue.use(Router)
 export default new Router({
   routes: [{
+    path: '/',
+    name: '首页',
+    component: homePage
+  },
+  {
     path: '/repo/API_document',
     name: '项目/API文档',
     component: APIDocument

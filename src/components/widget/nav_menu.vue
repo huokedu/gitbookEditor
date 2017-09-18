@@ -3,7 +3,7 @@
   <el-menu :default-active="activeRoute" class="el-menu-vertical-demo el-icon-" theme="dark" 
   @select=changeView :unique-opened="true" :collapse="isCollapse">
 
-  <el-menu-item index="1">
+  <el-menu-item index="/">
       <i class="el-icon-message"></i>
       <span slot="title">首页</span>
   </el-menu-item>

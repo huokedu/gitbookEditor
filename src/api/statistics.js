@@ -21,8 +21,13 @@ function getIPsDetails (region) {
     }
   })
 }
+// 数据总览
+function getGeneralData (params) {
+  return Axios.get('/general/data/query')
+}
 export {
   getIncomings,
   getIPs,
-  getIPsDetails
+  getIPsDetails,
+  getGeneralData
 }
