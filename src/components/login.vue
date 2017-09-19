@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Login from '../api/power.js'
+import {Login} from '../api/power.js'
 export default {
   name: 'login',
   data () {
