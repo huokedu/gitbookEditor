@@ -12,7 +12,7 @@
       </el-select>
     </div>
     <div class="line">
-      <span class="title">项目名称：</span>
+      <span class="title">用户名称：</span>
       <el-select v-model="userId" filterable placeholder="请选择">
         <el-option
           v-for="item in userList"
