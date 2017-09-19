@@ -42,7 +42,7 @@
       <span slot="title">会员</span>
   </el-menu-item>
 
-  <el-menu-item index="7">
+  <el-menu-item index="/power">
       <i class="el-icon-message"></i>
       <span slot="title">管理员</span>
   </el-menu-item>

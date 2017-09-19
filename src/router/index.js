@@ -29,6 +29,8 @@ import ipDetails from '../components/statistics/ip_details.vue'
 
 import shadowMemberList from '../components/shadow/shadow_member_list.vue'
 import shadowCommentList from '../components/shadow/shadow_comment_list.vue'
+
+import power from '../components/power.vue'
 Vue.use(Router)
 export default new Router({
   routes: [{
@@ -150,6 +152,11 @@ export default new Router({
     name: '影子/评论列表',
     path: '/shadow/comment_list',
     component: shadowCommentList
+  },
+  {
+    name: '管理员',
+    path: '/power',
+    component: power
   }
   ]
 })
