@@ -98,7 +98,7 @@ export default {
         inputPattern: /[\S]/,
         inputErrorMessage: '文档名不能为空'
       }).then(({ value }) => {
-        addDoc({title: value, sort: vm.sort, label: vm.label}).then((res) => {
+        addDoc({title: value, sort: vm.sort, label: vm.label, token: vm.$store.state.power.token}).then((res) => {
           if (res.data.status === 200) {
             vm.$store.commit('article/ADD_LIST', res.data.data)
             vm.makeSelected(0, res.data.data)

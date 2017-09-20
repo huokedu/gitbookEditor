@@ -20,11 +20,12 @@ function delDoc (id) {
   })
 }
 // 添加文档
-function addDoc ({label, title, sort}) {
+function addDoc ({label, title, sort, token}) {
   return Axios.post('/article/add', {
     label,
     sort,
-    title
+    title,
+    token
   })
 }
 // 文档详情
@@ -47,9 +48,9 @@ function getBook (id) {
   })
 }
 // 生成文档目录
-function pubBook ({id, title, levelOne, levelTwo, isSave}) {
+function pubBook ({id, title, levelOne, levelTwo, isSave, token}) {
   return Axios.post('/pub/release', {
-    id, title, levelOne, levelTwo, isSave
+    id, title, levelOne, levelTwo, isSave, token
   })
 }
 // 获取技术文章分类

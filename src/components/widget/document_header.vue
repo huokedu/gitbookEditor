@@ -75,8 +75,8 @@ export default {
     pubBook (isSave) {
       const vm = this
       const title = vm.$refs.title.textContent
-      vm.fullscreenLoading = true
-      pubBook({id: vm.id, title, levelOne: vm.levelOne, levelTwo: vm.levelTwo, isSave})
+      vm.fullscreenLoading = !isSave
+      pubBook({id: vm.id, title, levelOne: vm.levelOne, levelTwo: vm.levelTwo, isSave, token: vm.$store.state.power.token})
       .then((res) => {
         vm.fullscreenLoading = false
         vm.$message({
