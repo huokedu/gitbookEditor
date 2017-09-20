@@ -37,7 +37,7 @@ export default {
         } else {
           vm.$message({
             type: 'error',
-            message: '账号或密码错误'
+            message: res.data.message
           })
         }
       })

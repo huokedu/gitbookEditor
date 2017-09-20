@@ -14,6 +14,13 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 Vue.use(ElementUI)
 /* eslint-disable no-new */
+router.beforeEach((to, from, next) => {
+  // ...
+  if (to.path !== '/login' && store.state.power.token === '') {
+    return next('/login')
+  }
+  next()
+})
 new Vue({
   el: '#app',
   router,

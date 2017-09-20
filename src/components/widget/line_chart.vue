@@ -47,7 +47,7 @@ export default {
         legend: {
           data: ['PV', 'UV'],
           x: '10%',
-          y: '20%'
+          y: '10%'
         },
         tooltip: {
           trigger: 'axis',
@@ -102,7 +102,6 @@ export default {
   },
   watch: {
     list (val) {
-      console.log(val)
       this.drawLine()
     }
   }
