@@ -1,11 +1,18 @@
-import { GET_POWER_LIST, CHANGE_LOGIN, QUIT_LOGIN } from '../mutations'
+import {
+  GET_POWER_LIST,
+  CHANGE_LOGIN,
+  QUIT_LOGIN,
+  SELECTED_POWER,
+  DELETE_POWER
+} from '../mutations'
 
 const state = {
   token: localStorage.token || '',
   powerList: localStorage.powers ? JSON.parse(localStorage.powers) : '',
   name: localStorage.name || '',
   avatar: localStorage.avatar || '',
-  firstLogin: false
+  firstLogin: false,
+  selectedPower: new Set()
 }
 
 const actions = {
@@ -32,6 +39,14 @@ const mutations = {
     state.powerList = ''
     localStorage.powers = ''
     state.name = localStorage.name = ''
+  },
+  [SELECTED_POWER] (state, power) {
+    state.selectedPower = new Set([...state.selectedPower, ...power])
+  },
+  [DELETE_POWER] (state, power) {
+    for (var i = 0; i < power.length; i++) {
+      state.selectedPower.delete(power[i])
+    }
   }
 }
 export default {

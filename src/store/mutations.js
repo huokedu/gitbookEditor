@@ -26,3 +26,6 @@ export const RECYCLE_STATUS = 'RECYCLE_STATUS'
 export const GET_POWER_LIST = 'GET_POWER_LIST'
 export const CHANGE_LOGIN = 'CHANGE_LOGIN'
 export const QUIT_LOGIN = 'QUIT_LOGIN'
+
+export const SELECTED_POWER = 'SELECTED_POWER'
+export const DELETE_POWER = 'DELETE_POWER'
