@@ -108,6 +108,7 @@ export default {
     },
     // 格式化费用
     formatFee (raw) {
+      if (!raw.cost) return 0
       return raw.cost.toFixed(2)
     },
     // 格式化购买时间
