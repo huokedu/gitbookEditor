@@ -30,7 +30,8 @@ import ipDetails from '../components/statistics/ip_details.vue'
 import shadowMemberList from '../components/shadow/shadow_member_list.vue'
 import shadowCommentList from '../components/shadow/shadow_comment_list.vue'
 
-import power from '../components/power.vue'
+import power from '../components/power/power.vue'
+import powerEdit from '../components/power/power_edit.vue'
 Vue.use(Router)
 export default new Router({
   routes: [{
@@ -157,6 +158,11 @@ export default new Router({
     name: '管理员',
     path: '/power',
     component: power
+  },
+  {
+    name: '管理员/权限编辑',
+    path: '/power/edit',
+    component: powerEdit
   }
   ]
 })
