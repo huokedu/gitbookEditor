@@ -12,7 +12,7 @@ function getMemberList ({name, page, shadow, limit = 10}) {
 }
 // 获取用户项目信息
 function getUserProject (id) {
-  return Axios.get('/member/project', {
+  return Axios.get('/member/project/query', {
     params: {
       id
     }
@@ -20,7 +20,7 @@ function getUserProject (id) {
 }
 // 修改密匙激活状态
 function setKeyStatus ({userId, proId, status}) {
-  return Axios.post('/member/set', {
+  return Axios.post('/member/project/set', {
     userId,
     proId,
     status
