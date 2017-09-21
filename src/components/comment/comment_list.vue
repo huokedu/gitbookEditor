@@ -68,6 +68,7 @@
           >
         </el-table-column>
         <el-table-column
+          v-if="power.has('project/comment/set')"
           label="操作"
           header-align="center"
           width="200">
@@ -253,6 +254,11 @@ export default {
           })
         }
       })
+    }
+  },
+  computed: {
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   }
 }

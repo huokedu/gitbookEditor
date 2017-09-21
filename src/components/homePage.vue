@@ -5,7 +5,7 @@
       <div class="general-content">
         <div class="header">
           <img src="" alt="">
-          <el-button @click="$router.push('/repo/repo_add')">添加项目</el-button>
+          <el-button @click="$router.push('/repo/repo_add')" v-if="power.has('project/add')">添加项目</el-button>
           <el-button @click="tabTo()">访问网站</el-button>
         </div>
         <div class="data">
@@ -82,7 +82,10 @@ export default {
     },
     ...mapState('power', [
       'firstLogin', 'name'
-    ])
+    ]),
+    power () {
+      return new Set(this.$store.state.power.powerList)
+    }
   },
   methods: {
     tabTo () {

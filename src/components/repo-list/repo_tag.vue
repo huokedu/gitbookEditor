@@ -8,7 +8,7 @@
           <span :class="[{selected: index === selectedIndex}, 'sort']" v-for="(Type, index) of tagTypes" :key="Type" @click="changeTag(index, Type)">{{Type}}</span>
         </div>
         <div class="handdle">
-          <el-button icon="plus" @click="addTag">添加标签组</el-button>      
+          <el-button icon="plus" @click="addTag" v-if="power.has('project/tag/add')">添加标签组</el-button>      
         </div>
       </div>
     </el-col>
@@ -18,7 +18,7 @@
           <el-tag
             v-for="(tag, index) in selectedTag"
             :key="tag.name"
-            :closable="true"
+            :closable="power.has('project/tag/del')"
             @close="handleClose(index)"
             type="primary"
           >
@@ -34,10 +34,10 @@
             @blur="handleInputConfirm"
           >
           </el-input>
-          <el-button v-else-if="changeShow" class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+          <el-button v-else-if="changeShow && power.has('project/tag/add')" class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
         </div>
         <div class="handdle">
-          <el-button@click="saveTags()">保存</el-button>      
+          <el-button@click="saveTags()" v-if="power.has('project/tag/del') || power.has('project/tag/add')">保存</el-button>      
         </div>
       </div>
     </el-col>
@@ -223,6 +223,11 @@ export default {
           })
         }
       })
+    }
+  },
+  computed: {
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   }
 }

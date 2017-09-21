@@ -3,7 +3,7 @@
     <div class="line">
       <span class="title">用户名称:</span>
       <span class="content"><el-input v-model="name"></el-input></span>
-      <span class="handdle"><el-button @click="generateName">一键生成</el-button></span>
+      <span class="handdle"><el-button @click="generateName" v-if="power.has('shadow/generate/name')">一键生成</el-button></span>
     </div>
     <div class="line">
       <span class="title">头像:</span>
@@ -11,13 +11,13 @@
         <span class="avatar"><img :src="avatar" alt=""></span>
       </span>
       <span class="handdle">
-        <el-button @click="generateAvatar">切换头像</el-button>
+        <el-button @click="generateAvatar" v-if="power.has('shadow/generate/avatar')">切换头像</el-button>
         <span v-show="pending" style="display:inline; padding: 20px;">头像请求中...</span>
         <span v-show="show" style="display:inline; color: red; padding: 20px;">图片加载失败，请切换头像</span>
       </span>
     </div>
     <div class="line" style="text-align: center">
-      <el-button @click="generateUser">保存</el-button>
+      <el-button @click="generateUser" v-if="power.has('shadow/generate/user')">保存</el-button>
     </div>
   </div>
 </template>
@@ -101,6 +101,11 @@ export default {
           })
         }
       })
+    }
+  },
+  computed: {
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   }
 }

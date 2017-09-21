@@ -48,7 +48,7 @@
               <div slot="tip" class="el-upload__tip">只能上传zip文件</div>
             </el-upload>
           </el-form-item>
-          <el-form-item　label="技术清单:">
+          <el-form-item　label="技术清单:" v-if="power.has('sort/list')">
             <el-button @click="$router.push({path: '/repo/pepo_edit/list', query:{API_id: client.List}})">添加/编辑</el-button>
           </el-form-item>
         </el-form>
@@ -58,7 +58,7 @@
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
     <div class="handle">
-      <el-button @click="saveChange">保存</el-button>
+      <el-button @click="saveChange" v-if="power.has('project/client/edit')">保存</el-button>
     </div>
   </div>
 </template>
@@ -93,6 +93,9 @@ export default {
     cover () {
       const vm = this
       return vm.client.cover.indexOf('http') !== -1 ? vm.client.cover : `http://192.168.1.98:8808/${vm.client.cover}`
+    },
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   },
   methods: {

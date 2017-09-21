@@ -34,6 +34,7 @@ export default {
     handleCheckAllPowers (event) {
       const vm = this
       vm.checkedPower = event.target.checked ? vm.power.ids : []
+      vm.$store.commit(event.target.checked ? 'power/SELECTED_POWER' : 'power/DELETE_POWER', vm.power.ids)
       vm.temPowers = vm.checkedPower
       vm.isIndeterminate = false
     },
@@ -61,8 +62,8 @@ export default {
       vm.$store.commit('power/SELECTED_POWER', vm.checkedPower)
       // 判断选中状态
       vm.temPowers = vm.checkedPower
-      vm.isIndeterminate = !!vm.checkedPower.length
       vm.checkAll = vm.allPowers.length === vm.checkedPower.length
+      vm.isIndeterminate = !!vm.checkedPower.length && !vm.checkAll
     },
     checkPower () {
       const vm = this
@@ -72,16 +73,24 @@ export default {
       })
       const weight = vm.weightList[[...set][0]]
       const arr = []
-      const delArr = []
-      vm.allPowers.map((power, index) => {
-        if (weight > 3) return
-        if (vm.power.weights[index] < weight) {
-          arr.push(vm.power.ids[index])
-        } else {
-          delArr.push(vm.power.ids[index])
-        }
-      })
-      vm.checkedPower = vm.temPowers = arr
+      let delArr = []
+      console.log(weight)
+      if (weight < 4) {
+        vm.allPowers.map((power, index) => {
+          if (vm.power.weights[index] < weight) {
+            arr.push(vm.power.ids[index])
+          } else {
+            if (vm.power.weights[index] === weight && new Set(vm.checkedPower).has(vm.power.ids[index])) {
+              return arr.push(vm.power.ids[index])
+            }
+            delArr.push(vm.power.ids[index])
+          }
+        })
+        vm.checkedPower = vm.temPowers = arr
+      } else {
+        delArr = [...set]
+        vm.temPowers = vm.checkedPower
+      }
       // 同步选中状态
       vm.$store.commit('power/DELETE_POWER', delArr)
     },

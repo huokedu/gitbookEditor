@@ -1,7 +1,7 @@
 <template>
   <div id="techList">
     <doc-header :pub="true" :preview="true" :editable="true"></doc-header>
-    <drag-list></drag-list>
+    <drag-list v-if="power.has('pub/query')"></drag-list>
     <div class="left-list">
       <div class="search">
         <el-select v-model="sort" placeholder="请选择">
@@ -14,6 +14,7 @@
         </el-select>
         <el-input
           placeholder="搜索"
+          @keyup.enter.native="search"
           icon="search"
           v-model="keyWord"
           :on-icon-click="search"
@@ -41,7 +42,7 @@
     </div>
     <div class="page">
       <el-pagination
-        :current-page="currentPage"
+        :current-page.sync="currentPage"
         @current-change="getDoc"
         layout="total, prev, pager, next"
         :total="count">
@@ -100,6 +101,7 @@ export default {
       })
     },
     search () {
+      this.currentPage = 1
       this.getDoc(1)
     },
     // 格式化时间
@@ -116,6 +118,9 @@ export default {
         ghostClass: 'ghost',
         sort: false
       }
+    },
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   },
   watch: {

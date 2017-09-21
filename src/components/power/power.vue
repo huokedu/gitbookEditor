@@ -1,6 +1,6 @@
 <template>
   <div id="power">
-    <div class="header">
+    <div class="header" v-if="power.has('member/list')">
       <span class="title">用户名称：</span>
       <el-select v-model="userId" filterable placeholder="请选择">
         <el-option
@@ -10,7 +10,7 @@
           :value="item._id">
         </el-option>
       </el-select>
-      <el-button @click="addAdmin">
+      <el-button @click="addAdmin" v-if="power.has('power/admin/add')">
         添加管理员
       </el-button>
     </div>
@@ -57,12 +57,14 @@
           width="200">
           <template scope="scope">
             <el-button
+              v-if="power.has('power/list')"
               type="text"
               @click.native.prevent="$router.push({path: '/power/edit', query: {id: scope.row.user._id}})"
               size="small">
               编辑 
             </el-button>
             <el-button
+              v-if="power.has('power/admin/del')"
               type="text"
               @click.native.prevent="delAdmin(scope)"
               size="small">
@@ -169,6 +171,11 @@ export default {
       const vm = this
       vm.user = row
       vm.show = true
+    }
+  },
+  computed: {
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   }
 }

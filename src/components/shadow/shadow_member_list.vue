@@ -9,7 +9,7 @@
         icon="search"
         >
       </el-input>
-      <el-button @click="addUser">
+      <el-button @click="addUser"  v-if="power.has('shadow/generate/user')">
         添加用户
       </el-button>
     </div>
@@ -51,17 +51,20 @@
           label="注册时间">
         </el-table-column>
         <el-table-column
+          v-if="power.has('shadow/generate/user') || power.has('shadow/user/del')"
           label="操作"
           header-align="center"
           width="200">
           <template scope="scope">
             <el-button
+              v-if="power.has('shadow/generate/user')"
               type="text"
-              @click.native.prevent="editUser(scope.row)"
+              @click.native.prevent="editUser(scope)"
               size="small">
               编辑 
             </el-button>
             <el-button
+              v-if="power.has('shadow/user/del')"
               type="text"
               @click.native.prevent="delUser(scope)"
               size="small">
@@ -100,6 +103,7 @@ export default {
       count: 0,
       show: false,
       user: {},
+      index: 0,
       currentPage: 1
     }
   },
@@ -124,6 +128,10 @@ export default {
     updateMemberList (user) {
       const vm = this
       vm.show = false
+      if (vm.user._id) {
+        vm.getMemberList(1)
+        return
+      }
       vm.list.pop()
       vm.list.unshift(user)
     },
@@ -158,10 +166,15 @@ export default {
       })
     },
     // editUser
-    editUser (row) {
+    editUser (scope) {
       const vm = this
-      vm.user = row
+      vm.user = scope.row
       vm.show = true
+    }
+  },
+  computed: {
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   }
 }

@@ -80,6 +80,9 @@ export default {
     orderType () {
       if (this.details.content) return this.details.content.trial ? '试用订单' : '正式订单'
       return ''
+    },
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   }
 }

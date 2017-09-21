@@ -26,7 +26,7 @@ const mutations = {
   [GET_POWER_LIST] (state, user) {
     state.token = localStorage.token = user.user.token
     state.avatar = localStorage.avatar = user.user.avatar
-    state.powerList = user.powers
+    state.powerList = new Set(user.powers)
     localStorage.powers = JSON.stringify(user.powers)
     state.name = localStorage.name = user.user.name
   },
@@ -44,9 +44,12 @@ const mutations = {
     state.selectedPower = new Set([...state.selectedPower, ...power])
   },
   [DELETE_POWER] (state, power) {
-    for (var i = 0; i < power.length; i++) {
-      state.selectedPower.delete(power[i])
+    const set = new Set(state.selectedPower)
+    const length = state.selectedPower.length > power.length ? state.selectedPower.length : power.length
+    for (var i = 0; i < length; i++) {
+      set.delete(power[i])
     }
+    state.selectedPower = [...set]
   }
 }
 export default {

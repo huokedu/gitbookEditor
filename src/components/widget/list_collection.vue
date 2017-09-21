@@ -10,7 +10,7 @@
         <i class="el-icon-delete2" title="删除分类"　@click="delSort(index)"></i>        
       </span>
     </div>
-    <div class="recycle" :class="[{selected: isRecycle}, '']" title="删除分类"　@click="getRecycle">
+    <div class="recycle" :class="[{selected: isRecycle}, '']" title="删除分类"　@click="getRecycle" v-if="power.has('recycle/list')">
       <i class="el-icon-delete2"></i>
       <span>回收站</span>
     </div>
@@ -31,7 +31,7 @@ export default {
   mounted () {
     const vm = this
     vm.selected.length = vm.collection.length
-    if (!vm.$route.query._id) vm.getSort()
+    if (!vm.$route.query._id && vm.power.has('sort/list')) vm.getSort()
   },
   methods: {
     getSort () {
@@ -44,7 +44,6 @@ export default {
             vm.collection.some((sort, index) => {
               // 返回第一个分类id相等的分类
               if (sort._id === vm.article.sort) {
-                console.log(vm.article)
                 vm.makeSelected(index, sort._id)
                 return true
               }
@@ -84,7 +83,6 @@ export default {
     makeSelected (index, id) {
       // 选中状态
       let vm = this
-      console.log(index, id)
       vm.$store.dispatch('article/getStatus', false)
       vm.selected = []
       vm.selected.length = vm.collection.length
@@ -129,11 +127,16 @@ export default {
     },
     article () {
       return this.$store.state.article.article
+    },
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   },
   watch: {
     article (article, val) {
-      this.getSort()
+      const vm = this
+      if (!vm.$route.query._id || !vm.power.has('sort/list')) return
+      vm.getSort()
     }
   },
   beforeDestroy () {

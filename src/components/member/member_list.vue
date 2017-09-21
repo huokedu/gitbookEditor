@@ -49,6 +49,7 @@
           label="注册时间">
         </el-table-column>
         <el-table-column
+          v-if="power.has('member/project/query')"
           label="操作"
           header-align="center"
           width="200">
@@ -114,6 +115,11 @@ export default {
     // 格式化购买时间
     formatTime (row) {
       return formatTime(row.update_time / 1000, '{y}-{m}-{d}')
+    }
+  },
+  computed: {
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   }
 }

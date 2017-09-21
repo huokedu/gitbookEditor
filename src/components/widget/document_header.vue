@@ -2,18 +2,18 @@
   <div id="header">
     <h2 :contenteditable="editable && !isRecycle" ref="title">{{title}}</h2>
     <i v-if="editable" class="el-icon-edit" title="编辑" @click="$refs.title.focus()"  v-show="!isRecycle"></i>
-    <span v-if="pub && !isRecycle" @click="pubBook(false)" 
+    <span v-if="pub && !isRecycle && power.has('pub/release')" @click="pubBook(false)" 
     v-loading.fullscreen.lock="fullscreenLoading"
     element-loading-text="拼命发布中,等等我。。。。。"
     >
       <i class="el-icon-upload2"></i><br>
       发布
     </span>
-    <span v-if="preview && !isRecycle" @click="view">
+    <span v-if="preview && !isRecycle && power.has('pub/release')" @click="view">
       <i class="el-icon-view" ></i><br>
       预览
     </span>
-    <span v-if="!isRecycle" @click="saveContent">
+    <span v-if="!isRecycle && power.has('article/edit')" @click="saveContent">
       <i class="el-icon-document"></i><br>
       保存
     </span>
@@ -69,7 +69,7 @@ export default {
     },
     saveContent () {
       if (document.querySelector('.fa-floppy-o')) document.querySelector('.fa-floppy-o').click()
-      if (this.$route.path === '/tech_list/add') return
+      if (this.$route.path === '/tech_list/add' || this.power.has('pub/release')) return
       this.pubBook(true)
     },
     pubBook (isSave) {
@@ -104,6 +104,9 @@ export default {
     ]),
     id () {
       return this.$route.query.API_id
+    },
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   }
 }

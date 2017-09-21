@@ -1,7 +1,7 @@
 <template>
   <div id="repoList">
     <div class="handdle">
-      <el-button　@click="$router.push('/repo/repo_add')">添加项目</el-button>
+      <el-button　@click="$router.push('/repo/repo_add')" v-if="power.has('project/add')">添加项目</el-button>
       <el-select v-model="selected" placeholder="请选择">
         <el-option
           v-for="item in options"
@@ -11,8 +11,9 @@
         </el-option>
       </el-select>
       <el-input
-        placeholder="搜索"
+        placeholder="请输入项目名称"
         icon="search"
+        @keyup.enter.native="search"
         v-model="keyWord"
         :on-icon-click="search"
         >
@@ -59,9 +60,10 @@
       <el-table-column
         label="操作"
         header-align="center"
-        width="200">
+       >
         <template scope="scope">
           <el-button
+            v-if="power.has('article/list')"
             type="text"
             size="small"
             @click="$router.push({path:'/repo/API_document', query: {API_id: scope.row.API }})"
@@ -69,6 +71,7 @@
             API
           </el-button>
           <el-button
+            v-if="power.has('project/client/query')"
             type="text"
             size="small"
             @click="$router.push({path:'/repo/repo_edit/repoPlatform', query: {platform: scope.row._id }})"
@@ -76,6 +79,7 @@
             客户端
           </el-button>
           <el-button
+            v-if="power.has('project/details')"
             type="text"
             size="small"
             @click="$router.push({path:'/repo/repo_edit', query: {id: scope.row._id }})"
@@ -83,6 +87,7 @@
             编辑
           </el-button>
           <el-button
+            v-if="power.has('project/edit')"
             type="text"
             size="small"
             @click="changeStatus(scope.row._id, scope.row.status, scope.$index)"
@@ -93,7 +98,7 @@
       </el-table-column>
     </el-table>
     <el-pagination
-      :current-page="currentPage"
+      :current-page.sync="currentPage"
       @current-change="getProjectList"
       layout="total, prev, pager, next"
       :total="count">
@@ -148,6 +153,7 @@ export default {
     // 搜索
     search () {
       const vm = this
+      vm.currentPage = 1
       vm.getProjectList(vm.currentPage, vm.keyWord)
     },
     // 切换上下架功能
@@ -165,6 +171,11 @@ export default {
           })
         }
       })
+    }
+  },
+  computed: {
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   },
   watch: {
@@ -201,5 +212,8 @@ export default {
 }
 #repoList .el-select {
   margin-right: 10px;
+}
+#repoList .cell {
+  text-align: center;
 }
 </style>

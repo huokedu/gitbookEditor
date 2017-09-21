@@ -1,17 +1,17 @@
 <template>
   <div id="mkHeader">
     <div class="title">
-      <h2 :contenteditable="!isRecycle" id="mkTitle" ref="title" @blur="changeTitle">{{title}}</h2>
-      <i v-if="!isRecycle" class="el-icon-edit" title="编辑" @click="$refs.title.focus()"></i>
+      <h2 :contenteditable="!isRecycle && power.has('article/edit')" id="mkTitle" ref="title" @blur="changeTitle">{{title}}</h2>
+      <i v-if="!isRecycle  && power.has('article/edit')" class="el-icon-edit" title="编辑" @click="$refs.title.focus()"></i>
     </div>
     <div class="wrapper" >
       <el-button v-if="showTag && !isRecycle" @click="visible = true">
         添加标签
       </el-button>
-      <el-button v-if="isRecycle" @click="recover">
+      <el-button v-if="isRecycle && power.has('recycle/recover')" @click="recover">
         恢复文章
       </el-button>
-      <el-button v-if="isRecycle" @click="delArticle">
+      <el-button v-if="isRecycle && power.has('recycle/del')" @click="delArticle">
         彻底删除
       </el-button>  
       <div class="tag" :style="{width: isRecycle ? '476px' : '550px'}" v-if="showTag">
@@ -23,7 +23,7 @@
         {{tag.name}}
         </el-tag>
       </div>
-      <el-dialog title="添加标签" :visible.sync="visible">
+      <el-dialog title="添加标签" :visible.sync="visible" v-if="power.has('project/tag/list') && power.has('article/edit')">
         <tags v-show="visible"></tags>
       </el-dialog>
     </div>
@@ -107,7 +107,10 @@ export default {
   computed: {
     ...mapState('article', [
       'tags', 'isRecycle', 'title'
-    ])
+    ]),
+    power () {
+      return new Set(this.$store.state.power.powerList)
+    }
   }
 }
 </script>

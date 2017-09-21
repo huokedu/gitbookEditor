@@ -15,7 +15,7 @@
           <el-dropdown-item v-else command="delete_time">删除时间</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-button @click="addArticle" v-if="!isRecycle">添加文章</el-button>
+      <el-button @click="addArticle" v-if="!isRecycle && power.has('article/add')">添加文章</el-button>
       <el-button @click="getArticles" v-if="isRecycle === 'API'">返回API</el-button> 
     </div>
     <draggable class="article" element="div" v-model="list" :options="dragOptions" >
@@ -24,7 +24,7 @@
           <span :title="col.title">
             {{col.title}}
           </span>
-          <i class="el-icon-delete2" title="删除文档" @click.stop="delArticle(index, col)" v-if="!isRecycle"></i>
+          <i class="el-icon-delete2" title="删除文档" @click.stop="delArticle(index, col)" v-if="!isRecycle && power.has('article/del')"></i>
         </li> 
       </transition-group>
     </draggable>
@@ -176,7 +176,10 @@ export default {
     },
     ...mapState('article', [
       'chooseDir', 'sort', 'isRecycle', 'list'
-    ])
+    ]),
+    power () {
+      return new Set(this.$store.state.power.powerList)
+    }
   },
   watch: {
     chooseDir (val) {

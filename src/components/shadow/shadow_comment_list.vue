@@ -19,7 +19,7 @@
         icon="search"
         >
       </el-input>
-      <el-button @click="addVisible = true">添加评论</el-button>
+      <el-button @click="addVisible = true" v-if="power.has('shadow/generate/comment')">添加评论</el-button>
     </div>
     <div class="list">
       <el-table
@@ -59,6 +59,7 @@
           >
         </el-table-column>
         <el-table-column
+          v-if="power.has('project/comment/set')"
           label="操作"
           header-align="center"
           width="200">
@@ -241,6 +242,11 @@ export default {
   components: {
     addComment,
     addUser
+  },
+  computed: {
+    power () {
+      return new Set(this.$store.state.power.powerList)
+    }
   }
 }
 </script>

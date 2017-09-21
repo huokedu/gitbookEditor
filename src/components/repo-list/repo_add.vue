@@ -37,7 +37,7 @@
             {{tag.name}}
             </el-tag>
           </section>
-          <el-button @click="visible = true">添加</el-button>        
+          <el-button @click="visible = true"  v-if="power.has('project/tag/list')">添加</el-button>        
         </el-form-item>
         <el-form-item label="项目描述" prop="details" >
           <el-input 
@@ -51,7 +51,7 @@
         <tags v-if="visible" label="project"></tags>
       </el-dialog>
     </section>
-    <section>
+    <section v-if="power.has('project/part/query')">
       <div class="title">
         <h2>项目套餐</h2> <div class="bar"></div>
       </div>
@@ -63,7 +63,7 @@
               <span>接口次数： {{part.count}}次</span><br>
               <span>销售价格： &yen; {{part.price}}</span>
             </div>
-            <div class="handdle">
+            <div class="handdle" v-if="power.has('project/part/edit')">
               <span>是否试用：</span>
               <el-switch
                 v-model="part.trial"
@@ -77,7 +77,7 @@
                 on-text=""
                 off-text="">
               </el-switch>
-              <el-button @click="changePart(index)">
+              <el-button @click="changePart(index)" >
                 编辑
               </el-button>
               <el-button　@click="delPart(index)">
@@ -86,15 +86,17 @@
             </div>
           </el-card>
         </transition-group>
-        <el-card class="box-card add" @click.native="changePart(-1)" >
+        <el-card class="box-card add" @click.native="changePart(-1)" v-if="power.has('project/part/add')">
           <i class="el-icon-plus"></i>
           <h3>添加套餐</h3>
         </el-card><br>
-        <el-button @click="save('project')">保存</el-button>        
       </div>
       <el-dialog title="添加套餐" :visible.sync="visiblePart" size="tiny" style="min-width: 1200px">
         <parts v-if="visiblePart" @addPart="editPart" :part="choosePart"></parts>
       </el-dialog>
+    </section>
+    <section class="part">
+      <el-button @click="save('project')" v-if="power.has('project/edit')">保存</el-button>
     </section>
   </div>
 </template>
@@ -325,6 +327,9 @@ export default {
   computed: {
     tags () {
       return this.$store.state.article.tags
+    },
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   },
   components: {

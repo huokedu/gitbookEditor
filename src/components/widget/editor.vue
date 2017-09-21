@@ -1,6 +1,6 @@
 <template>
   <div id="mainBook"> 
-    <mavon-editor style="height: 100%" v-model="value" @save="save" @imgAdd="saveImg" @imgDel="imgDel" :editable="!isRecycle" :toolbars="isRecycle ? {} : toolbars" /> 
+    <mavon-editor style="height: 100%" v-model="value" @save="save" @imgAdd="saveImg" @imgDel="imgDel" :editable="!isRecycle && power.has('article/edit')" :toolbars="isRecycle ? {} : toolbars" /> 
   </div>
 </template>
 
@@ -42,14 +42,15 @@ export default {
   },
   mounted () {
     const vm = this
-    console.log(vm.$route.query._id)
     if (vm.$route.query._id) return vm.getContent(vm.$route.query._id)
     vm.getContent(vm.id)
+    vm.toolbars.save = vm.power.has('article/edit')
   },
   methods: {
     // 获取文章详情
     getContent (id) {
       let vm = this
+      if (!vm.power.has('article/query')) return
       getContent(id).then(res => {
         if (res.data.status === 200) {
           vm.value = res.data.data.article.content
@@ -132,12 +133,19 @@ export default {
     },
     tags () {
       return this.$store.state.article.tags
+    },
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   },
   watch: {
     id (id) {
       const vm = this
       if (vm.isRecycle) {
+        if (!vm.power.has('recycle/query')) {
+          vm.value = ''
+          return
+        }
         getReArticle(id).then(res => {
           if (res.data.status === 200) {
             vm.value = res.data.data.doc.content

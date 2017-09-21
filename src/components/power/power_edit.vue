@@ -4,7 +4,7 @@
       <power-sel :power="power" :ownPowerList="ownPowerList"></power-sel>
     </div>
     <div class="handdle">
-      <el-button @click="editPower">保存</el-button>
+      <el-button @click="editPower" v-if="power.has('power/admin/edit')">保存</el-button>
     </div>
   </div>
 </template>
@@ -50,6 +50,11 @@ export default {
   },
   components: {
     powerSel
+  },
+  computed: {
+    power () {
+      return new Set(this.$store.state.power.powerList)
+    }
   }
 }
 </script>

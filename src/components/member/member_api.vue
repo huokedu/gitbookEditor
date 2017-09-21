@@ -38,17 +38,20 @@
           >
         </el-table-column>  
         <el-table-column
+          v-if="power.has('member/router/query') && power.has('member/project/set')"
           label="操作"
           header-align="center"
           width="200">
           <template scope="scope">
             <el-button 
+              v-if="power.has('member/project/set')"
               type="text"
               @click.native.prevent="setKeyStatus(scope.row)"
               size="small">
               {{scope.row.status ? '禁用密匙' : '启用密匙'}}
             </el-button>
-            <el-button 
+            <el-button
+              v-if="power.has('member/router/query')"
               type="text"
               @click.native.prevent="$router.push({path: '/member/member_project',query: {userId: scope.row.user, proId: scope.row.project._id}})"
               size="small">
@@ -126,6 +129,11 @@ export default {
           message: '已取消删除'
         })
       })
+    }
+  },
+  computed: {
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   }
 }

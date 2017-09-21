@@ -2,69 +2,68 @@
 <div class="wrapper">
   <el-menu :default-active="activeRoute" class="el-menu-vertical-demo el-icon-" theme="dark" 
   @select=changeView :unique-opened="true" :collapse="isCollapse">
-
-  <el-menu-item index="/">
+  <el-menu-item index="/" v-if="power.has('general/data/query')">
       <i class="el-icon-message"></i>
       <span slot="title">首页</span>
   </el-menu-item>
 
-  <el-submenu index="项目">
+  <el-submenu index="项目" v-if="power.has('project/query') || power.has('project/add') || power.has('project/tag/list')">
     <template slot="title">
       <i class="el-icon-message"></i>
       <span slot="title">项目</span>
     </template>
-    <el-menu-item index="/repo/repo_list">项目列表</el-menu-item>
-    <el-menu-item index="/repo/repo_add">添加项目</el-menu-item>
-    <el-menu-item index="/repo/tag">标签</el-menu-item>    
+    <el-menu-item index="/repo/repo_list" v-if="power.has('project/query')">项目列表</el-menu-item>
+    <el-menu-item index="/repo/repo_add" v-if="power.has('project/add')">添加项目</el-menu-item>
+    <el-menu-item index="/repo/tag" v-if="power.has('project/tag/list')">标签</el-menu-item>    
   </el-submenu>
 
-  <el-submenu index="3">
+  <el-submenu index="文档" v-if="power.has('article/list') || power.has('sort/list')">
     <template slot="title">
       <i class="el-icon-message"></i>
       <span slot="title">技术文档</span>
     </template>
-    <el-menu-item index="/tech_list/list">文档列表</el-menu-item>
-    <el-menu-item index="/tech_list/add">添加文档</el-menu-item>
+    <el-menu-item index="/tech_list/list" v-if="power.has('article/list')">文档列表</el-menu-item>
+    <el-menu-item index="/tech_list/add" v-if="power.has('sort/list')">添加文档</el-menu-item>
   </el-submenu>
 
-  <el-menu-item index="/order/order_list">
+  <el-menu-item index="/order/order_list" v-if="power.has('order/query')">
     <i class="el-icon-message"></i>
     <span slot="title">订单</span>
   </el-menu-item>
 
-  <el-menu-item index="/comment/comment_list">
+  <el-menu-item index="/comment/comment_list" v-if="power.has('project/comment/query')">
     <i class="el-icon-message"></i>
     <span slot="title">评论</span>
   </el-menu-item>
 
-  <el-menu-item index="/member/member_list">
+  <el-menu-item index="/member/member_list" v-if="power.has('member/list')">
       <i class="el-icon-message"></i>
       <span slot="title">会员</span>
   </el-menu-item>
 
-  <el-menu-item index="/power">
+  <el-menu-item index="/power" v-if="power.has('power/admin/list')">
       <i class="el-icon-message"></i>
       <span slot="title">管理员</span>
   </el-menu-item>
 
-  <el-submenu index="8">
+  <el-submenu index="stastics" v-if="power.has('income/statistics/query') || power.has('member/router/query') || power.has('ip/query')">
     <template slot="title">
       <i class="el-icon-d-arrow-left"></i>
       <span slot="title">经营数据</span>
     </template>
-    <el-menu-item index="/statistics/incoming_statistics">收入统计</el-menu-item>
-    <el-menu-item index="/statistics/api_statistics">接口调用统计</el-menu-item>
-    <el-menu-item index="/statistics/ip_statistics">IP统计</el-menu-item>
+    <el-menu-item index="/statistics/incoming_statistics" v-if="power.has('income/statistics/query')">收入统计</el-menu-item>
+    <el-menu-item index="/statistics/api_statistics"  v-if="power.has('member/router/query')">接口调用统计</el-menu-item>
+    <el-menu-item index="/statistics/ip_statistics" v-if="power.has('ip/query')">IP统计</el-menu-item>
     <!-- <el-menu-item index="8-4">调用日志</el-menu-item> -->
   </el-submenu>
   
-  <el-submenu index="9">
+  <el-submenu index="9" v-if="power.has('member/list') || power.has('project/comment/query')">
     <template slot="title">
       <i class="el-icon-message"></i>
       <span slot="title">影子</span>
     </template>
-    <el-menu-item index="/shadow/member_list">用户列表</el-menu-item>
-    <el-menu-item index="/shadow/comment_list">评论列表</el-menu-item>
+    <el-menu-item index="/shadow/member_list" v-if="power.has('member/list')">用户列表</el-menu-item>
+    <el-menu-item index="/shadow/comment_list" v-if="power.has('project/comment/query')">评论列表</el-menu-item>
   </el-submenu>
   </el-menu>
 </div>
@@ -81,6 +80,9 @@ export default {
   computed: {
     activeRoute () {
       return this.$route.path
+    },
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   },
   methods: {

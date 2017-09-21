@@ -25,7 +25,7 @@
             </draggable>
           </el-collapse-transition>
         </li>
-        <div :class="[{selected: isRecycle}, 'recycle']" title="删除分类"　@click="getRecycle">
+        <div :class="[{selected: isRecycle}, 'recycle']" title="删除分类"　@click="getRecycle" v-if="power.has('recycle/list')">
           <i class="el-icon-delete2"></i>
           <span>回收站</span>
         </div>
@@ -196,6 +196,9 @@ export default {
       set (value) {
         this.$store.commit('article/UPDATE_DIRECTORY', { dir: value })
       }
+    },
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   },
   watch: {

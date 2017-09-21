@@ -1,8 +1,8 @@
 <template>
   <div id="docList">
     <div class="handdle">
-      <el-button　@click="$router.push('/tech_list/add')">添加文章</el-button>
-      <el-select v-model="sort" placeholder="请选择">
+      <el-button　@click="$router.push('/tech_list/add')" v-if="power.has('article/add')">添加文章</el-button>
+      <el-select v-model="sort" placeholder="请选择" v-if="power.has('sort/list')">
         <el-option
           v-for="item in options"
           :key="item._id"
@@ -11,7 +11,7 @@
         </el-option>
       </el-select>
       <el-input
-        placeholder="搜索"
+        placeholder="搜索文章名称"
         icon="search"
         v-model="keyWord"
         :on-icon-click="search"
@@ -76,6 +76,7 @@
         width="100">
         <template scope="scope">
           <el-button
+            v-if="power.has('article/edit')"      
             type="text"
             size="small"
             @click="$router.push({path: '/tech_list/edit', query: {_id: scope.row._id}})"
@@ -83,6 +84,7 @@
             编辑
           </el-button>
           <el-button
+            v-if="power.has('article/del')"      
             type="text"
             size="small"
             @click="delArticle(scope.$index, scope.row)"
@@ -208,6 +210,11 @@ export default {
     // 搜索
     search () {
       this.getAPIDoc(1)
+    }
+  },
+  computed: {
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   },
   watch: {

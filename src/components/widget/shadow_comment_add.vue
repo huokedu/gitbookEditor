@@ -1,6 +1,6 @@
 <template>
   <div id="addComment">
-    <div class="line">
+    <div class="line" v-if="power.has('project/query')">
       <span class="title">项目名称：</span>
       <el-select v-model="proId" filterable placeholder="请选择">
         <el-option
@@ -11,7 +11,7 @@
         </el-option>
       </el-select>
     </div>
-    <div class="line">
+    <div class="line" v-if="power.has('member/list')">
       <span class="title">用户名称：</span>
       <el-select v-model="userId" filterable placeholder="请选择">
         <el-option
@@ -111,6 +111,11 @@ export default {
       const vm = this
       vm.userList.push(val)
       vm.userId = val._id
+    }
+  },
+  computed: {
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   }
 }
