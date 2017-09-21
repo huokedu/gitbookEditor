@@ -69,7 +69,7 @@ export default {
     },
     saveContent () {
       if (document.querySelector('.fa-floppy-o')) document.querySelector('.fa-floppy-o').click()
-      if (this.$route.path === '/tech_list/add' || this.power.has('pub/release')) return
+      if (this.$route.path === '/tech_list/add' || !this.power.has('pub/release')) return
       this.pubBook(true)
     },
     pubBook (isSave) {
@@ -79,10 +79,19 @@ export default {
       pubBook({id: vm.id, title, levelOne: vm.levelOne, levelTwo: vm.levelTwo, isSave, token: vm.$store.state.power.token})
       .then((res) => {
         vm.fullscreenLoading = false
-        vm.$message({
-          type: 'success',
-          message: res.data.message
-        })
+        if (res.data.status === 200) {
+          vm.$message({
+            type: 'success',
+            message: res.data.message
+          })
+          return
+        }
+        setTimeout(() => {
+          vm.$message({
+            type: 'warning',
+            message: res.data.message
+          })
+        }, 1000)
       })
       .catch(err => {
         console.log(err)

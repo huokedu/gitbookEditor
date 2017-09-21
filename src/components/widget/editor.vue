@@ -72,7 +72,7 @@ export default {
         if (res.data.status === 200) {
           vm.$message({
             type: 'success',
-            message: '保存成功'
+            message: '文章保存成功'
           })
         } else {
           vm.$message({
