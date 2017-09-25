@@ -25,7 +25,7 @@ function getPowerList () {
 }
 // 查询用户拥有权限
 function getUserPower (id) {
-  return Axios.post('/power/query', {id})
+  return Axios.post('/power/admin/query', {id})
 }
 // 编辑管理员权限
 function editPower ({uid, ids}) {
