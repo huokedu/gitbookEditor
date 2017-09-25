@@ -74,11 +74,11 @@ export default {
   computed: {
     PV () {
       if (this.generalData.newView) return this.generalData.newView.PV
-      return ''
+      return 0
     },
     UV () {
       if (this.generalData.newView) return this.generalData.newView.UV
-      return ''
+      return 0
     },
     ...mapState('power', [
       'firstLogin', 'name'

@@ -5,8 +5,8 @@
   :unique-opened="true">
     <el-dropdown trigger="click" style="cursor: pointer" @command="quitLogin">
       <span class="el-dropdown-link">
-        <img src="../../assets/logo.png" alt="">
-        <span>下拉菜单</span>
+        <img :src="avatar" alt="头像">
+        <span>{{name}}</span>
         <i class="el-icon-caret-bottom el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
@@ -28,6 +28,7 @@
 
 <script>
 import editUser from '../widget/edit_user'
+import { mapState } from 'vuex'
 export default {
   name: 'nav_menu',
   data () {
@@ -39,7 +40,10 @@ export default {
   computed: {
     routeList () {
       return this.$route.name.split('/')
-    }
+    },
+    ...mapState('power', [
+      'avatar', 'name'
+    ])
   },
   methods: {
     quitLogin (status) {
@@ -72,6 +76,8 @@ export default {
 .el-dropdown-link img {
   width: 30px;
   height: 30px;
+  margin-right: 6px;
+  border-radius: 4px;
   vertical-align: middle;
 }
 .el-breadcrumb{
