@@ -124,7 +124,7 @@ export default {
     // 获取用户列表
     getMemberList () {
       const vm = this
-      getMemberList({limit: 0, shadow: true}).then(res => {
+      getMemberList({limit: 0, shadow: false}).then(res => {
         if (res.data.status === 200) {
           vm.userList = res.data.data.members
         }
