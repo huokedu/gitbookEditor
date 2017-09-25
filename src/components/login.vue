@@ -18,6 +18,7 @@
 <script>
 import {Login} from '../api/power.js'
 import { setupConnection } from '../utils/connect.js'
+import Axios from '../api'
 export default {
   name: 'login',
   data () {
@@ -32,6 +33,7 @@ export default {
       const vm = this
       Login({phone: vm.phone, password: vm.pwd}).then(res => {
         if (res.data.status === 200) {
+          Axios.defaults.headers = {'X-Token-Header': res.data.data.user.token}
           vm.$store.commit('power/CHANGE_LOGIN', true)
           vm.$store.commit('power/GET_POWER_LIST', res.data.data)
           // 建立客服链接

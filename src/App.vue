@@ -14,12 +14,15 @@ import navBar from './components/widget/nav_menu'
 import navTitle from './components/widget/nav_title'
 import { setupConnection } from './utils/connect.js'
 import {getSession} from './api/session.js'
+import Axios from './api'
 export default {
   name: 'app',
   mounted () {
     const vm = this
     const token = vm.$store.state.power.token
     if (token) {
+      // 设置权限请求头
+      Axios.defaults.headers = {'X-Token-Header': token}
       setupConnection(token, vm)
       getSession(token).then(res => {
         if (res.data.status === 200) {
