@@ -16,7 +16,7 @@
             </el-badge>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="历史记录">定时任务补偿</el-tab-pane>
+        <el-tab-pane label="历史记录">还没开发</el-tab-pane>
       </el-tabs>
     </section>
     <section class="right-msg-box">
@@ -181,6 +181,7 @@ export default {
                 }
                 return true
               })
+              // 新用户提示
               if (isNewUser) {
                 const user = msg.user
                 msg.user = {}
@@ -195,10 +196,9 @@ export default {
                 })
                 vm.selected[vm.selected.length] = false
                 if (index) vm.selected.splice(index, 1, true)
-                // 添加消息标记
-                const value = !vm.badge[index] ? 1 : vm.badge[index] + 1
-                vm.badge.splice(index, 1, value)
                 vm.$store.commit('message/GET_SESSION', [msg, ...vm.sessions])
+                // 添加消息标记
+                vm.badge.unshift(1)
               }
               return
             }
