@@ -17,6 +17,7 @@
 
 <script>
 import {Login} from '../api/power.js'
+import { setupConnection } from '../utils/connect.js'
 export default {
   name: 'login',
   data () {
@@ -33,6 +34,8 @@ export default {
         if (res.data.status === 200) {
           vm.$store.commit('power/CHANGE_LOGIN', true)
           vm.$store.commit('power/GET_POWER_LIST', res.data.data)
+          // 建立客服链接
+          setupConnection(res.data.data.user.token)
           vm.$router.push({path: '/'})
         } else {
           vm.$message({
