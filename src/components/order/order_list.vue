@@ -5,8 +5,8 @@
       <el-input
         placeholder="来呀"
         v-model="orderId"
-        @keyup.enter.native="getOrderList(1)"
-        :on-icon-click="() => {getOrderList(1)}"
+        @keyup.enter.native="idSearch"
+        :on-icon-click="idSearch"
         icon="search"
         >
       </el-input>
@@ -148,8 +148,8 @@ export default {
   methods: {
     getOrderList (page) {
       const vm = this
-      console.log(page)
-      getOrderList({page, username: vm.username, orderId: vm.orderId, isTrial: vm.value}).then(res => {
+      vm.orderId = ''
+      getOrderList({page, username: vm.username, isTrial: vm.value}).then(res => {
         if (res.data.status === 200) {
           vm.count = res.data.data.count
           vm.list = res.data.data.types
@@ -172,8 +172,18 @@ export default {
     // 模糊搜索
     fuzzySearch () {
       const vm = this
-      vm.orderId = ''
+      vm.currentPage = 1
       vm.getOrderList(1)
+    },
+    // 订单编号查询
+    idSearch () {
+      const vm = this
+      getOrderList({page: 1, username: vm.username, orderId: vm.orderId, isTrial: vm.value}).then(res => {
+        if (res.data.status === 200) {
+          vm.count = res.data.data.count
+          vm.list = res.data.data.types
+        }
+      })
     }
   },
   computed: {

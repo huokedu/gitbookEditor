@@ -136,7 +136,9 @@ export default {
       vm.list.unshift(user)
     },
     fuzzySearch () {
-      this.getMemberList(1)
+      const vm = this
+      vm.currentPage = 1
+      vm.getMemberList(1)
     },
     // 格式化费用
     formatFee (row) {

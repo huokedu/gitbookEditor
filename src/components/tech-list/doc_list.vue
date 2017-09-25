@@ -14,6 +14,7 @@
         placeholder="搜索文章名称"
         icon="search"
         v-model="keyWord"
+        @keyup.enter.native="search"
         :on-icon-click="search"
         >
       </el-input>
@@ -95,7 +96,7 @@
       </el-table-column>
     </el-table>
     <el-pagination
-      :current-page="currentPage"
+      :current-page.sync="currentPage"
       @current-change="getAPIDoc"
       layout="total, prev, pager, next"
       :total="count">
@@ -209,7 +210,9 @@ export default {
     },
     // 搜索
     search () {
-      this.getAPIDoc(1)
+      const vm = this
+      vm.currentPage = 1
+      vm.getAPIDoc(1)
     }
   },
   computed: {

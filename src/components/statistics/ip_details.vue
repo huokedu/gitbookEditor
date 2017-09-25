@@ -45,6 +45,14 @@
           >
         </el-table-column>
       </el-table>
+      <div class="block">
+        <el-pagination
+          :page-size="10"
+          @current-change="getIPsDetails"
+          layout="total, prev, pager, next"
+          :total="count">
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -57,7 +65,8 @@ export default {
   name: 'ip_details',
   data () {
     return {
-      list: []
+      list: [],
+      count: 27
     }
   },
   mounted () {
@@ -70,6 +79,7 @@ export default {
       getIPsDetails(vm.$route.query.region).then(res => {
         if (res.data.status === 200) {
           vm.list = res.data.data.users
+          vm.count = res.data.data.users.length
         }
       })
     },
@@ -85,6 +95,10 @@ export default {
 #ipDetails {
   width: 1200px;
   margin: 50px auto;
+}
+#ipDetails .block {
+  margin: 20px;
+  text-align: center;
 }
 </style>
 

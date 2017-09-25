@@ -4,7 +4,7 @@
       <span>评论状态：</span>
       <el-select 
       v-model="value"
-      @change="getComments(1)"      
+      @change="fuzzySearch"      
       placeholder="请选择">
         <el-option
           v-for="item in options"
@@ -199,6 +199,7 @@ export default {
     // 模糊搜索
     fuzzySearch () {
       const vm = this
+      vm.currentPage = 1
       vm.getComments(1)
     },
     // 审核评论
