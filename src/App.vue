@@ -12,8 +12,22 @@
 <script>
 import navBar from './components/widget/nav_menu'
 import navTitle from './components/widget/nav_title'
+import { setupConnection } from './utils/connect.js'
+import {getSession} from './api/session.js'
 export default {
   name: 'app',
+  mounted () {
+    const vm = this
+    const token = vm.$store.state.power.token
+    if (token) {
+      setupConnection(token, vm)
+      getSession(token).then(res => {
+        if (res.data.status === 200) {
+          vm.$store.commit('message/GET_SESSION', res.data.data.sessions)
+        }
+      })
+    }
+  },
   components: {
     navBar,
     navTitle

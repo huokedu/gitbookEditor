@@ -29,3 +29,8 @@ export const QUIT_LOGIN = 'QUIT_LOGIN'
 
 export const SELECTED_POWER = 'SELECTED_POWER'
 export const DELETE_POWER = 'DELETE_POWER'
+
+export const GET_MESSAGE = 'GET_MESSAGE'
+export const END_MESSAGE = 'END_MESSAGE'
+export const COMBINE_MESSAGE = 'COMBINE_MESSAGE'
+export const GET_SESSION = 'GET_SESSION'

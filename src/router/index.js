@@ -32,6 +32,8 @@ import shadowCommentList from '../components/shadow/shadow_comment_list.vue'
 
 import power from '../components/power/power.vue'
 import powerEdit from '../components/power/power_edit.vue'
+
+import customer from '../components/customer/customer.vue'
 Vue.use(Router)
 export default new Router({
   routes: [{
@@ -163,6 +165,11 @@ export default new Router({
     name: '管理员/权限编辑',
     path: '/power/edit',
     component: powerEdit
+  },
+  {
+    name: '客服',
+    path: '/customer',
+    component: customer
   }
   ]
 })
