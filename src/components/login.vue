@@ -33,7 +33,7 @@ export default {
       const vm = this
       Login({phone: vm.phone, password: vm.pwd}).then(res => {
         if (res.data.status === 200) {
-          Axios.defaults.headers = {'X-Token-Header': res.data.data.user.token}
+          vm.VetifyPower(res.data.data.user.token)
           vm.$store.commit('power/CHANGE_LOGIN', true)
           vm.$store.commit('power/GET_POWER_LIST', res.data.data)
           // 建立客服链接
@@ -45,6 +45,25 @@ export default {
             message: res.data.message
           })
         }
+      })
+    },
+    VetifyPower (token) {
+      const vm = this
+      Axios.defaults.headers = {'X-Token-Header': token}
+      Axios.interceptors.response.use(function (res) {
+        // 在发送请求之前做些什么
+        if (res.data.status > 6000) {
+          vm.$message({
+            type: 'error',
+            message: res.data.message
+          })
+          vm.$router.push('/login')
+          return
+        }
+        return res
+      }, function (error) {
+        // 对请求错误做些什么
+        return Promise.reject(error)
       })
     },
     // 验证账号密码

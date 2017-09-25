@@ -22,12 +22,25 @@ export default {
     const token = vm.$store.state.power.token
     if (token) {
       // 设置权限请求头
-      Axios.defaults.headers = {'X-Token-Header': token}
+      vm.VetifyPower(token)
       setupConnection(token, vm)
       getSession(token).then(res => {
         if (res.data.status === 200) {
           vm.$store.commit('message/GET_SESSION', res.data.data.sessions)
         }
+      })
+    }
+  },
+  methods: {
+    VetifyPower (token) {
+      Axios.defaults.headers = {'X-Token-Header': token}
+      Axios.interceptors.response.use(function (config) {
+        // 在发送请求之前做些什么
+        console.log(config)
+        return config
+      }, function (error) {
+        // 对请求错误做些什么
+        return Promise.reject(error)
       })
     }
   },
