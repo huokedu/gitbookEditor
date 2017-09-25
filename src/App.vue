@@ -33,11 +33,19 @@ export default {
   },
   methods: {
     VetifyPower (token) {
+      const vm = this
       Axios.defaults.headers = {'X-Token-Header': token}
-      Axios.interceptors.response.use(function (config) {
+      Axios.interceptors.response.use(function (res) {
         // 在发送请求之前做些什么
-        console.log(config)
-        return config
+        if (res.data.status > 6000) {
+          vm.$message({
+            type: 'error',
+            message: res.data.message
+          })
+          vm.$router.push('/login')
+          return
+        }
+        return res
       }, function (error) {
         // 对请求错误做些什么
         return Promise.reject(error)
