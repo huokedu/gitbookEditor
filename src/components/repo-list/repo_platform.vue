@@ -92,7 +92,7 @@ export default {
   computed: {
     cover () {
       const vm = this
-      return vm.client.cover.indexOf('http') !== -1 ? vm.client.cover : `http://192.168.1.98:8808/${vm.client.cover}`
+      return vm.client.cover.indexOf('http') !== -1 ? vm.client.cover : `http://9:8808/${vm.client.cover}`
     },
     power () {
       return new Set(this.$store.state.power.powerList)
@@ -111,7 +111,7 @@ export default {
             if (client.name === vm.activeName) {
               vm.client.show.splice(0, vm.client.show.length)
               client.show = client.show.map(pic => {
-                const url = pic.indexOf('http') === -1 ? `http://192.168.1.98:8808/${pic}` : pic
+                const url = pic.indexOf('http') === -1 ? `http://192.168.1.99:8808/${pic}` : pic
                 return {url}
               })
               setTimeout(() => {

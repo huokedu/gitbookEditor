@@ -3,7 +3,7 @@ let count = 1
 let client = ''
 export function setupConnection (token, vm) {
   const connect = () => {
-    const link = 'http://192.168.1.98:8081?admin=' + token
+    const link = 'http://192.168.1.99:8081?admin=' + token
     const screen = client = Io(link)
     screen.on('connect', () => {
       console.log(`连接成功：${screen.id}`)

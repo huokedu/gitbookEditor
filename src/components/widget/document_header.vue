@@ -51,7 +51,7 @@ export default {
       const vm = this
       checkPub(vm.id).then(res => {
         if (res.status === 200) {
-          window.open(`http://192.168.1.98:8808/pub/${vm.id}`)
+          window.open(`http://192.168.1.99:8808/pub/${vm.id}`)
         } else {
           vm.$message({
             type: 'warning',
