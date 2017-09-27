@@ -78,7 +78,7 @@ export default {
     },
     getMemberList () {
       const vm = this
-      getMemberList({limit: 0}).then(res => {
+      getMemberList({limit: 0, shadow: true}).then(res => {
         if (res.data.status === 200) {
           vm.userList = res.data.data.members
         }
