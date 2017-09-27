@@ -288,6 +288,7 @@ export default {
       }
       // 修改套餐
       vm.parts.map(part => {
+        part.salePrice = part.price
         if (part._id) {
           part.id = part._id
           editPart(part).then(res => {
@@ -301,7 +302,6 @@ export default {
           })
           return
         }
-        part.salePrice = part.price
         part.id = id
         // 添加套餐
         addPart(part).then(res => {
