@@ -78,7 +78,7 @@ export default {
       return [time[0] + '日', time[1]]
     },
     orderType () {
-      if (this.details.content) return this.details.content.trial ? '正式订单' : '试用订单'
+      if (this.details.content) return this.details.content.trial ? '试用订单' : '正式订单'
       return ''
     },
     power () {

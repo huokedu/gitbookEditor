@@ -163,7 +163,7 @@ export default {
     },
     // 格式化订单类型
     formatOrderType (row) {
-      return row.content.trial ? '正式订单' : '试用订单'
+      return row.content.trial ? '试用订单' : '正式订单'
     },
     // 格式化支付方式
     formatPayType (row) {
