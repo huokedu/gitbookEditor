@@ -4,6 +4,7 @@
     <drag-list v-if="power.has('pub/query')"></drag-list>
     <div class="left-list">
       <div class="search">
+        <el-button @click="saveContent">返回</el-button>
         <el-select v-model="sort" placeholder="请选择">
           <el-option
             v-for="item in options"
@@ -107,6 +108,12 @@ export default {
     // 格式化时间
     formatter (time) {
       return formatTime(new Date(time).getTime() / 1000)
+    },
+    // 保存状态
+    saveContent () {
+      const vm = this
+      vm.$store.commit('project/CHECK_SAVE', true)
+      vm.$router.go(-1)
     }
   },
   computed: {

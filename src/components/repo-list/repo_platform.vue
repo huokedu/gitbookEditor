@@ -1,7 +1,7 @@
 <template>
   <div id="platform">
-    <el-tabs v-model="activeName" type="card" @tab-click="changePlatform">
-      <el-tab-pane v-for="cli in clients" :label="cli.name" :name="cli.name" :key="cli._id">
+    <el-tabs v-model="platform" type="card" @tab-click="changePlatform">
+      <el-tab-pane v-for="client in clients" :label="client.name" :name="client.name" :key="client._id">
         <el-form ref="project"  label-width="120px">
           <el-form-item label="客户端封面:">
             <el-upload
@@ -23,8 +23,7 @@
               action="https://11"
               list-type="picture-card"
               :auto-upload= "false"
-              :multiple="true"
-              :file-list="client.show"
+              :file-list="showPic"
               :on-change="saveFileList"
               :on-remove="saveDel"              
               :on-preview="handlePictureCardPreview"
@@ -33,7 +32,7 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="原型地址:">
-            <el-input v-model="client.link.model"></el-input>
+            <el-input :value = "client.link.model" @input="saveModel"></el-input>
           </el-form-item>
           <el-form-item label="UI文件:">
             <el-upload
@@ -41,6 +40,7 @@
               action="https://11"
               ref="upload"
               :on-change="saveUI"
+              :fileList = "fileList"
               :on-remove="handleUIRemove"
               :auto-upload="false"
               >
@@ -49,7 +49,7 @@
             </el-upload>
           </el-form-item>
           <el-form-item　label="技术清单:" v-if="power.has('sort/list')">
-            <el-button @click="$router.push({path: '/repo/pepo_edit/list', query:{API_id: client.List}})">添加/编辑</el-button>
+            <el-button @click="turnToList(client.List)">添加/编辑</el-button>
           </el-form-item>
         </el-form>
       </el-tab-pane>
@@ -65,61 +65,56 @@
 
 <script>
 import { getClientDetials, editClient } from '../../api/projects.js'
+import { deepClone } from '../../utils/index.js'
+import { mapState } from 'vuex'
 export default {
   name: 'repo_platform',
   data () {
     return {
-      activeName: 'android',
-      clients: [],
-      client: {
-        cover: '',
-        show: [],
-        file: '',
-        link: {
-          model: '',
-          ui: ''
-        }
-      },
-      delShow: [],
       dialogImageUrl: '',
       dialogVisible: false,
       UIfile: ''
     }
   },
   mounted () {
-    this.changePlatform()
+    this.getClients()
   },
   computed: {
     cover () {
       const vm = this
-      return vm.client.cover.indexOf('http') !== -1 ? vm.client.cover : `http://9:8808/${vm.client.cover}`
+      const cover = vm.clients[vm.checkIndex].cover
+      return cover && (cover.indexOf('http') !== -1 ? cover : `http://192.168.1.99:8808/${cover}`)
+    },
+    fileList () {
+      const vm = this
+      return vm.clients[vm.checkIndex].link.ui.url ? [deepClone(vm.clients[vm.checkIndex].link.ui)] : []
     },
     power () {
       return new Set(this.$store.state.power.powerList)
+    },
+    ...mapState('project', [
+      'clients', 'checkIndex', 'isSave', 'delShow', 'platform'
+    ]),
+    showPic () {
+      const vm = this
+      const show = vm.clients[vm.checkIndex].show.map(pic => {
+        if (typeof pic === 'string') return pic
+        return deepClone(pic)
+      })
+      return show
     }
   },
   methods: {
-    // 切换平台
-    changePlatform () {
+    getClients () {
       const vm = this
+      if (vm.isSave) return
       const id = vm.$route.query.platform
-      console.log(vm.activeName)
       getClientDetials(id).then(res => {
         if (res.data.status === 200) {
-          vm.clients = res.data.data.clients
-          vm.clients.filter(client => {
-            if (client.name === vm.activeName) {
-              vm.client.show.splice(0, vm.client.show.length)
-              client.show = client.show.map(pic => {
-                const url = pic.indexOf('http') === -1 ? `http://192.168.1.99:8808/${pic}` : pic
-                return {url}
-              })
-              setTimeout(() => {
-                vm.client = client
-              }, 0)
-              return true
-            }
-          })
+          vm.$store.commit('project/GET_CLIENT', res.data.data.clients)
+          // 初始化选中第一个
+          const obj = {label: vm.clients[0].name}
+          vm.changePlatform(obj)
         } else {
           vm.$message({
             type: 'error',
@@ -128,33 +123,46 @@ export default {
         }
       })
     },
+    // 切换平台
+    changePlatform (pla) {
+      const vm = this
+      // 当前客户端
+      vm.clients.some((client, index) => {
+        if (client.name === pla.label) {
+          vm.activeName = pla.label
+          vm.$store.commit('project/CHANGE_CLIENT', index)
+          return true
+        }
+      })
+    },
     // 保存封面
     beforeAvatarUpload (file) {
       const vm = this
       console.log(file)
-      vm.client.file = file.raw
-      vm.client.cover = URL.createObjectURL(file.raw)
+      vm.$store.commit('project/CHANGE_COVER', file.raw)
     },
     // 保存照片墙
     saveFileList () {
-      this.client.show = arguments[1]
+      const vm = this
+      vm.$store.commit('project/SAVE_SHOW', arguments[1])
     },
     // 保存删除文件
     saveDel (file, fileList) {
       const vm = this
-      vm.client.show = fileList
+      vm.$store.commit('project/SAVE_SHOW', fileList)
       if (file.name) return
-      vm.delShow.push(file.url)
+      vm.$store.commit('project/DEL_SHOW', file.url)
     },
     // 保存UI组件
     saveUI (file, fileList) {
       const isZIP = 'application/zip'
       const vm = this
-      fileList.length = 1
-      if (isZIP) {
-        fileList[0] = file
-        vm.UIfile = file
+      if (isZIP === file.raw.type) {
+        fileList.length = 1
+        vm.fileList.splice(0, 1, file)
+        vm.$store.commit('project/SAVE_UI', file)
       } else {
+        fileList = []
         vm.$message({
           type: 'warning',
           message: '上传文件格式错误'
@@ -163,32 +171,44 @@ export default {
     },
     // 移除文件
     handleUIRemove () {
-      this.UIfile = ''
+      this.$store.commit('project/SAVE_UI', '')
     },
     // 图片预览
     handlePictureCardPreview (file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
+    saveModel () {
+      const vm = this
+      vm.$store.commit('project/CHANGE_LINK', event.target.value)
+    },
     saveChange () {
       const vm = this
-      const id = vm.client._id
-      const Cover = vm.client.file
-      const upPic = vm.client.show.filter(pic => {
+      // 确定保存客户端
+      let client = vm.clients[vm.checkIndex]
+      const id = client._id
+      const Cover = client.file
+      const upPic = client.show.filter(pic => {
         return pic.percentage === 0
       })
       const show = upPic.map(pic => {
         return pic.raw
       })
-      const delShow = vm.delShow
-      const ui = vm.UIfile.raw
-      const modelUrl = vm.client.link.model
+      const delShow = client.delShow
+      const ui = client.link.ui ? client.link.ui.raw : ''
+      const modelUrl = client.link.model
       editClient({id, Cover, show, ui, modelUrl, delShow}).then(res => {
         vm.$message({
           type: 'success',
           message: res.data.message
         })
       })
+    },
+    // 跳转到技术清单
+    turnToList (id) {
+      const vm = this
+      // 跳转钱保存信息
+      vm.$router.push({path: '/repo/pepo_edit/list', query: { API_id: id }})
     }
   }
 }

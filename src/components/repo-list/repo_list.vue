@@ -74,7 +74,7 @@
             v-if="power.has('project/client/query')"
             type="text"
             size="small"
-            @click="$router.push({path:'/repo/repo_edit/repoPlatform', query: {platform: scope.row._id }})"
+            @click="editPro(scope.row._id)"
             >
             客户端
           </el-button>
@@ -171,6 +171,12 @@ export default {
           })
         }
       })
+    },
+    editPro (id) {
+      const vm = this
+      vm.$store.commit('project/CHECK_SAVE', false)
+      console.log(id)
+      vm.$router.push({path: '/repo/repo_edit/repoPlatform', query: {platform: id}})
     }
   },
   computed: {
