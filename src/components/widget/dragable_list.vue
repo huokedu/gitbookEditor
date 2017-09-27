@@ -25,7 +25,7 @@
             </draggable>
           </el-collapse-transition>
         </li>
-        <div :class="[{selected: isRecycle}, 'recycle']" title="删除分类"　@click="getRecycle" v-if="power.has('recycle/list')">
+        <div :class="[{selected: isRecycle}, 'recycle']" title="删除分类"　@click="getRecycle" v-if="power.has('recycle/list') && $route.path !== '/repo/pepo_edit/list'">
           <i class="el-icon-delete2"></i>
           <span>回收站</span>
         </div>
