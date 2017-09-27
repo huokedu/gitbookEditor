@@ -2,14 +2,14 @@
   <div id="listCol">
     <h2 @click="addSort"><i class="el-icon-plus"></i>&nbsp;&nbsp;新分类</h2>
     <h2></h2>
-    <div class="collection">
+    <draggable class="collection" element="div" :options="dragOptions" @sort="changeSort">
        <span class="col" v-for="(col,index) of collection" :class="{selected: selected[index]}" :key="col._id" @click="makeSelected(index, col._id)">
         <span  :data-id="col._id":title="col.name" :contenteditable="editable[index]" @blur="changeSortName">
           {{col.name}}        
         </span>
         <i class="el-icon-delete2" title="删除分类"　@click="delSort(index)"></i>        
       </span>
-    </div>
+    </draggable>
     <div class="recycle" :class="[{selected: isRecycle}, '']" title="删除分类"　@click="getRecycle" v-if="power.has('recycle/list')">
       <i class="el-icon-delete2"></i>
       <span>回收站</span>
@@ -19,6 +19,7 @@
 
 <script>
 import { getSort, addSort, delSort, editSort } from '../../api/articles.js'
+import draggable from 'vuedraggable'
 export default {
   name: 'list_collection',
   data () {
@@ -144,6 +145,27 @@ export default {
           })
         }
       })
+    },
+    changeSort (event) {
+      const index = event.newIndex - 1
+      const vm = this
+      if (index < 0) return
+      // 获取离开和进入分类id和文章id
+      const toId = event.srcElement.children[index].firstChild.dataset.id
+      const fromId = vm.$store.state.article.sort
+      if (fromId === toId) return
+      const articleId = event.item.dataset.id
+      const delIndex = event.item.dataset.index
+      // 调用编辑接口
+      editSort({fromId, toId, articleId}).then(res => {
+        if (res.data.status === 200) {
+          vm.$store.commit('article/CHANGE_LIST', delIndex)
+          vm.$message({
+            type: 'success',
+            message: res.data.message
+          })
+        }
+      })
     }
   },
   computed: {
@@ -155,6 +177,19 @@ export default {
     },
     power () {
       return new Set(this.$store.state.power.powerList)
+    },
+    dragOptions () {
+      return {
+        animation: 1,
+        group: {
+          name: 'levelTwo',
+          pull: false,
+          put: true
+        },
+        filter: 'span',
+        preventOnFilter: false,
+        disabled: false
+      }
     }
   },
   watch: {
@@ -163,6 +198,9 @@ export default {
       if (!vm.$route.query._id || !vm.power.has('sort/list')) return
       vm.getSort()
     }
+  },
+  components: {
+    draggable
   },
   beforeDestroy () {
     const vm = this
@@ -203,7 +241,7 @@ export default {
   text-overflow:ellipsis;
   vertical-align: top;  
 }
-#listCol .col:hover, #listCol .selected, #listCol .recycle:hover{
+#listCol .col:hover, #listCol .selected, #listCol .recycle:hover {
   color: #f63;
   background-color: #fff !important;
 }

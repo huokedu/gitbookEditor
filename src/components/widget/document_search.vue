@@ -20,7 +20,7 @@
     </div>
     <draggable class="article" element="div" v-model="list" :options="dragOptions" >
       <transition-group type="transition" name="el-fade-in">
-        <li class="col" v-for="(col, index) of list" :class="{selected: selected[index]}" :key="col._id" @click="makeSelected(index, col)"> 
+        <li :data-id="col._id" :data-index="index" class="col" v-for="(col, index) of list" :class="{selected: selected[index]}" :key="col._id" @click="makeSelected(index, col)"> 
           <span :title="col.title">
             {{col.title}}
           </span>
@@ -309,6 +309,9 @@ export default {
 }
 #docSearch .ghost {
   opacity: 0.5;
+}
+#listCol .ghost {
+  /* transform: translateY(-30px) */
 }
 #dragCol .sortable-chosen>span{
   display: inline-block;

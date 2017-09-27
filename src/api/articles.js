@@ -64,10 +64,13 @@ function addSort (name) {
   })
 }
 // 编辑文章分类
-function editSort ({name, id}) {
+function editSort ({name, id, fromId, toId, articleId}) {
   return Axios.post('/sort/edit', {
     name,
-    id
+    id,
+    fromId,
+    toId,
+    articleId
   })
 }
 // 删除分类
