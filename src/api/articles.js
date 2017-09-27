@@ -63,6 +63,13 @@ function addSort (name) {
     name
   })
 }
+// 编辑文章分类
+function editSort ({name, id}) {
+  return Axios.post('/sort/edit', {
+    name,
+    id
+  })
+}
 // 删除分类
 function delSort (id) {
   return Axios.post('/sort/del', {
@@ -114,6 +121,7 @@ export {
   getSort,
   addSort,
   delSort,
+  editSort,
   getTags,
   getRecycleList,
   getReArticle,
