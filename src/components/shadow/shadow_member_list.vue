@@ -132,7 +132,9 @@ export default {
         vm.getMemberList(1)
         return
       }
-      vm.list.pop()
+      if (vm.list.length === 10) {
+        vm.list.pop()
+      }
       vm.list.unshift(user)
     },
     fuzzySearch () {

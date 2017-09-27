@@ -23,7 +23,7 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-  name: 'edit_shadow_user',
+  name: 'edit_user',
   props: ['user'],
   data () {
     return {
