@@ -201,27 +201,33 @@ export default {
     },
     editPart (part) {
       const vm = this
-      if (!part._id) {
-        const isDuplicate = vm.parts.some(savedPart => {
-          return savedPart.name === part.name
+      const isDuplicate = vm.parts.some((savedPart, index) => {
+        if (part.index === index) return false
+        return savedPart.name === part.name
+      })
+      // 检查标题重复
+      if (isDuplicate) {
+        return vm.$message({
+          type: 'warning',
+          message: '套餐名重复'
         })
-        // 检查标题重复
-        if (isDuplicate) {
-          return vm.$message({
-            type: 'warning',
-            message: '套餐名重复'
-          })
-        }
-        vm.parts.push(part)
       }
       vm.visiblePart = false
+      if (part.index || part.index === 0) {
+        const index = part.index
+        delete part.index
+        return vm.parts.splice(index, 1, part)
+      }
+      vm.parts.push(part)
     },
     changePart (index) {
       const vm = this
       if (index === -1) {
         vm.choosePart = ''
       } else {
-        vm.choosePart = vm.parts[index]
+        // 复制对象，防止双向绑定
+        const {count, name, price, status, trial} = vm.parts[index]
+        vm.choosePart = {count, name, price, status, trial, index}
       }
       vm.visiblePart = true
     },
@@ -248,9 +254,10 @@ export default {
     },
     // 删除套餐
     delPart (index) {
-      console.log(index)
       const vm = this
-      vm.delId.push(vm.parts[index]._id)
+      if (vm.parts[index]._id) {
+        vm.delId.push(vm.parts[index]._id)
+      }
       vm.parts.splice(index, 1)
     },
     // 编辑项目
