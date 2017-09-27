@@ -249,7 +249,9 @@
  }
 
  export function deepClone(source) {
+   console.log(typeof source)
    if (!source && typeof source !== 'object') {
+     return source
      throw new Error('error arguments', 'shallowClone')
    }
    const targetObj = source.constructor === Array ? [] : {}
