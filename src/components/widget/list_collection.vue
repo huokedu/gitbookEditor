@@ -4,7 +4,7 @@
     <h2></h2>
     <div class="collection">
        <span class="col" v-for="(col,index) of collection" :class="{selected: selected[index]}" :key="col._id" @click="makeSelected(index, col._id)">
-        <span :title="col.name">
+        <span  :data-id="col._id":title="col.name" :contenteditable="editable[index]" @blur="changeSortName">
           {{col.name}}        
         </span>
         <i class="el-icon-delete2" title="删除分类"　@click="delSort(index)"></i>        
@@ -18,19 +18,19 @@
 </template>
 
 <script>
-import { getSort, addSort, delSort } from '../../api/articles.js'
+import { getSort, addSort, delSort, editSort } from '../../api/articles.js'
 export default {
   name: 'list_collection',
   data () {
     return {
       collection: [],
       selected: [],
-      selectedIndex: 0
+      selectedIndex: 0,
+      editable: []
     }
   },
   mounted () {
     const vm = this
-    vm.selected.length = vm.collection.length
     if (!vm.$route.query._id && vm.power.has('sort/list')) vm.getSort()
   },
   methods: {
@@ -84,10 +84,11 @@ export default {
       // 选中状态
       let vm = this
       vm.$store.dispatch('article/getStatus', false)
-      vm.selected = []
-      vm.selected.length = vm.collection.length
+      vm.selected = vm.editable = []
+      vm.selected.length = vm.editable.length = vm.collection.length
       vm.selectedIndex = index
       vm.selected.splice(index, 1, true)
+      vm.editable.splice(index, 1, true)
       vm.$store.dispatch('article/getSort', id)
     },
     addSort () {
@@ -119,6 +120,30 @@ export default {
       const vm = this
       vm.selected.splice(vm.selectedIndex, 1, false)
       vm.$store.dispatch('article/getStatus', 'List')
+    },
+    // 编辑分类名称
+    changeSortName (event) {
+      const name = event.target.innerText
+      if (name === event.target.title) return
+      const vm = this
+      if (!/\D/.test(name)) {
+        event.target.innerText = event.target.title
+        return vm.$message({
+          type: 'success',
+          message: '分类名不能有数字'
+        })
+      }
+      console.log(name, event.target.title)
+      const id = event.target.dataset.id
+      editSort({id, name}).then(res => {
+        if (res.data.status === 200) {
+          event.target.title = name
+          vm.$message({
+            type: 'success',
+            message: res.data.message
+          })
+        }
+      })
     }
   },
   computed: {
