@@ -188,6 +188,10 @@ export default {
     selected () {
       this.getProjectList(this.currentPage)
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    this.$store.commit('project/GET_CLIENT', [])
+    next()
   }
 }
 </script>

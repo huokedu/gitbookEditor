@@ -87,7 +87,12 @@ export default {
     },
     fileList () {
       const vm = this
-      return vm.clients[vm.checkIndex].link.ui.url ? [deepClone(vm.clients[vm.checkIndex].link.ui)] : []
+      const file = vm.clients[vm.checkIndex].link.ui
+      if (file.url) {
+        file.name = file.url.split('/')[1]
+        return [deepClone(file)]
+      }
+      return []
     },
     power () {
       return new Set(this.$store.state.power.powerList)
