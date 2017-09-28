@@ -136,6 +136,12 @@ export default {
       this.keyWord = ''
       this.search()
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    if (to.path === '/repo/repo_edit/repoPlatform') {
+      this.$store.commit('project/CHECK_SAVE', true)
+    }
+    next()
   }
 }
 </script>
