@@ -67,7 +67,7 @@ export default {
         .then(res => {
           if (res.data.status === 200) {
             vm.collection.splice(index, 1)
-            vm.makeSelected(0, res.data.data.sorts[0]._id)
+            vm.makeSelected(0, vm.collection[0]._id)
           }
           vm.$message({
             type: 'success',
@@ -146,6 +146,7 @@ export default {
         }
       })
     },
+    // 修改所属分类
     changeSort (event) {
       const index = event.newIndex - 1
       const vm = this
@@ -170,7 +171,7 @@ export default {
   },
   computed: {
     isRecycle () {
-      return this.$store.state.article.status
+      return this.$store.state.article.isRecycle
     },
     article () {
       return this.$store.state.article.article
@@ -195,6 +196,14 @@ export default {
   watch: {
     article (article, val) {
       const vm = this
+      if (vm.isRecycle) {
+        getSort().then(res => {
+          if (res.data.status === 200) {
+            vm.collection = res.data.data.sorts
+          }
+        })
+        return
+      }
       if (!vm.$route.query._id || !vm.power.has('sort/list')) return
       vm.getSort()
     }

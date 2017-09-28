@@ -122,11 +122,12 @@ export default {
     },
     makeSelected (index, article) {
       let vm = this
+      vm.selected = []
       vm.selected.length = vm.list.length
-      vm.selected = vm.selected.map(() => false)
-      if (index < 0 || !article) return
+      if (index < 0) return
       vm.selected.splice(index, 1, true)
       vm.$store.commit('article/GET_SELECTED', index)
+      if (!article) return
       article.status = false
       vm.$store.dispatch('article/changeSelected', article)
     },
@@ -175,7 +176,7 @@ export default {
       }
     },
     ...mapState('article', [
-      'chooseDir', 'sort', 'isRecycle', 'list'
+      'chooseDir', 'sort', 'isRecycle', 'list', 'selectedIndex'
     ]),
     power () {
       return new Set(this.$store.state.power.powerList)
@@ -225,6 +226,11 @@ export default {
           vm.makeSelected(0, res.data.data[0])
         })
       }
+    },
+    selectedIndex (index) {
+      const vm = this
+      if (!this.isRecycle) return
+      vm.makeSelected(index)
     }
   },
   components: {

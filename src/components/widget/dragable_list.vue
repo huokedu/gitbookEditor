@@ -44,7 +44,6 @@ export default {
   data () {
     return {
       editable: true,
-      selectedIndex: '',
       levelTwo: {}
     }
   },

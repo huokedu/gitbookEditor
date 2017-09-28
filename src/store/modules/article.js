@@ -146,6 +146,13 @@ const mutations = {
   [CHANGE_LIST] (state, index) {
     if (!index) {
       state.list.splice(state.selectedIndex, 1)
+      state.selectedIndex = 0
+      const article = state.list[0]
+      if (!article) return
+      article.status = false
+      state.article = article
+      state.title = article.title
+      state.chooseDir = article.status
       return
     }
     state.list.splice(index, 1)
