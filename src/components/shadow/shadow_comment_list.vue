@@ -65,10 +65,18 @@
           width="200">
           <template scope="scope">
             <el-button
+              v-if="!scope.row.reply.length"
               @click.native.prevent="openReplyBox(scope.row)"
               type="text"
               size="small">
               回复
+            </el-button>
+            <el-button
+              v-else
+              disabled
+              type="text"
+              size="small">
+              已回复
             </el-button>
           </template>
         </el-table-column>
@@ -110,7 +118,7 @@
     <el-dialog
       :visible.sync="addVisible"
       >
-      <add-comment @close="addVisible = false" @addUser="editVisible = true" :user="addUser"></add-comment>
+      <reply-comment @close="addVisible = false" @addUser="editVisible = true" :user="addUser"></reply-comment>
     </el-dialog>
     <el-dialog
       :visible.sync="editVisible"
@@ -120,10 +128,10 @@
   </div>
 </template>
 <script>
-import { getComments, setComment } from '../../api/comments.js'
+import { getComments, setComment, addComment } from '../../api/comments.js'
 import addUser from '../widget/edit_shadow_user'
 import { formatTime } from '../../utils/index.js'
-import addComment from '../widget/shadow_comment_add'
+import replyComment from '../widget/shadow_comment_add'
 export default {
   name: 'order_lsit',
   data () {
@@ -140,7 +148,8 @@ export default {
       editVisible: false,
       addVisible: false,
       textarea: '',
-      addUser: {}
+      addUser: {},
+      userId: ''
     }
   },
   mounted () {
@@ -211,6 +220,7 @@ export default {
       vm.user = row.user.name
       vm.content = row.content
       vm.id = row._id
+      vm.userId = row.user._id
     },
     // 回复评论
     replyComment () {
@@ -221,10 +231,12 @@ export default {
           message: '回复内容不能为空'
         })
       }
-      setComment({id: vm.id, reply: vm.textarea}).then(res => {
+      addComment({commentId: vm.id, content: vm.textarea, userId: vm.userId}).then(res => {
         if (res.data.status === 200) {
           vm.textarea = ''
           vm.dialogVisible = false
+          // 显示已回复
+          vm.list[vm.selectedIndex].reply = [1]
           vm.$message({
             type: 'success',
             message: '回复成功'
@@ -240,7 +252,7 @@ export default {
     }
   },
   components: {
-    addComment,
+    replyComment,
     addUser
   },
   computed: {

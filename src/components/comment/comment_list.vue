@@ -86,10 +86,18 @@
               不通过
             </el-button>
             <el-button
-              @click.native.prevent="openReplyBox(scope.row)"
+              v-if="!scope.row.reply.length"
+              @click.native.prevent="openReplyBox(scope.row, scope.$index)"
               type="text"
               size="small">
               回复
+            </el-button>
+            <el-button
+              v-else
+              disabled
+              type="text"
+              size="small">
+              已回复
             </el-button>
           </template>
         </el-table-column>
@@ -165,7 +173,8 @@ export default {
       content: '',
       dialogVisible: false,
       textarea: '',
-      userId: ''
+      userId: '',
+      selectedIndex: 0
     }
   },
   mounted () {
@@ -230,13 +239,15 @@ export default {
         })
       })
     },
-    openReplyBox (row) {
+    openReplyBox (row, index) {
+      console.log(row, index)
       const vm = this
       vm.dialogVisible = true
       vm.user = row.user.name
       vm.userId = row.user._id
       vm.content = row.content
       vm.id = row._id
+      vm.selectedIndex = index
     },
     // 回复评论
     replyComment () {
@@ -251,6 +262,8 @@ export default {
         if (res.data.status === 200) {
           vm.textarea = ''
           vm.dialogVisible = false
+          // 显示已回复
+          vm.list[vm.selectedIndex].reply = [1]
           vm.$message({
             type: 'success',
             message: '回复成功'
