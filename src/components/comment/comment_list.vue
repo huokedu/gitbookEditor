@@ -131,7 +131,7 @@
   </div>
 </template>
 <script>
-import { getComments, setComment } from '../../api/comments.js'
+import { getComments, setComment, addComment } from '../../api/comments.js'
 import { formatTime } from '../../utils/index.js'
 export default {
   name: 'order_lsit',
@@ -164,7 +164,8 @@ export default {
       user: '',
       content: '',
       dialogVisible: false,
-      textarea: ''
+      textarea: '',
+      userId: ''
     }
   },
   mounted () {
@@ -233,6 +234,7 @@ export default {
       const vm = this
       vm.dialogVisible = true
       vm.user = row.user.name
+      vm.userId = row.user._id
       vm.content = row.content
       vm.id = row._id
     },
@@ -245,7 +247,7 @@ export default {
           message: '回复内容不能为空'
         })
       }
-      setComment({id: vm.id, reply: vm.textarea}).then(res => {
+      addComment({commentId: vm.id, content: vm.textarea, userId: vm.userId}).then(res => {
         if (res.data.status === 200) {
           vm.textarea = ''
           vm.dialogVisible = false

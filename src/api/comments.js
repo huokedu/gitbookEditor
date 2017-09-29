@@ -19,7 +19,16 @@ function setComment ({id, state, reply}) {
     reply
   })
 }
+// 添加评论
+function addComment ({userId, commentId, content}) {
+  return Axios.post('/project/comment/add', {
+    userId,
+    commentId,
+    content
+  })
+}
 export {
   getComments,
-  setComment
+  setComment,
+  addComment
 }
