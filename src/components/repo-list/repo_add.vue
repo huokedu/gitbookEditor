@@ -74,6 +74,7 @@
               <span>是否启用</span>
               <el-switch
                 v-model="part.status"
+                @change="checkOnline(index, part.status)"
                 on-text=""
                 off-text="">
               </el-switch>
@@ -168,8 +169,29 @@ export default {
       if (val) {
         this.parts.map((part, sort) => {
           if (sort === index) return
+          part.status = part.trial ? false : part.status
           part.trial = false
         })
+      } else {
+        this.parts[index].status = false
+      }
+    },
+    // 确保最多只有三个套餐上线
+    checkOnline (index, val) {
+      if (val) {
+        let count = 0
+        const vm = this
+        vm.parts.map((part, sort) => {
+          if (part.trial) return
+          count = part.status ? ++count : count
+        })
+        if (count === 4) {
+          vm.$message({
+            type: 'warning',
+            message: '最多上线三个正式套餐'
+          })
+          vm.parts[index].status = false
+        }
       }
     },
     // 保存修改
