@@ -158,6 +158,9 @@ export default {
         vm.getContent(id)
       }
     }
+  },
+  beforeDestroy () {
+    this.$store.commit('article/CHANGE_SELECTED', {title: '', _id: '', stauts: true})
   }
 }
 </script>
