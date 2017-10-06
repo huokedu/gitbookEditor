@@ -84,12 +84,13 @@ function getTags () {
   return Axios.get('/project/tag/list')
 }
 // 获取回收站文章列表
-function getRecycleList ({ label, title, order }) {
+function getRecycleList ({ label, title, order, sort }) {
   return Axios.get('/recycle/list', {
     params: {
       label,
       title,
-      order
+      order,
+      sort
     }
   })
 }
