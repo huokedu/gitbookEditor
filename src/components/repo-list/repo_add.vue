@@ -320,16 +320,14 @@ export default {
         part.salePrice = part.price
         if (part._id) {
           part.id = part._id
-          editPart(part).then(res => {
+          return editPart(part).then(res => {
             if (res.data.status === 200) {
               vm.$message({
                 type: 'success',
                 message: '保存成功'
               })
-              return
             }
           })
-          return
         }
         part.id = id
         // 添加套餐
