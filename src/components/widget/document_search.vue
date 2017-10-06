@@ -18,7 +18,7 @@
       <el-button @click="addArticle" v-show="!isRecycle && power.has('article/add')">添加文章</el-button>
       <el-button @click="getArticles" v-show="isRecycle === 'API'">返回API</el-button> 
     </div>
-    <draggable class="article" element="div" v-model="list" :options="dragOptions" >
+    <draggable class="article" element="div" v-model="list" :options="dragOptions" :move="onMove" >
       <transition-group type="transition" name="el-fade-in">
         <li :data-id="col._id" :data-index="index" class="col" v-for="(col, index) of list" :class="{selected: selected[index]}" :key="col._id" @click="makeSelected(index, col)"> 
           <span :title="col.title">
@@ -165,6 +165,22 @@ export default {
           vm.makeSelected(0, res.data.data.docs[0])
         })
       }
+    },
+    // 判断重复
+    onMove ({draggedContext}) {
+      const id = draggedContext.element._id
+      const vm = this
+      let duplicate = false
+      const checkSet = new Set()
+      checkSet.add(id)
+      Object.values(vm.$store.state.article.levelTwo).map(dir => {
+        if (duplicate) return
+        duplicate = dir.some((article, index) => {
+          if (checkSet.has(article._id)) return true
+          checkSet.add(article._id)
+        })
+      })
+      return !duplicate
     }
   },
   computed: {
@@ -315,9 +331,6 @@ export default {
 }
 #docSearch .ghost {
   opacity: 0.5;
-}
-#listCol .ghost {
-  /* transform: translateY(-30px) */
 }
 #dragCol .sortable-chosen>span{
   display: inline-block;

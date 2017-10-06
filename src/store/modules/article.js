@@ -54,11 +54,7 @@ const actions = {
   getDir ({commit}, dir) {
     commit('GET_DIR', dir)
   },
-  modifyDir ({commit}, { index, title, key, secDir }) {
-    if (key) {
-      commit('DEL_SEC_DIR', { index, key })
-      return
-    }
+  modifyDir ({commit}, { index, title }) {
     if (title) {
       commit('ADD_DIR', { index, title })
       return
@@ -114,6 +110,7 @@ const mutations = {
     state.levelOne.splice(index, 1, title)
   },
   [DEL_DIR] (state, index) {
+    delete state.levelTwo[state.levelOne[index]]
     state.levelOne.splice(index, 1)
   },
   [UPDATE_DIRECTORY] (state, { dir, secDir }) {

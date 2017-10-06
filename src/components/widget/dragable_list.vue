@@ -6,7 +6,7 @@
           <p class="level-one" :title="col">
             <span>{{col}}</span>
             <i class="el-icon-delete2" title="删除目录" @click="delDir(index)"></i>        
-            <!-- <i class="el-icon-plus" title="添加文档"　@click="addArticle(levelOne[index])"></i>       -->
+            <i class="el-icon-edit" title="修改目录名称"　@click="changeName(index, col)"></i>      
           </p>
           <el-collapse-transition>
             <draggable element="div" v-model="levelTwo[col]" :options="dragOptions1" @sort="saveDir"> 
@@ -82,6 +82,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        delete vm.levelTwo[vm.levelOne[index]]
         vm.$store.dispatch('article/modifyDir', { index })
         vm.$message({
           type: 'success',
@@ -136,6 +137,36 @@ export default {
         })
       })
     },
+    // 修改目录名称
+    changeName (index, name) {
+      // 修改目录名称
+      let vm = this
+      vm.$msgbox.prompt('请输入目录名称', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /\D/,
+        inputErrorMessage: '标题名不能有数字'
+      }).then(({ value }) => {
+        const dulpliate = vm.levelOne.some((dir, ind) => {
+          return dir === value
+        })
+        const message = dulpliate ? '标题重复' : '添加成功'
+        const type = dulpliate ? 'warning' : 'success'
+        vm.$message({
+          type, message
+        })
+        vm.$store.dispatch('article/modifyDir', { index, title: value })
+        if (dulpliate) return vm.changeName()
+        vm.$set(vm.levelTwo, value, vm.levelTwo[name])
+        delete vm.levelTwo[name]
+      }).catch((err) => {
+        console.log(err)
+        vm.$message({
+          type: 'info',
+          message: '取消输入'
+        })
+      })
+    },
     delArticle (key, index) {
       // 删除二级目录
       let vm = this
@@ -157,7 +188,7 @@ export default {
         })
       })
     },
-    saveDir () {
+    saveDir (target) {
       const vm = this
       const levelTwoStr = JSON.stringify(vm.levelTwo)
       const dir = JSON.parse(levelTwoStr)
@@ -202,16 +233,7 @@ export default {
     }
   },
   watch: {
-    title (title) {
-      const vm = this
-      Object.keys(vm.levelTwo).map(path => {
-        vm.levelTwo[path].map((article, index) => {
-          if (vm.article._id === article._id) {
-            vm.levelTwo[path].splice(index, 1, { _id: vm.article._id, title })
-          }
-        })
-      })
-    },
+    // 切换两个列表选中状态
     chooseDir (val) {
       if (!val) {
         this.makeSelected(-1)
@@ -281,7 +303,7 @@ export default {
 #docSearch .sortable-chose {
   width: 20px !important;
 }
-#dragCol .col .el-icon-delete2, #dragCol .col .el-icon-plus{
+#dragCol .col .el-icon-delete2, #dragCol .col .el-icon-edit{
   float: right;
   margin: 14px 0 0 6px;
   cursor: pointer;
