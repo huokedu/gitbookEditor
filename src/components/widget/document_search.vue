@@ -15,8 +15,8 @@
           <el-dropdown-item v-else command="delete_time">删除时间</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-button @click="addArticle" v-if="!isRecycle && power.has('article/add')">添加文章</el-button>
-      <el-button @click="getArticles" v-if="isRecycle === 'API'">返回API</el-button> 
+      <el-button @click="addArticle" v-show="!isRecycle && power.has('article/add')">添加文章</el-button>
+      <el-button @click="getArticles" v-show="isRecycle === 'API'">返回API</el-button> 
     </div>
     <draggable class="article" element="div" v-model="list" :options="dragOptions" >
       <transition-group type="transition" name="el-fade-in">
@@ -216,6 +216,14 @@ export default {
         .then(res => {
           vm.$store.commit('article/GET_LIST', res.data.data.docs)
           vm.makeSelected(0, res.data.data.docs[0])
+        })
+      } else {
+        // 文章列表
+        const vm = this
+        const sort = vm.sort || vm.$route.query.API_id
+        getAPIDoc({page: 1, label: vm.label, sort}).then((res) => {
+          if (res.data.status === 200) vm.$store.commit('article/GET_LIST', res.data.data)
+          vm.makeSelected(0, res.data.data[0])
         })
       }
     },
