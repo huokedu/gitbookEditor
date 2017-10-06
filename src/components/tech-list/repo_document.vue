@@ -1,11 +1,11 @@
 <template>
   <div id="repoDocument">
     <doc-header title="APIplus技术文档"></doc-header>
-    <listCol></listCol>
-    <search label="List"></search>
+    <listCol v-if="!isEdit"></listCol>
+    <search v-if="!isEdit" label="List"></search>
     <div>
-      <mk-header></mk-header>
-      <editor></editor>    
+      <mk-header :class="{isEdit: isEdit}"></mk-header>
+      <editor :class="{isEdit: isEdit}"></editor>    
     </div>
   </div>
 </template>
@@ -24,9 +24,18 @@ export default {
     listCol,
     search,
     mkHeader
+  },
+  computed: {
+    isEdit () {
+      return this.$route.path === '/tech_list/edit'
+    }
   }
 }
 </script>
 
 <style scoped>
+.isEdit {
+  width: 99% ;
+  margin: 0 !important;
+}
 </style>

@@ -35,7 +35,7 @@
         >
       </el-table-column>
       <el-table-column
-        prop="author.username"
+        prop="author.name"
         header-align="center"
         label="作者"
         >
@@ -113,7 +113,7 @@ export default {
     const vm = this
     vm.getAPIDoc(1)
     vm.getTags()
-    vm.getSort()
+    if (vm.power.has('sort/list')) vm.getSort()
   },
   data () {
     return {

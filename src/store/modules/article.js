@@ -147,8 +147,17 @@ const mutations = {
     if (!index) {
       state.list.splice(state.selectedIndex, 1)
       state.selectedIndex = 0
+      console.log(state.list[0])
       const article = state.list[0]
-      if (!article) return
+      if (!article) {
+        state.article = {
+          _id: '',
+          status: '',
+          title: ''
+        }
+        state.title = ''
+        return
+      }
       article.status = false
       state.article = article
       state.title = article.title

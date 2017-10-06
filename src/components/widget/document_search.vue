@@ -57,7 +57,8 @@ export default {
     getArticles (page) {
       let vm = this
       vm.$store.dispatch('article/getStatus', false)
-      getAPIDoc({ page }).then((res) => {
+      const sort = vm.sort || vm.$route.query.API_id
+      getAPIDoc({ page, sort }).then((res) => {
         if (res.data.status === 200) vm.$store.commit('article/GET_LIST', res.data.data)
         vm.makeSelected(0, res.data.data[0])
       })
@@ -98,7 +99,8 @@ export default {
         inputPattern: /[\S]/,
         inputErrorMessage: '文档名不能为空'
       }).then(({ value }) => {
-        addDoc({title: value, sort: vm.sort, label: vm.label, token: vm.$store.state.power.token}).then((res) => {
+        const sort = vm.sort || vm.$route.query.API_id
+        addDoc({title: value, sort, label: vm.label, token: vm.$store.state.power.token}).then((res) => {
           if (res.data.status === 200) {
             vm.$store.commit('article/ADD_LIST', res.data.data)
             vm.makeSelected(0, res.data.data)
@@ -148,12 +150,12 @@ export default {
     },
     changeOrder (index) {
       let vm = this
-      console.log(index)
       const order = {}
       order[index] = vm.order
       vm.order = vm.order === 1 ? -1 : 1
       if (!vm.isRecycle) {
-        getAPIDoc({page: 1, title: vm.keyword, order, label: vm.label, sort: vm.sort}).then((res) => {
+        const sort = vm.sort || vm.$route.query.API_id
+        getAPIDoc({page: 1, title: vm.keyword, order, label: vm.label, sort}).then((res) => {
           if (res.data.status === 200) vm.$store.commit('article/GET_LIST', res.data.data)
         })
       } else {
@@ -184,12 +186,11 @@ export default {
   },
   watch: {
     chooseDir (val) {
-      console.log(val)
       if (val) this.makeSelected(-1)
     },
     sort (sort) {
       const vm = this
-      if (sort === '') return
+      if (sort === undefined) return
       getAPIDoc({page: 1, label: vm.label, sort}).then((res) => {
         if (res.data.status === 200) {
           vm.$store.commit('article/GET_LIST', res.data.data)
@@ -198,8 +199,6 @@ export default {
             vm.selected.length = vm.list.length
             res.data.data.map((article, index) => {
               if (article._id === vm.$route.query._id) {
-                console.log(article._id, vm.$route.query._id)
-                console.log(index, vm.selected)
                 vm.selected.splice(index, 1, true)
               }
             })

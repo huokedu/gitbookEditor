@@ -109,7 +109,7 @@ export default {
     top: 0;
     bottom: 0;
     left: 0;
-    z-index: 1001;
+    z-index: 3000;
     overflow: hidden;
     transition: all .28s ease-out;
     transform: translate(-160px,0);  

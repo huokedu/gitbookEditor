@@ -213,7 +213,7 @@ export default {
   },
   beforeDestroy () {
     const vm = this
-    vm.$store.dispatch('article/getSort', '')
+    vm.$store.dispatch('article/getSort', undefined)
   }
 }
 </script>
