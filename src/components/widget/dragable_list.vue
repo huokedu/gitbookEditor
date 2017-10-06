@@ -174,7 +174,8 @@ export default {
         animation: 0,
         group: 'levelOne',
         disabled: !this.editable,
-        ghostClass: 'ghost'
+        ghostClass: 'ghost',
+        filter: '.recycle'
       }
     },
     dragOptions1 () {
