@@ -36,6 +36,11 @@
     <span slot="title">评论</span>
   </el-menu-item>
 
+  <el-menu-item index="/cdKey" >
+      <i class="el-icon-message"></i>
+      <span slot="title">兑换码</span>
+  </el-menu-item>
+
   <el-menu-item index="/member/member_list" v-if="power.has('member/list')">
       <i class="el-icon-message"></i>
       <span slot="title">会员</span>

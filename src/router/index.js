@@ -34,6 +34,8 @@ import power from '../components/power/power.vue'
 import powerEdit from '../components/power/power_edit.vue'
 
 import customer from '../components/customer/customer.vue'
+
+import cdKey from '../components/cdKey/cdKey_list.vue'
 Vue.use(Router)
 export default new Router({
   routes: [{
@@ -170,6 +172,11 @@ export default new Router({
     name: '客服',
     path: '/customer',
     component: customer
+  },
+  {
+    name: '兑换码',
+    path: '/cdKey',
+    component: cdKey
   }
   ]
 })
