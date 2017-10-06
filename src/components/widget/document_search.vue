@@ -212,17 +212,10 @@ export default {
       // 回收站列表
       if (status) {
         const vm = this
-        getRecycleList({label: status})
+        getRecycleList({label: status, sort: vm.$route.query.API_id})
         .then(res => {
           vm.$store.commit('article/GET_LIST', res.data.data.docs)
           vm.makeSelected(0, res.data.data.docs[0])
-        })
-      } else {
-        // 文章列表
-        const vm = this
-        getAPIDoc({page: 1, label: vm.label, sort: vm.sort}).then((res) => {
-          if (res.data.status === 200) vm.$store.commit('article/GET_LIST', res.data.data)
-          vm.makeSelected(0, res.data.data[0])
         })
       }
     },
