@@ -141,6 +141,10 @@ export default {
   watch: {
     id (id) {
       const vm = this
+      if (!id) {
+        vm.value = ''
+        return
+      }
       if (vm.isRecycle) {
         if (!vm.power.has('recycle/query')) {
           vm.value = ''

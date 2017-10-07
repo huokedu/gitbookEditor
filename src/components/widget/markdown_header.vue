@@ -8,10 +8,10 @@
       <el-button v-if="showTag && !isRecycle" @click="visible = true">
         添加标签
       </el-button>
-      <el-button v-if="isRecycle && power.has('recycle/recover')" @click="recover">
+      <el-button v-if="isRecycle && power.has('recycle/recover') && title" @click="recover">
         恢复文章
       </el-button>
-      <el-button v-if="isRecycle && power.has('recycle/del')" @click="delArticle">
+      <el-button v-if="isRecycle && power.has('recycle/del') && title" @click="delArticle">
         彻底删除
       </el-button>  
       <div class="tag" :style="{width: isRecycle ? '476px' : '550px'}" v-if="showTag">

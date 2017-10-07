@@ -137,13 +137,14 @@ export default {
       let vm = this
       if (vm.isRecycle) {
         const vm = this
-        getRecycleList({ label: vm.isRecycle, title: vm.keyword })
+        getRecycleList({ label: vm.isRecycle, title: vm.keyword, sort: vm.$route.query.API_id })
         .then(res => {
           vm.$store.commit('article/GET_LIST', res.data.data.docs)
           vm.makeSelected(0, res.data.data.docs[0])
         })
       } else {
-        getAPIDoc({page: 1, title: vm.keyword, label: vm.label, sort: vm.sort}).then((res) => {
+        const sort = vm.sort || vm.$route.query.API_id
+        getAPIDoc({page: 1, title: vm.keyword, label: vm.label, sort}).then((res) => {
           if (res.data.status === 200) vm.$store.commit('article/GET_LIST', res.data.data)
         })
       }
@@ -159,7 +160,7 @@ export default {
           if (res.data.status === 200) vm.$store.commit('article/GET_LIST', res.data.data)
         })
       } else {
-        getRecycleList({ label: vm.isRecycle, order })
+        getRecycleList({ label: vm.isRecycle, order, sort: vm.$route.query.API_id })
         .then(res => {
           vm.$store.commit('article/GET_LIST', res.data.data.docs)
           vm.makeSelected(0, res.data.data.docs[0])
@@ -231,7 +232,15 @@ export default {
         getRecycleList({label: status, sort: vm.$route.query.API_id})
         .then(res => {
           vm.$store.commit('article/GET_LIST', res.data.data.docs)
-          vm.makeSelected(0, res.data.data.docs[0])
+          if (res.data.data.docs.length) {
+            vm.makeSelected(0, res.data.data.docs[0])
+          } else {
+            vm.makeSelected(0, {
+              _id: '',
+              title: '',
+              status: false
+            })
+          }
         })
       } else {
         // 文章列表
