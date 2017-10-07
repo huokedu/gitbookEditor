@@ -20,9 +20,9 @@ function setComment ({id, state, reply}) {
   })
 }
 // 添加评论
-function addComment ({userId, commentId, content}) {
+function addComment ({token, commentId, content}) {
   return Axios.post('/project/comment/add', {
-    userId,
+    token,
     commentId,
     content
   })

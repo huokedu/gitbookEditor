@@ -86,7 +86,7 @@
               不通过
             </el-button>
             <el-button
-              v-if="!scope.row.reply.length"
+              v-if="!scope.row.reply.length && scope.row.state !== 'unpassed'"
               @click.native.prevent="openReplyBox(scope.row, scope.$index)"
               type="text"
               size="small">
@@ -97,7 +97,7 @@
               disabled
               type="text"
               size="small">
-              已回复
+              {{scope.row.state === 'unpassed' ? '' : '已回复'}}
             </el-button>
           </template>
         </el-table-column>
@@ -173,7 +173,6 @@ export default {
       content: '',
       dialogVisible: false,
       textarea: '',
-      userId: '',
       selectedIndex: 0
     }
   },
@@ -244,7 +243,6 @@ export default {
       const vm = this
       vm.dialogVisible = true
       vm.user = row.user.name
-      vm.userId = row.user._id
       vm.content = row.content
       vm.id = row._id
       vm.selectedIndex = index
@@ -258,7 +256,7 @@ export default {
           message: '回复内容不能为空'
         })
       }
-      addComment({commentId: vm.id, content: vm.textarea, userId: vm.userId}).then(res => {
+      addComment({commentId: vm.id, content: vm.textarea, token: vm.$store.state.power.token}).then(res => {
         if (res.data.status === 200) {
           vm.textarea = ''
           vm.dialogVisible = false
