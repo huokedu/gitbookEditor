@@ -27,7 +27,7 @@
         <span>作者</span>
         <span>发布时间</span>
       </div>
-      <draggable class="article" element="div" v-model="articleList" :options="dragOptions" > 
+      <draggable class="article" element="div" v-model="articleList" :options="dragOptions" :move="onMove"> 
         <li  v-for="(col, index) of articleList" :key="col._id"> 
           <span>
             {{col.title}}
@@ -114,6 +114,22 @@ export default {
       const vm = this
       vm.$store.commit('project/CHECK_SAVE', true)
       vm.$router.go(-1)
+    },
+    // 判断重复
+    onMove ({draggedContext}) {
+      const id = draggedContext.element._id
+      const vm = this
+      let duplicate = false
+      const checkSet = new Set()
+      checkSet.add(id)
+      Object.values(vm.$store.state.article.levelTwo).map(dir => {
+        if (duplicate) return
+        duplicate = dir.some((article, index) => {
+          if (checkSet.has(article._id)) return true
+          checkSet.add(article._id)
+        })
+      })
+      return !duplicate
     }
   },
   computed: {
