@@ -5,7 +5,7 @@
   :unique-opened="true">
     <el-dropdown trigger="click" style="cursor: pointer" @command="quitLogin">
       <span class="el-dropdown-link">
-        <img :src="avatar" alt="头像">
+        <img :src="avatar | link" alt="头像">
         <span>{{name}}</span>
         <i class="el-icon-caret-bottom el-icon--right"></i>
       </span>

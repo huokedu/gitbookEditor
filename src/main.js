@@ -21,6 +21,14 @@ router.beforeEach((to, from, next) => {
   }
   next()
 })
+
+// 注册全局过滤函数
+Vue.filter('link', function (value) {
+  // 返回处理后的值
+  if (!value) return ''
+  return value.indexOf('http') === -1 ? `http://192.168.1.99:8808/${value}` : value
+})
+
 new Vue({
   el: '#app',
   router,
