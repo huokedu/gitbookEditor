@@ -24,7 +24,7 @@
         </el-tag>
       </div>
       <el-dialog title="添加标签" :visible.sync="visible" v-if="power.has('project/tag/list') && power.has('article/edit')">
-        <tags v-show="visible"></tags>
+        <tags v-if="visible"></tags>
       </el-dialog>
     </div>
   </div>
@@ -54,6 +54,15 @@ export default {
     changeTitle () {
       const vm = this
       const title = document.querySelector('#mkTitle').textContent
+      // 标题不符合规定时持续聚焦
+      if (/[\s,.，。]+/.test(title)) {
+        vm.$store.dispatch('article/changeTitle', vm.title)
+        document.querySelector('#mkTitle').focus()
+        return vm.$message({
+          type: 'warning',
+          message: '文档名不能为空,且不能有空格,逗号,句号'
+        })
+      }
       vm.$store.dispatch('article/changeTitle', title)
     },
     recover () {
