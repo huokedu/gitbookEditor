@@ -12,7 +12,7 @@ import {
 
 const state = {
   platform: 'android',
-  clients: {},
+  clients: [],
   checkIndex: 0,
   isSave: false
 }
