@@ -148,7 +148,6 @@ export default {
     width: 200px;
     overflow: hidden;
     white-space: nowrap;
-    text-overflow: ellipsis;
     vertical-align: middle;    
   }
   #mkHeader .tag {
