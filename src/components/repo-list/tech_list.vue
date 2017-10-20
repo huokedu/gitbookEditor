@@ -155,7 +155,8 @@ export default {
   },
   beforeRouteLeave (to, from, next) {
     if (to.path === '/repo/repo_edit/repoPlatform') {
-      this.$store.commit('project/CHECK_SAVE', true)
+      const state = !!this.$store.state.project.clients.length
+      this.$store.commit('project/CHECK_SAVE', state)
     }
     next()
   }
