@@ -60,6 +60,7 @@
       <el-table-column
         label="操作"
         header-align="center"
+        width="250"
        >
         <template scope="scope">
           <el-button
@@ -87,12 +88,28 @@
             编辑
           </el-button>
           <el-button
-            v-if="power.has('project/edit')"
+            v-if="power.has('project/edit') && scope.row.status === 'offline'"
             type="text"
             size="small"
-            @click="changeStatus(scope.row._id, scope.row.status, scope.$index)"
+            @click="changeStatus(scope.row._id, 'pre', scope.$index)"
             >
-            {{scope.row.status === 'online' ? '下架' : '上架'}}
+            预售
+          </el-button>
+          <el-button
+            v-if="power.has('project/edit') && scope.row.status === 'offline'"
+            type="text"
+            size="small"
+            @click="changeStatus(scope.row._id, 'online', scope.$index)"
+            >
+            上架
+          </el-button>
+          <el-button
+            v-if="power.has('project/edit') && scope.row.status !== 'offline'"
+            type="text"
+            size="small"
+            @click="changeStatus(scope.row._id, 'offline', scope.$index)"
+            >
+            下架
           </el-button>
         </template>
       </el-table-column>
@@ -142,7 +159,7 @@ export default {
       getProjectList({ page, status: vm.selected, name }).then(res => {
         if (res.data.status === 200) {
           res.data.data.projects.map(data => {
-            data.statusText = data.status === 'online' ? '上架中' : '已下架'
+            data.statusText = data.status === 'offline' ? '已下架' : data.status === 'online' ? '上架中' : '预售中'
             if (!data.part) data.part = 'N/A'
           })
           vm.tableData = res.data.data.projects
@@ -158,16 +175,15 @@ export default {
     },
     // 切换上下架功能
     changeStatus (id, status, index) {
-      console.log(index)
-      status = status === 'online' ? 'offline' : 'online'
       const vm = this
       editProject({id, status}).then(res => {
         if (res.data.status === 200) {
-          vm.$set(vm.tableData[index], 'statusText', status === 'online' ? '上架中' : '已下架')
+          vm.$set(vm.tableData[index], 'statusText', status === 'offline' ? '已下架' : status === 'online' ? '上架中' : '预售中')
           vm.$set(vm.tableData[index], 'status', status)
+          const message = status === 'offline' ? '下架成功' : status === 'online' ? '上架成功' : '预售成功'
           vm.$message({
             type: 'success',
-            message: status === 'online' ? '上架成功' : '下架成功'
+            message
           })
         }
       })
@@ -175,7 +191,6 @@ export default {
     editPro (id) {
       const vm = this
       vm.$store.commit('project/CHECK_SAVE', false)
-      console.log(id)
       vm.$router.push({path: '/repo/repo_edit/repoPlatform', query: {platform: id}})
     }
   },
