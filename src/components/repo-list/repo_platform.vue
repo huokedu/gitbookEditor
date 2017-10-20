@@ -212,7 +212,7 @@ export default {
     // 跳转到技术清单
     turnToList (id) {
       const vm = this
-      // 跳转钱保存信息
+      // 跳转前保存信息
       vm.$router.push({path: '/repo/pepo_edit/list', query: { API_id: id }})
     }
   }
