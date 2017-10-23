@@ -86,14 +86,14 @@
               不通过
             </el-button>
             <el-button
-              v-if="!scope.row.reply.length && scope.row.state !== 'unpassed'"
+              v-if="power.has('project/comment/add') && !scope.row.reply.length && scope.row.state !== 'unpassed'"
               @click.native.prevent="openReplyBox(scope.row, scope.$index)"
               type="text"
               size="small">
               回复
             </el-button>
             <el-button
-              v-else
+              v-else-if="power.has('project/comment/add')"
               disabled
               type="text"
               size="small">

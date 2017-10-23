@@ -18,6 +18,7 @@
 <script>
 import {Login} from '../api/power.js'
 import { setupConnection } from '../utils/connect.js'
+import {getSession} from '../api/session.js'
 import Axios from '../api'
 export default {
   name: 'login',
@@ -32,12 +33,20 @@ export default {
     Login () {
       const vm = this
       Login({phone: vm.phone, password: vm.pwd}).then(res => {
+        const token = res.data.data.user.token
         if (res.data.status === 200) {
-          vm.VetifyPower(res.data.data.user.token)
+          vm.VetifyPower(token)
           vm.$store.commit('power/CHANGE_LOGIN', true)
           vm.$store.commit('power/GET_POWER_LIST', res.data.data)
-          // 建立客服链接
-          setupConnection(res.data.data.user.token)
+          // 有客服权限时，建立客服链接
+          if (vm.power.has('customer/session/query')) {
+            setupConnection(token)
+            getSession(token).then(res => {
+              if (res.data.status === 200) {
+                vm.$store.commit('message/GET_SESSION', res.data.data.sessions)
+              }
+            })
+          }
           vm.$router.push({path: '/'})
         } else {
           vm.$message({
@@ -82,6 +91,11 @@ export default {
         })
       }
       vm.Login()
+    }
+  },
+  computed: {
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   }
 }

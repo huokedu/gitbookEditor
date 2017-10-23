@@ -1,6 +1,6 @@
 <template>
   <div id="listCol">
-    <h2 @click="addSort"><i class="el-icon-plus"></i>&nbsp;&nbsp;新分类</h2>
+    <h2 @click="addSort" v-if="power.has('sort/add')"><i class="el-icon-plus"></i>&nbsp;&nbsp;新分类</h2>
     <h2></h2>
     <draggable class="collection" element="div" :options="dragOptions" @sort="changeSort">
        <span class="col" v-for="(col,index) of collection" :class="{selected: selected[index]}" :key="col._id" @click="makeSelected(index, col._id)">
@@ -85,11 +85,13 @@ export default {
       // 选中状态
       let vm = this
       vm.$store.dispatch('article/getStatus', false)
-      vm.selected = vm.editable = []
+      vm.selected = []
+      vm.editable = []
       vm.selected.length = vm.editable.length = vm.collection.length
       vm.selectedIndex = index
       vm.selected.splice(index, 1, true)
-      vm.editable.splice(index, 1, true)
+      console.log(vm.power.has('sort/edit'))
+      if (vm.power.has('sort/edit')) vm.editable.splice(index, 1, true)
       vm.$store.dispatch('article/getSort', id)
     },
     addSort () {

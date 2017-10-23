@@ -20,15 +20,18 @@ export default {
   mounted () {
     const vm = this
     const token = vm.$store.state.power.token
-    if (token) {
+    if (token && vm.$route.path !== '/login') {
       // 设置权限请求头
       vm.VetifyPower(token)
-      setupConnection(token, vm)
-      getSession(token).then(res => {
-        if (res.data.status === 200) {
-          vm.$store.commit('message/GET_SESSION', res.data.data.sessions)
-        }
-      })
+      // 有客服权限时
+      if (vm.power.has('customer/session/query')) {
+        setupConnection(token, vm)
+        getSession(token).then(res => {
+          if (res.data.status === 200) {
+            vm.$store.commit('message/GET_SESSION', res.data.data.sessions)
+          }
+        })
+      }
     }
   },
   methods: {
@@ -42,14 +45,20 @@ export default {
             type: 'error',
             message: res.data.message
           })
+          vm.$store.commit('power/QUIT_LOGIN')
           vm.$router.push('/login')
-          return
+          return res
         }
         return res
       }, function (error) {
         // 对请求错误做些什么
         return Promise.reject(error)
       })
+    }
+  },
+  computed: {
+    power () {
+      return new Set(this.$store.state.power.powerList)
     }
   },
   components: {

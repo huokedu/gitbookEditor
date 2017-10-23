@@ -8,7 +8,7 @@
           v-for="(session, index) in sessions"
           :key="session._id"
           :title="session.user.user.name">
-            <img src="/static/avatar.b988378.jpg" alt="">
+            <img :src="session.user.user.avatar | link" alt="">
             <el-badge :value="badge[index]" class="item">
               <span >
                 {{session.user.user.name}}
@@ -24,9 +24,9 @@
       <div  class="chat-section" ref="chat" v-loading.body="loading">
         <transition-group name=msg-display>
           <div v-for="(info, index) in msgList" :class="info.class" :key="index">
-            <div v-if="!info.end" class="time">{{formatTime(info.time)}}</div>                        
+            <div v-if="!info.end" class="time">{{formatTime(info.time)}}</div></br>                      
             <div class="end" v-if="info.end">没有更多了～～～</div>
-            <span v-else><img :src="info.user && info.user.avatar || '/static/avatar.b988378.jpg'" alt=""></span>
+            <span v-else><img :src="info.user && info.user.avatar | link" alt=""></span>
             <p v-if="!info.end">{{info.body}}</p>
           </div>
         </transition-group>    
@@ -52,7 +52,6 @@ export default {
     return {
       isChat: false,
       msg: '',
-      msgIndex: 0,
       online: false,
       db: null,
       latest_id: '',
@@ -138,30 +137,37 @@ export default {
         vm.from = vm.sessions[0].admin
       }
       client.emit('message-offline', '', (data) => {
-        if (vm.msgList.length) return
-        vm.db.insert(data, function (err, docs) {
-          if (err || !docs.data.messages.length) return
-          vm.$store.commit('message/GET_MESSAGE', docs.data.messages)
+        if (!data.data.messages.length) return
+        const messages = data.data.messages.map(msg => {
+          msg.class = 'custom-service'
+          msg.user = msg.from.user
+          msg.from = msg.from._id
+          return
+        })
+        console.log(data.data)
+        vm.db.insert(messages, function (err, docs) {
+          if (err) return
           let ele = vm.$refs.chat
+          console.log(ele)
           setTimeout(function () {
+            console.log(ele)
             ele.scrollTop = ele.scrollHeight - 10
           }, 0)
         })
       })
       client.on('message', (msg) => {
         // 收到消息
-        console.log(msg)
         if (msg.type === 'online') {
           client.send({
             to: msg.from,
             from: msg.to,
-            body: '您好',
+            body: vm.$store.state.power.name,
             time: Date.now(),
-            type: 'text'
+            type: 'online'
           })
         }
         client.emit('vcard', msg.from, (data) => {
-          console.log(data)
+          console.log(data, 123)
           msg.user = data.data.vcard.user
           msg.class = 'custom-service'
           // 重置消息时间
@@ -237,7 +243,7 @@ export default {
           if (err) return
           console.log(docs)
           if (!docs.length) {
-            if (vm.msgList[0].end) return
+            if (!vm.msgList.length || vm.msgList[0].end) return
             vm.$store.commit('message/END_MESSAGE')
           }
           vm.$store.commit('message/COMBINE_MESSAGE', [...docs.reverse(), ...vm.msgList])
@@ -287,7 +293,8 @@ export default {
   vertical-align: top;
 }
 #customer .time {
-  line-height: 0px;
+  display: inline-block;
+  height: 22px;
 }
 #customer .el-tabs{
   height: 100%;
@@ -304,6 +311,7 @@ export default {
   margin: 10px 0 0;
   height: 35px;
   width: 35px;
+  border-radius: 50%;
   vertical-align: middle;
 }
 #customer .box span {
@@ -375,33 +383,33 @@ export default {
 }
 #customer .chat-section .user {
   text-align: right;
-  height: 70px;
-  line-height: 70px;
 }
-#customer .chat-section .custom-service {
-  height: 70px;
-  line-height: 70px;
+#customer .chat-section .user, #customer .chat-section .custom-service {
+  padding: 5px 0;
 }
-#customer .chat-section .user img {
+#customer .chat-section .user span {
   float: right;
-  margin-top: 13px;
+  margin-top: -2px;
 }
 
 #customer .chat-section img {
   width: 36px;
   height: 36px;
-  vertical-align: middle;
+  border-radius: 50%;
+  vertical-align: top;
 }
 #customer .chat-section p {
   position: relative;
   display: inline-block;
   margin: 0 10px;
   padding: 0 10px;
-  height: 35px;
+  max-width: 800px;
   line-height: 35px;
   border-radius: 5px;
   background-color: #20a0ff;
   vertical-align: middle;
+  word-break: break-all;
+  text-align: left;
 }
 #customer .chat-section p::after{
   content: '';

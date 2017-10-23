@@ -23,7 +23,7 @@
       <span slot="title">技术文档</span>
     </template>
     <el-menu-item index="/tech_list/list" v-if="power.has('article/list')">文档列表</el-menu-item>
-    <el-menu-item index="/tech_list/add" v-if="power.has('sort/list')">添加文档</el-menu-item>
+    <el-menu-item index="/tech_list/add" v-if="power.has('sort/list') && power.has('article/list')">添加文档</el-menu-item>
   </el-submenu>
 
   <el-menu-item index="/order/order_list" v-if="power.has('order/query')">
@@ -36,8 +36,8 @@
     <span slot="title">评论</span>
   </el-menu-item>
 
-  <el-menu-item index="/cdKey" >
-      <i class="el-icon-message"></i>
+  <el-menu-item index="/cdKey" v-if="power.has('account/share/query')">
+      <i class="el-icon-message" ></i>
       <span slot="title">兑换码</span>
   </el-menu-item>
 
@@ -46,7 +46,7 @@
       <span slot="title">会员</span>
   </el-menu-item>
 
-  <el-menu-item index="/power" v-if="power.has('power/admin/list')">
+  <el-menu-item index="/power" v-if="power.has('power/admin/list') && power.has('member/list')">
       <i class="el-icon-message"></i>
       <span slot="title">管理员</span>
   </el-menu-item>
@@ -70,8 +70,8 @@
     <el-menu-item index="/shadow/member_list" v-if="power.has('member/list')">用户列表</el-menu-item>
     <el-menu-item index="/shadow/comment_list" v-if="power.has('project/comment/query')">评论列表</el-menu-item>
   </el-submenu>
-  <el-menu-item index="/customer">
-      <i class="el-icon-message"></i>
+  <el-menu-item index="/customer" v-if="power.has('customer/session/query')">
+      <i class="el-icon-message" ></i>
       <span slot="title">客服</span>
   </el-menu-item>
   </el-menu>
