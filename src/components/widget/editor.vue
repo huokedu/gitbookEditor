@@ -45,6 +45,8 @@ export default {
     if (vm.$route.query._id) return vm.getContent(vm.$route.query._id)
     vm.getContent(vm.id)
     vm.toolbars.save = vm.power.has('article/edit')
+    // 监听刷新
+    window.onbeforeunload = vm.reload
   },
   methods: {
     // 获取文章详情
@@ -122,6 +124,10 @@ export default {
       delete this.img_file[pos]
       const reg = new RegExp('!\\[[\\w\\W]+?\\]\\(' + pos + '\\)', 'g')
       vm.value = vm.value.replace(reg, '')
+    },
+    reload () {
+      alert('asdfasdf')
+      return confirm('刷新、或者离开页面后，所有未保存的数据将会消失')
     }
   },
   computed: {
@@ -164,6 +170,7 @@ export default {
     }
   },
   beforeDestroy () {
+    window.onbeforeunload = ''
     this.$store.commit('article/CHANGE_SELECTED', {title: '', _id: '', stauts: true})
   }
 }
