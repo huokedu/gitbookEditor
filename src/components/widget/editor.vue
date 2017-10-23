@@ -176,6 +176,9 @@ export default {
    min-width: 920px;
    margin-left: 390px;
  }
+ #mainBook .v-note-show li {
+   list-style: inherit
+ }
  #mainBook .v-note-read-content {
    width: 800px;
    margin: auto;
