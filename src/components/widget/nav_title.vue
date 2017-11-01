@@ -39,6 +39,7 @@ export default {
   },
   computed: {
     routeList () {
+      if (!this.$route.name) return
       return this.$route.name.split('/')
     },
     ...mapState('power', [

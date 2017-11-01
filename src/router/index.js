@@ -1,43 +1,44 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import homePage from '../components/homePage.vue'
+const homePage = () => import('../components/homePage.vue')
 
-import Login from '../components/login.vue'
-import APIDocument from '../components/repo-list/API_document.vue'
-import repoList from '../components/repo-list/repo_list.vue'
-import repoAdd from '../components/repo-list/repo_add.vue'
-import repoPlatform from '../components/repo-list/repo_platform.vue'
-import techList from '../components/repo-list/tech_list.vue'
-import repoTag from '../components/repo-list/repo_tag.vue'
-import repoDoc from '../components/tech-list/repo_document.vue'
-import docList from '../components/tech-list/doc_list.vue'
+const Login = () => import('../components/login.vue')
+const APIDocument = () => import('../components/repo-list/API_document.vue')
+const repoList = () => import('../components/repo-list/repo_list.vue')
+const repoAdd = () => import('../components/repo-list/repo_add.vue')
+const repoPlatform = () => import('../components/repo-list/repo_platform.vue')
+const techList = () => import('../components/repo-list/tech_list.vue')
+const repoTag = () => import('../components/repo-list/repo_tag.vue')
+const repoDoc = () => import('../components/tech-list/repo_document.vue')
+const docList = () => import('../components/tech-list/doc_list.vue')
 
-import orderList from '../components/order/order_list.vue'
-import orderDetails from '../components/order/order_details.vue'
+const orderList = () => import('../components/order/order_list.vue')
+const orderDetails = () => import('../components/order/order_details.vue')
 
-import commentList from '../components/comment/comment_list.vue'
+const commentList = () => import('../components/comment/comment_list.vue')
 
-import memberList from '../components/member/member_list.vue'
-import memberAPI from '../components/member/member_api.vue'
-import memberProject from '../components/member/member_project.vue'
+const memberList = () => import('../components/member/member_list.vue')
+const memberAPI = () => import('../components/member/member_api.vue')
+const memberProject = () => import('../components/member/member_project.vue')
 
-import incomingStatistics from '../components/statistics/incoming_statistics.vue'
-import ipStatistics from '../components/statistics/ip_statistics.vue'
-import apiStatistics from '../components/statistics/api_statistics.vue'
-import ipDetails from '../components/statistics/ip_details.vue'
+const incomingStatistics = () => import('../components/statistics/incoming_statistics.vue')
+const ipStatistics = () => import('../components/statistics/ip_statistics.vue')
+const apiStatistics = () => import('../components/statistics/api_statistics.vue')
+const ipDetails = () => import('../components/statistics/ip_details.vue')
 
-import shadowMemberList from '../components/shadow/shadow_member_list.vue'
-import shadowCommentList from '../components/shadow/shadow_comment_list.vue'
+const shadowMemberList = () => import('../components/shadow/shadow_member_list.vue')
+const shadowCommentList = () => import('../components/shadow/shadow_comment_list.vue')
 
-import power from '../components/power/power.vue'
-import powerEdit from '../components/power/power_edit.vue'
+const power = () => import('../components/power/power.vue')
+const powerEdit = () => import('../components/power/power_edit.vue')
 
-import customer from '../components/customer/customer.vue'
+const customer = () => import('../components/customer/customer.vue')
 
-import cdKey from '../components/cdKey/cdKey_list.vue'
+const cdKey = () => import('../components/cdKey/cdKey_list.vue')
 Vue.use(Router)
 export default new Router({
+  mode: 'history',
   routes: [{
     path: '/',
     name: '首页',

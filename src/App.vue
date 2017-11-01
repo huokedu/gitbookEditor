@@ -1,8 +1,8 @@
 <template>
   <div id="APIPlusDocument" v-if="$route.path !== '/login'">
-    <nav-bar></nav-bar>
+    <nav-bar v-if="$route.path !== '/login'"></nav-bar>
     <div class="main-content">
-      <nav-title></nav-title>
+      <nav-title v-if="$route.path !== '/login'"></nav-title>
       <router-view></router-view>
     </div>
   </div>
@@ -12,8 +12,8 @@
 <script>
 import navBar from './components/widget/nav_menu'
 import navTitle from './components/widget/nav_title'
-import { setupConnection } from './utils/connect.js'
-import {getSession} from './api/session.js'
+// import { setupConnection } from './utils/connect.js'
+// import {getSession} from './api/session.js'
 import Axios from './api'
 export default {
   name: 'app',
@@ -24,14 +24,14 @@ export default {
       // 设置权限请求头
       vm.VetifyPower(token)
       // 有客服权限时
-      if (vm.power.has('customer/session/query')) {
-        setupConnection(token, vm)
-        getSession(token).then(res => {
-          if (res.data.status === 200) {
-            vm.$store.commit('message/GET_SESSION', res.data.data.sessions)
-          }
-        })
-      }
+      // if (vm.power.has('customer/session/query')) {
+      //   setupConnection(token, vm)
+      //   getSession(token).then(res => {
+      //     if (res.data.status === 200) {
+      //       vm.$store.commit('message/GET_SESSION', res.data.data.sessions)
+      //     }
+      //   })
+      // }
     }
   },
   methods: {
