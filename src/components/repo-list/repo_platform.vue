@@ -66,6 +66,7 @@
 <script>
 import { getClientDetials, editClient } from '../../api/projects.js'
 import { deepClone } from '../../utils/index.js'
+import { serverPath } from '../../../config/path.js'
 import { mapState } from 'vuex'
 export default {
   name: 'repo_platform',
@@ -83,7 +84,7 @@ export default {
     cover () {
       const vm = this
       const cover = vm.clients[vm.checkIndex].cover
-      return cover && (cover.indexOf('http') !== -1 ? cover : `http://192.168.1.99:8808/${cover}`)
+      return cover && (cover.indexOf('http') !== -1 ? cover : `${serverPath}/${cover}`)
     },
     fileList () {
       const vm = this

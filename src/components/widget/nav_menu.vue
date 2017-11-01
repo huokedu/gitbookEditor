@@ -70,10 +70,10 @@
     <el-menu-item index="/shadow/member_list" v-if="power.has('member/list')">用户列表</el-menu-item>
     <el-menu-item index="/shadow/comment_list" v-if="power.has('project/comment/query')">评论列表</el-menu-item>
   </el-submenu>
-  <el-menu-item index="/customer" v-if="power.has('customer/session/query')">
+  <!-- <el-menu-item index="/customer" v-if="power.has('customer/session/query')">
       <i class="el-icon-message" ></i>
       <span slot="title">客服</span>
-  </el-menu-item>
+  </el-menu-item> -->
   </el-menu>
 </div>
 </template>

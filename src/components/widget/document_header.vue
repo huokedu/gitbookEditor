@@ -23,6 +23,7 @@
 <script>
 import { pubBook } from '../../api/articles.js'
 import checkPub from '../../api/pub.js'
+import {serverPath} from '../../../config/path.js'
 import { mapState } from 'vuex'
 
 export default {
@@ -51,7 +52,7 @@ export default {
       const vm = this
       checkPub(vm.id).then(res => {
         if (res.status === 200) {
-          window.open(`http://192.168.1.99:8808/pub/${vm.id}`)
+          window.open(`${serverPath}/pub/${vm.id}`)
         } else {
           vm.$message({
             type: 'warning',

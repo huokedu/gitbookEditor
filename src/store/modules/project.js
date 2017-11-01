@@ -9,7 +9,7 @@ import {
   SAVE_UI,
   DEL_UI
 } from '../mutations'
-
+import {serverPath} from '../../../config/path'
 const state = {
   platform: 'android',
   clients: [],
@@ -27,7 +27,7 @@ const mutations = {
       client.delShow = []
       client.link.ui = {url: client.link.ui}
       client.show = client.show.map(pic => {
-        const url = pic.indexOf('http') === -1 ? `http://192.168.1.99:8808/${pic}` : pic
+        const url = pic.indexOf('http') === -1 ? `${serverPath}/${pic}` : pic
         return {url}
       })
       return true
