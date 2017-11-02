@@ -96,6 +96,7 @@ export default {
       })
       .catch(err => {
         console.log(err)
+        vm.fullscreenLoading = false
         vm.$message({
           type: 'error',
           message: '保存失败'

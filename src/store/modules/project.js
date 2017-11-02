@@ -7,7 +7,8 @@ import {
   DEL_SHOW,
   CHANGE_LINK,
   SAVE_UI,
-  DEL_UI
+  DEL_UI,
+  CHANGE_PROGRESS
 } from '../mutations'
 import {serverPath} from '../../../config/path'
 const state = {
@@ -57,8 +58,17 @@ const mutations = {
   [DEL_UI] (state, file) {
     state.clients[state.checkIndex].link.ui = file
   },
-  [SAVE_UI] (state, file) {
-    state.clients[state.checkIndex].link.ui = file
+  [SAVE_UI] (state, {vm, file}) {
+    vm.$set(state.clients[state.checkIndex].link, 'ui', file)
+  },
+  [CHANGE_PROGRESS] (state, {vm, percentage}) {
+    if (!state.clients[state.checkIndex].link.ui) return
+    if (percentage === 100) {
+      vm.$set(state.clients[state.checkIndex].link.ui, 'status', 'success')
+    } else {
+      vm.$set(state.clients[state.checkIndex].link.ui, 'status', 'uploading')
+    }
+    vm.$set(state.clients[state.checkIndex].link.ui, 'percentage', percentage)
   }
 }
 export default {

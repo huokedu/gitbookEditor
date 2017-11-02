@@ -60,7 +60,7 @@ function getClientDetials (id) {
 }
 // 修改客户端信息
 function editClient ({
-  id, name, list, Cover, show, ui, modelUrl, delShow
+  id, name, list, Cover, show, ui, modelUrl, delShow, vm
 }) {
   const formData = new FormData()
   formData.append('id', id)
@@ -77,6 +77,10 @@ function editClient ({
   return Axios.post('/project/client/edit', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
+    },
+    onUploadProgress: function (progressEvent) {
+      // 对原生进度事件的处理
+      vm.changeProgress(progressEvent)
     }
   })
 }

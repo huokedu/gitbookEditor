@@ -1,8 +1,14 @@
 <template>
   <div id="platform">
-    <el-tabs v-model="platform" type="card" @tab-click="changePlatform">
+    <el-tabs v-model="platform" 
+    type="card" 
+    @tab-click="changePlatform"
+    v-loading.lock="fullscreenLoading"
+    element-loading-text="文件上传中，请勿关闭、刷新页面"
+    >
       <el-tab-pane v-for="client in clients" :label="client.name" :name="client.name" :key="client._id">
-        <el-form ref="project"  label-width="120px">
+        <el-form ref="project"  label-width="120px"
+        >
           <el-form-item label="客户端封面:">
             <el-upload
               class="avatar-uploader"
@@ -45,7 +51,7 @@
               :auto-upload="false"
               >
               <el-button size="small" type="primary">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传zip文件</div>
+              <div slot="tip" class="el-upload__tip">只能上传zip文件{{(uiMsg)}}</div>
             </el-upload>
           </el-form-item>
           <el-form-item　label="技术清单:" v-if="power.has('sort/list')">
@@ -58,7 +64,10 @@
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
     <div class="handle">
-      <el-button @click="saveChange" v-if="power.has('project/client/edit')">保存</el-button>
+      <el-button @click="saveChange"
+      v-if="power.has('project/client/edit') && fullscreenLoading === false"
+      >保存</el-button>
+      <el-progress v-else :text-inside="true" :stroke-width="18" :percentage="percentage"></el-progress>
     </div>
   </div>
 </template>
@@ -74,26 +83,22 @@ export default {
     return {
       dialogImageUrl: '',
       dialogVisible: false,
-      UIfile: ''
+      UIfile: '',
+      fileList: [],
+      uiMsg: '',
+      percentage: 0,
+      fullscreenLoading: false
     }
   },
   mounted () {
-    this.getClients()
+    const vm = this
+    vm.getClients()
   },
   computed: {
     cover () {
       const vm = this
       const cover = vm.clients[vm.checkIndex].cover
       return cover && (cover.indexOf('http') !== -1 ? cover : `${serverPath}/${cover}`)
-    },
-    fileList () {
-      const vm = this
-      const file = vm.clients[vm.checkIndex].link.ui
-      if (file.url) {
-        file.name = file.url.split('/')[1]
-        return [deepClone(file)]
-      }
-      return []
     },
     power () {
       return new Set(this.$store.state.power.powerList)
@@ -136,7 +141,10 @@ export default {
       vm.clients.some((client, index) => {
         if (client.name === pla.label) {
           vm.activeName = pla.label
+          vm.uiMsg = client.link.ui.url && !client.link.ui.raw ? client.link.ui.url.slice(3) : ''
+          vm.uiMsg = vm.uiMsg ? `(已上传${vm.uiMsg})` : ''
           vm.$store.commit('project/CHANGE_CLIENT', index)
+          // 切换平台ui
           return true
         }
       })
@@ -144,7 +152,6 @@ export default {
     // 保存封面
     beforeAvatarUpload (file) {
       const vm = this
-      console.log(file)
       vm.$store.commit('project/CHANGE_COVER', file.raw)
     },
     // 保存照片墙
@@ -164,11 +171,13 @@ export default {
       const isZIP = 'application/zip'
       const vm = this
       if (isZIP === file.raw.type) {
-        fileList.length = 1
-        vm.fileList.splice(0, 1, file)
-        vm.$store.commit('project/SAVE_UI', file)
+        vm.$nextTick(() => {
+          fileList[0] = fileList[1] ? fileList[1] : fileList[0]
+          fileList.splice(1, 1)
+        })
+        vm.$store.commit('project/SAVE_UI', {vm, file})
       } else {
-        fileList = []
+        fileList.length = 0
         vm.$message({
           type: 'warning',
           message: '上传文件格式错误'
@@ -177,7 +186,7 @@ export default {
     },
     // 移除文件
     handleUIRemove () {
-      this.$store.commit('project/SAVE_UI', '')
+      this.$store.commit('project/SAVE_UI', {vm: this, file: ''})
     },
     // 图片预览
     handlePictureCardPreview (file) {
@@ -203,7 +212,7 @@ export default {
       const delShow = client.delShow
       const ui = client.link.ui ? client.link.ui.raw : ''
       const modelUrl = client.link.model
-      editClient({id, Cover, show, ui, modelUrl, delShow}).then(res => {
+      editClient({id, Cover, show, ui, modelUrl, delShow, vm}).then(res => {
         vm.$message({
           type: 'success',
           message: res.data.message
@@ -215,6 +224,13 @@ export default {
       const vm = this
       // 跳转前保存信息
       vm.$router.push({path: '/repo/pepo_edit/list', query: { API_id: id }})
+    },
+    // 改变进度
+    changeProgress (progressEvent) {
+      const vm = this
+      vm.percentage = (progressEvent.loaded / progressEvent.total * 100).toFixed(2) * 1
+      vm.fullscreenLoading = vm.percentage !== 100
+      vm.$store.commit('project/CHANGE_PROGRESS', {vm, percentage: vm.percentage})
     }
   }
 }
