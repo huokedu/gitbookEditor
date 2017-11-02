@@ -17,7 +17,7 @@
               <span><strong>{{generalData.userNum}}</strong>&nbsp;个<br><span>会员</span></span>
             </li>
             <li>
-              <span><strong>{{generalData.orderNum}}</strong>&nbsp;笔<br><span>项目</span></span>
+              <span><strong>{{generalData.orderNum}}</strong>&nbsp;笔<br><span>订单</span></span>
             </li>
           </ul>
         </div>
@@ -89,7 +89,7 @@ export default {
   },
   methods: {
     tabTo () {
-      window.open('http://www.baidu.com')
+      window.open('https://apis.sh')
     },
     getGeneralData () {
       const vm = this
