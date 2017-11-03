@@ -74,6 +74,11 @@
           label="价格">
         </el-table-column>
         <el-table-column
+          property="receipt_amount"
+          header-align="center"
+          label="实收价格">
+        </el-table-column>
+        <el-table-column
           property="payment"
           header-align="center"
           :formatter="formatPayType"
@@ -126,11 +131,11 @@ export default {
           label: '所有订单'
         },
         {
-          value: false,
+          value: true,
           label: '试用订单'
         },
         {
-          value: true,
+          value: false,
           label: '正式订单'
         }
       ],
