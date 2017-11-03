@@ -37,7 +37,8 @@ export default {
       },
       watchMode: {
         editable: false
-      }
+      },
+      clearOut: ''
     }
   },
   mounted () {
@@ -167,6 +168,14 @@ export default {
       } else {
         vm.getContent(id)
       }
+    },
+    value (content) {
+      const vm = this
+      clearTimeout(vm.clearOut)
+      vm.clearOut = setTimeout(() => {
+        console.log(123)
+        vm.save(content)
+      }, 10000)
     }
   },
   beforeDestroy () {
