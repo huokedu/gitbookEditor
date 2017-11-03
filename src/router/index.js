@@ -36,6 +36,9 @@ const powerEdit = () => import('../components/power/power_edit.vue')
 const customer = () => import('../components/customer/customer.vue')
 
 const cdKey = () => import('../components/cdKey/cdKey_list.vue')
+
+// 404页面
+const notFound = () => import('../404.vue')
 Vue.use(Router)
 export default new Router({
   mode: 'history',
@@ -178,6 +181,11 @@ export default new Router({
     name: '兑换码',
     path: '/cdKey',
     component: cdKey
+  },
+  {
+    name: '404',
+    path: '*',
+    component: notFound
   }
   ]
 })

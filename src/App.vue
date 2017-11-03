@@ -1,5 +1,5 @@
 <template>
-  <div id="APIPlusDocument" v-if="$route.path !== '/login'">
+  <div id="APIPlusDocument" v-if="$route.path !== '/login' && $route.name !== '404'">
     <nav-bar v-if="$route.path !== '/login'"></nav-bar>
     <div class="main-content">
       <nav-title v-if="$route.path !== '/login'"></nav-title>
