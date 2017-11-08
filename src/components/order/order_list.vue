@@ -46,7 +46,7 @@
           >
         </el-table-column>
         <el-table-column
-          property="_id"
+          property="orderId"
           header-align="center"
           label="订单编号"
           >
@@ -71,7 +71,7 @@
         <el-table-column
           property="price"
           header-align="center"
-          label="价格">
+          label="订单价格">
         </el-table-column>
         <el-table-column
           property="receipt_amount"
