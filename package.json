@@ -14,7 +14,7 @@
     "axios": "^0.16.2",
     "echarts": "^3.7.1",
     "element-ui": "^1.4.2",
-    "mavon-editor": "^2.1.8",
+    "mavon-editor": "^2.3.0",
     "mongoose": "^4.11.3",
     "normalize.css": "^7.0.0",
     "socket.io-client": "^2.0.3",
