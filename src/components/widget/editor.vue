@@ -1,6 +1,6 @@
 <template>
   <div id="mainBook"> 
-    <mavon-editor style="height: 100%" v-model="value" @save="save" @imgAdd="saveImg" @imgDel="imgDel" :editable="!isRecycle && power.has('article/edit')" :toolbars="isRecycle ? {} : toolbars" /> 
+    <mavon-editor ref="mavon" style="height: 100%" v-model="value" @save="save" @imgAdd="saveImg" @imgDel="imgDel" :editable="!isRecycle && power.has('article/edit')" :toolbars="isRecycle ? {} : toolbars" /> 
   </div>
 </template>
 
@@ -11,7 +11,7 @@ export default {
   data () {
     return {
       value: '',
-      img_file: {},
+      imgFile: [],
       toolbars: {
         bold: true,
         italic: true,
@@ -48,6 +48,10 @@ export default {
     vm.toolbars.save = vm.power.has('article/edit')
     // 监听刷新
     window.onbeforeunload = vm.reload
+    // 失焦时取消自动保存
+    document.querySelector('.auto-textarea-input').onblur = () => {
+      clearTimeout(vm.clearOut)
+    }
   },
   methods: {
     // 获取文章详情
@@ -70,9 +74,16 @@ export default {
       const tags = vm.tags.map(tag => {
         return tag._id
       })
-      saveContent({ id: vm.id, content, pics: vm.img_file, title, tags })
+      saveContent({ id: vm.id, content, pics: vm.imgFile, title, tags })
       .then((res) => {
         if (res.data.status === 200) {
+          vm.imgFile = vm.imgFile.map((file, index) => {
+            return index
+          })
+          res.data.imgList.map((img, index) => {
+            if (!img) return
+            vm.$refs.mavon.$img2Url('./' + index, img)
+          })
           vm.$message({
             type: 'success',
             message: '文章保存成功'
@@ -85,16 +96,15 @@ export default {
         }
       })
       .catch((err) => {
-        console.log(err)
+        console.error(err)
         vm.$message({
           type: 'error',
           message: '保存失败'
         })
       })
     },
-    saveImg (name, $file) {
+    saveImg (name) {
       const vm = this
-      let tem = name
       const img = document.querySelector('img[rel="' + name + '"]')
       const image = new Image()
       image.onload = () => {
@@ -102,27 +112,16 @@ export default {
         const ctx = canvas.getContext('2d')
         const w = canvas.width = image.width
         const h = canvas.height = image.height
-        ctx.drawImage(image, 0, 0, w, h, 0, 0, w, h)
-        const data = canvas.toDataURL('image/jpeg', 0.5)
-        // 去重
-        Object.keys(vm.img_file).map((pos) => {
-          if (vm.img_file[pos] === data) {
-            const reg = new RegExp('(!\\[[\\w\\W]+?\\]\\()' + name + '(\\))', 'g')
-            vm.value = vm.value.replace(reg, '$1' + pos + '$2')
-            tem = pos
-            return
-          }
-        })
-        if (tem === name) {
-          console.log(1)
-          vm.img_file[name] = data
-        }
+        ctx.drawImage(img, 0, 0, w, h, 0, 0, w, h)
+        canvas.toBlob((blob) => {
+          vm.imgFile.push(blob)
+        }, 'file', 0.5)
       }
       image.src = img.src
     },
     imgDel (pos) {
       const vm = this
-      delete this.img_file[pos]
+      vm.imgFile[pos] = ''
       const reg = new RegExp('!\\[[\\w\\W]+?\\]\\(' + pos + '\\)', 'g')
       vm.value = vm.value.replace(reg, '')
     },
@@ -173,7 +172,6 @@ export default {
       const vm = this
       clearTimeout(vm.clearOut)
       vm.clearOut = setTimeout(() => {
-        console.log(123)
         vm.save(content)
       }, 10000)
     }

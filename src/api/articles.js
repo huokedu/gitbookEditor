@@ -35,8 +35,20 @@ function getContent (id) {
 }
 // 文档编辑接口
 function saveContent ({ content, id, pics, title, tags }) {
-  return Axios.post('/article/edit', {
-    content, id, pics, title, tags
+  const formData = new FormData()
+  formData.append('content', content)
+  formData.append('id', id)
+  formData.append('title', title)
+  tags.map(tag => {
+    formData.append('tags', tag)
+  })
+  pics.map((pic, index) => {
+    formData.append('pics', pic, index)
+  })
+  return Axios.post('/article/edit', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
   })
 }
 // 获取文档
