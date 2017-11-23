@@ -144,10 +144,16 @@ export default {
         })
       }
       addAdmin(vm.userId).then(res => {
-        if (res.data.status === 200 || res.data.status === 304) {
+        if (res.data.status === 200) {
           vm.list.unshift(res.data.data.user)
           vm.$message({
             type: 'success',
+            message: res.data.message
+          })
+        }
+        if (res.data.status === 304) {
+          vm.$message({
+            type: 'warning',
             message: res.data.message
           })
         }
