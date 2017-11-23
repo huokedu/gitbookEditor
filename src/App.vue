@@ -41,13 +41,17 @@ export default {
       Axios.interceptors.response.use(function (res) {
         // 在发送请求之前做些什么
         if (res.data.status > 6000) {
-          vm.$message({
-            type: 'error',
-            message: res.data.message
+          vm.$confirm(`${res.data.message},是否返回登录页面`, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            vm.$store.commit('power/QUIT_LOGIN')
+            vm.$router.push('/login')
+            return res
+          }).catch(() => {
+            return res
           })
-          vm.$store.commit('power/QUIT_LOGIN')
-          vm.$router.push('/login')
-          return res
         }
         return res
       }, function (error) {
