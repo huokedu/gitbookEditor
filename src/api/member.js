@@ -1,12 +1,13 @@
 import Axios from './index'
 // 获取用户列表
-function getMemberList ({name, page, shadow, limit = 10}) {
+function getMemberList ({name, page, shadow, limit = 10, isPower}) {
   return Axios.get('/member/list', {
     params: {
       name,
       limit,
       page,
-      shadow
+      shadow,
+      isPower
     }
   })
 }
