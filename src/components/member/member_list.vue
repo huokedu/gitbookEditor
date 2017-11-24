@@ -97,7 +97,7 @@ export default {
   methods: {
     getMemberList (page) {
       const vm = this
-      getMemberList({name: vm.value, page, shadow: false}).then(res => {
+      getMemberList({name: vm.value, page}).then(res => {
         if (res.data.status === 200) {
           vm.list = res.data.data.members
           vm.count = res.data.data.count

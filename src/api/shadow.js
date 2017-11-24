@@ -1,19 +1,7 @@
 import Axios from './index'
-// 生成用户名
-function generateName () {
-  return Axios.post('/shadow/generate/name')
-}
-// 生成头像
-function generateAvatar () {
-  return Axios.post('/shadow/generate/avatar')
-}
 // 生成用户
-function generateUser ({id, name, avatar}) {
-  return Axios.post('/shadow/generate/user', {
-    id,
-    avatar,
-    name
-  })
+function generateUser (number) {
+  return Axios.post('/shadow/generate/user', {number})
 }
 // 删除影子用户
 function delUser (id) {
@@ -27,11 +15,13 @@ function addComment ({uid, projId, content, isBuy}) {
     uid, projId, content, isBuy
   })
 }
-
+// 查询影子用户
+function getShadowList () {
+  return Axios.get('/shadow/user/query')
+}
 export {
-  generateName,
-  generateAvatar,
   generateUser,
   delUser,
-  addComment
+  addComment,
+  getShadowList
 }

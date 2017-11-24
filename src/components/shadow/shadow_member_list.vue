@@ -9,7 +9,7 @@
         icon="search"
         >
       </el-input>
-      <el-button @click="addUser"  v-if="power.has('shadow/generate/user')">
+      <el-button @click="generateUser" v-if="power.has('shadow/generate/user')">
         添加用户
       </el-button>
     </div>
@@ -45,7 +45,7 @@
           >
         </el-table-column>
         <el-table-column
-          property="update_time"
+          property="create_time"
           header-align="center"
           :formatter="formatTime"
           label="注册时间">
@@ -77,23 +77,18 @@
     <div class="block">
       <el-pagination
         :page-size="10"
-        @current-change="getMemberList"
+        @current-change="getShadowList"
         :current-page.sync="currentPage"
         layout="total, prev, pager, next"
         :total="count">
       </el-pagination>
     </div>
-    <el-dialog :visible.sync="show">
-      <edit-user v-if="show" :user="user" @update="updateMemberList"></edit-user>   
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getMemberList } from '../../api/member.js'
-import { delUser } from '../../api/shadow.js'
+import { generateUser, getShadowList } from '../../api/shadow.js'
 import { formatTime } from '../../utils/index.js'
-import editUser from '../widget/edit_shadow_user'
 export default {
   name: 'member_list',
   data () {
@@ -102,78 +97,69 @@ export default {
       list: [],
       count: 0,
       show: false,
-      user: {},
-      index: 0,
-      currentPage: 1
+      form: {},
+      currentPage: 1,
+      loading: ''
     }
   },
   mounted () {
     const vm = this
-    vm.getMemberList(1)
-  },
-  components: {
-    editUser
+    vm.getShadowList(1)
   },
   methods: {
-    getMemberList (page) {
+    getShadowList (page) {
       const vm = this
-      getMemberList({name: vm.value, page, shadow: true}).then(res => {
+      getShadowList().then(res => {
         if (res.data.status === 200) {
-          vm.list = res.data.data.members
+          vm.list = res.data.data.shadowUsers.map(user => user.shadow_user)
           vm.count = res.data.data.count
         }
       })
     },
-    // 更新列表
-    updateMemberList (user) {
-      const vm = this
-      vm.show = false
-      if (vm.user._id) {
-        vm.getMemberList(1)
-        return
-      }
-      if (vm.list.length === 10) {
-        vm.list.pop()
-      }
-      vm.list.unshift(user)
-    },
     fuzzySearch () {
       const vm = this
       vm.currentPage = 1
-      vm.getMemberList(1)
-    },
-    // 格式化费用
-    formatFee (row) {
-      return row.cost.toFixed(2)
+      vm.getShadowList(1)
     },
     // 格式化购买时间
     formatTime (row) {
-      return formatTime(row.update_time / 1000, '{y}-{m}-{d}')
+      return formatTime(row.create_time / 1000, '{y}-{m}-{d}')
     },
-    // 添加用户
-    addUser () {
+    // 批量添加用户
+    generateUser () {
       const vm = this
-      vm.user = {}
-      vm.show = true
-    },
-    // 删除用户
-    delUser (scoped) {
-      const vm = this
-      delUser(scoped.row._id).then(res => {
-        if (res.data.status === 200) {
-          vm.$message({
-            type: 'success',
-            message: '删除成功'
-          })
-          vm.list.splice(scoped.$index, 1)
-        }
+      vm.$prompt('请输入生成用户数量(生成用户数量小于等于30)', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        // 检校函数
+        inputValidator: (value) => {
+          return value !== '' && value % 1 === 0 && value <= 30
+        },
+        inputErrorMessage: '请输入小于等于30的整数'
+      }).then(({ value }) => {
+        if (!value) return
+        vm.loading = vm.$loading({
+          lock: true,
+          text: '生成用户中，请稍后...'
+        })
+        generateUser(value).then(res => {
+          if (res.data.status === 200) {
+            vm.$message({
+              type: 'success',
+              message: res.data.message
+            })
+          }
+          vm.getShadowList(1)
+          vm.loading.close()
+        })
+      }).catch(() => {
+        if (vm.loading) vm.loading.close()
+        vm.$message({
+          type: 'info',
+          message: '取消输入'
+        })
       })
-    },
-    // editUser
-    editUser (scope) {
-      const vm = this
-      vm.user = scope.row
-      vm.show = true
+      generateUser
     }
   },
   computed: {

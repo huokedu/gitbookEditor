@@ -46,8 +46,7 @@
 
 <script>
 import { getProjectList } from '../../api/projects.js'
-import { getMemberList } from '../../api/member.js'
-import { addComment } from '../../api/shadow.js'
+import { addComment, getShadowList } from '../../api/shadow.js'
 export default {
   name: 'shadow_comment_add',
   data () {
@@ -64,7 +63,7 @@ export default {
   mounted () {
     const vm = this
     vm.getProjectList()
-    vm.getMemberList()
+    vm.getShadowList()
     console.log(vm.user)
   },
   methods: {
@@ -76,11 +75,11 @@ export default {
         }
       })
     },
-    getMemberList () {
+    getShadowList () {
       const vm = this
-      getMemberList({limit: 0, shadow: true}).then(res => {
+      getShadowList().then(res => {
         if (res.data.status === 200) {
-          vm.userList = res.data.data.members
+          vm.userList = res.data.data.shadowUsers.map(user => user.shadow_user)
         }
       })
     },
