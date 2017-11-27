@@ -19,82 +19,84 @@
         >
       </el-input>
     </div>
-    <el-table
-      :data="tableData"
-      @filter-change="resetTable"
-      stripe
-      >
-      <el-table-column
-        type="selection"
+    <div class="list">
+      <el-table
+        :data="tableData"
+        @filter-change="resetTable"
+        stripe
         >
-      </el-table-column>
-      <el-table-column
-        prop="title"
-        label="文章"
-        header-align="center"
-        >
-      </el-table-column>
-      <el-table-column
-        prop="author.name"
-        header-align="center"
-        label="作者"
-        >
-      </el-table-column>
-      <el-table-column
-        prop="sort.name"
-        header-align="center"
-        label="分类"
-        >
-      </el-table-column>
-      <el-table-column
-        prop="tags"
-        label="标签"
-        width="250"
-        header-align="center"
-        :filters="allTags"
-        :filter-method="filterTag"
-        filter-placement="bottom-end">
-        <template scope="scope">
-          <el-tag
-            v-for="tag in scope.row.tags"
-            :key="tag._id"
-            :type="selectedTags.has(tag._id) ? 'primary' : 'grey'"
-            close-transition
-          >{{tag.name}}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="update_time"
-        header-align="center"
-        width="240px"
-        label="发布日期"
-        :formatter="formatter"
-        >
-      </el-table-column>    
-      <el-table-column
-        label="操作"
-        header-align="center"
-        width="100">
-        <template scope="scope">
-          <el-button
-            v-if="power.has('article/edit')"      
-            type="text"
-            size="small"
-            @click="$router.push({path: '/tech_list/edit', query: {_id: scope.row._id}})"
-            >
-            编辑
-          </el-button>
-          <el-button
-            v-if="power.has('article/del')"      
-            type="text"
-            size="small"
-            @click="delArticle(scope.$index, scope.row)"
-            >
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        <el-table-column
+          type="selection"
+          >
+        </el-table-column>
+        <el-table-column
+          prop="title"
+          label="文章"
+          header-align="center"
+          >
+        </el-table-column>
+        <el-table-column
+          prop="author.name"
+          header-align="center"
+          label="作者"
+          >
+        </el-table-column>
+        <el-table-column
+          prop="sort.name"
+          header-align="center"
+          label="分类"
+          >
+        </el-table-column>
+        <el-table-column
+          prop="tags"
+          label="标签"
+          width="250"
+          header-align="center"
+          :filters="allTags"
+          :filter-method="filterTag"
+          filter-placement="bottom-end">
+          <template scope="scope">
+            <el-tag
+              v-for="tag in scope.row.tags"
+              :key="tag._id"
+              :type="selectedTags.has(tag._id) ? 'primary' : 'grey'"
+              close-transition
+            >{{tag.name}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="update_time"
+          header-align="center"
+          width="240px"
+          label="发布日期"
+          :formatter="formatter"
+          >
+        </el-table-column>    
+        <el-table-column
+          label="操作"
+          header-align="center"
+          width="100">
+          <template scope="scope">
+            <el-button
+              v-if="power.has('article/edit')"      
+              type="text"
+              size="small"
+              @click="$router.push({path: '/tech_list/edit', query: {_id: scope.row._id}})"
+              >
+              编辑
+            </el-button>
+            <el-button
+              v-if="power.has('article/del')"      
+              type="text"
+              size="small"
+              @click="delArticle(scope.$index, scope.row)"
+              >
+              删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
     <el-pagination
       :current-page.sync="currentPage"
       @current-change="getAPIDoc"
@@ -243,6 +245,9 @@ export default {
 }
 .el-table__header {
   text-align: center;
+}
+#docList .list {
+  min-height: 500px;
 }
 #docList .el-pagination {
   margin: 30px;

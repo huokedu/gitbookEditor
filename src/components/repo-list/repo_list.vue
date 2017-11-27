@@ -19,101 +19,103 @@
         >
       </el-input>
     </div>
-    <el-table
-      :data="tableData"
-      stripe
-      >
-      <el-table-column
-        type="selection"
+    <div class="list">
+      <el-table
+        :data="tableData"
+        stripe
         >
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="项目"
-        header-align="center"      
-        width="150">
-      </el-table-column>
-      <el-table-column
-        prop="server.host"
-        header-align="center"
-        label="服务器地址"
+        <el-table-column
+          type="selection"
+          >
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="项目"
+          header-align="center"      
+          width="150">
+        </el-table-column>
+        <el-table-column
+          prop="server.host"
+          header-align="center"
+          label="服务器地址"
+          >
+        </el-table-column>
+        <el-table-column
+          prop="statusText"
+          header-align="center"
+          label="状态"
+          >
+        </el-table-column>
+        <el-table-column
+          prop="part"
+          header-align="center"
+          label="价格"
+          >
+        </el-table-column>
+        <el-table-column
+          prop="count"
+          header-align="center"
+          label="总销量"
+          >
+        </el-table-column>    
+        <el-table-column
+          label="操作"
+          header-align="center"
+          width="250"
         >
-      </el-table-column>
-      <el-table-column
-        prop="statusText"
-        header-align="center"
-        label="状态"
-        >
-      </el-table-column>
-      <el-table-column
-        prop="part"
-        header-align="center"
-        label="价格"
-        >
-      </el-table-column>
-      <el-table-column
-        prop="count"
-        header-align="center"
-        label="总销量"
-        >
-      </el-table-column>    
-      <el-table-column
-        label="操作"
-        header-align="center"
-        width="250"
-       >
-        <template scope="scope">
-          <el-button
-            v-if="power.has('article/list')"
-            type="text"
-            size="small"
-            @click="$router.push({path:'/repo/API_document', query: {API_id: scope.row.API }})"
-            >
-            API
-          </el-button>
-          <el-button
-            v-if="power.has('project/client/query')"
-            type="text"
-            size="small"
-            @click="editPro(scope.row._id)"
-            >
-            客户端
-          </el-button>
-          <el-button
-            v-if="power.has('project/details')"
-            type="text"
-            size="small"
-            @click="$router.push({path:'/repo/repo_edit', query: {id: scope.row._id }})"
-            >
-            编辑
-          </el-button>
-          <el-button
-            v-if="power.has('project/edit') && scope.row.status === 'offline'"
-            type="text"
-            size="small"
-            @click="changeStatus(scope.row._id, 'pre', scope.$index)"
-            >
-            预售
-          </el-button>
-          <el-button
-            v-if="power.has('project/edit') && scope.row.status === 'offline'"
-            type="text"
-            size="small"
-            @click="changeStatus(scope.row._id, 'online', scope.$index)"
-            >
-            上架
-          </el-button>
-          <el-button
-            v-if="power.has('project/edit') && scope.row.status !== 'offline'"
-            type="text"
-            size="small"
-            @click="changeStatus(scope.row._id, 'offline', scope.$index)"
-            >
-            下架
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+          <template scope="scope">
+            <el-button
+              v-if="power.has('article/list')"
+              type="text"
+              size="small"
+              @click="$router.push({path:'/repo/API_document', query: {API_id: scope.row.API }})"
+              >
+              API
+            </el-button>
+            <el-button
+              v-if="power.has('project/client/query')"
+              type="text"
+              size="small"
+              @click="editPro(scope.row._id)"
+              >
+              客户端
+            </el-button>
+            <el-button
+              v-if="power.has('project/details')"
+              type="text"
+              size="small"
+              @click="$router.push({path:'/repo/repo_edit', query: {id: scope.row._id }})"
+              >
+              编辑
+            </el-button>
+            <el-button
+              v-if="power.has('project/edit') && scope.row.status === 'offline'"
+              type="text"
+              size="small"
+              @click="changeStatus(scope.row._id, 'pre', scope.$index)"
+              >
+              预售
+            </el-button>
+            <el-button
+              v-if="power.has('project/edit') && scope.row.status === 'offline'"
+              type="text"
+              size="small"
+              @click="changeStatus(scope.row._id, 'online', scope.$index)"
+              >
+              上架
+            </el-button>
+            <el-button
+              v-if="power.has('project/edit') && scope.row.status !== 'offline'"
+              type="text"
+              size="small"
+              @click="changeStatus(scope.row._id, 'offline', scope.$index)"
+              >
+              下架
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
     <el-pagination
       :current-page.sync="currentPage"
       @current-change="getProjectList"
@@ -221,6 +223,9 @@ export default {
   padding: 20px;
   font-size: 0;
   text-align: right;
+}
+#repoList .list {
+   height: 500px;  
 }
 #repoList .el-pagination {
   margin: 30px;
