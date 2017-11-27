@@ -41,9 +41,16 @@ function getRouters ({id, page, router, proId, proName, start, end}) {
     }
   })
 }
+function editUser ({id, name}) {
+  return Axios.post('/user/edit', {
+    id,
+    name
+  })
+}
 export {
   getMemberList,
   getUserProject,
   setKeyStatus,
-  getRouters
+  getRouters,
+  editUser
 }

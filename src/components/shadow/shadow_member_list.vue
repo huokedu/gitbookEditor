@@ -51,24 +51,26 @@
           label="注册时间">
         </el-table-column>
         <el-table-column
-          v-if="power.has('shadow/generate/user') || power.has('shadow/user/del')"
+          v-if="power.has('shadow/user/del')"
           label="操作"
           header-align="center"
           width="200">
           <template scope="scope">
             <el-button
-              v-if="power.has('shadow/generate/user')"
+              v-if="power.has('shadow/user/del') && scope.row.can_delete"
               type="text"
-              @click.native.prevent="editUser(scope)"
+              :disabled="!scope.row.can_delete"
+              @click.native.prevent="editUser(scope.row)"
               size="small">
-              编辑 
+              编辑
             </el-button>
             <el-button
               v-if="power.has('shadow/user/del')"
               type="text"
+              :disabled="!scope.row.can_delete"
               @click.native.prevent="delUser(scope)"
               size="small">
-              删除
+              {{scope.row.can_delete ? '删除' : '已有用户行为，无法编辑、删除'}}
             </el-button>
           </template>  
         </el-table-column>
@@ -83,12 +85,19 @@
         :total="count">
       </el-pagination>
     </div>
+    <el-dialog
+      :visible.sync="editVisible"
+      size="tiny"
+      >
+       <edit-user v-if="editVisible" :user="currentUser" :visible.sync="editVisible"></edit-user>   
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { generateUser, getShadowList } from '../../api/shadow.js'
+import { generateUser, getShadowList, delUser } from '../../api/shadow.js'
 import { formatTime } from '../../utils/index.js'
+import editUser from '../widget/edit_user'
 export default {
   name: 'member_list',
   data () {
@@ -99,7 +108,9 @@ export default {
       show: false,
       form: {},
       currentPage: 1,
-      loading: ''
+      loading: '',
+      editVisible: false,
+      currentUser: {}
     }
   },
   mounted () {
@@ -111,7 +122,11 @@ export default {
       const vm = this
       getShadowList({page, user: vm.value}).then(res => {
         if (res.data.status === 200) {
-          vm.list = res.data.data.shadowUsers.map(user => user.shadow_user)
+          vm.list = res.data.data.shadowUsers.map(user => {
+            const obj = user.shadow_user
+            obj.can_delete = user.can_delete
+            return obj
+          })
           vm.count = res.data.data.count
         }
       })
@@ -160,12 +175,46 @@ export default {
         })
       })
       generateUser
+    },
+    // 删除用户
+    delUser (scope) {
+      const vm = this
+      const id = scope.row._id
+      delUser(id).then(res => {
+        if (res.data.status === 200) {
+          vm.$message({
+            type: 'success',
+            message: res.data.message
+          })
+          vm.list.splice(scope.$index, 1)
+        } else {
+          vm.$message({
+            type: 'error',
+            message: res.data.message
+          })
+        }
+      })
+      .catch(() => {
+        vm.$message({
+          type: 'error',
+          message: '服务器内部错误'
+        })
+      })
+    },
+    // 编辑用户
+    editUser (user) {
+      const vm = this
+      vm.currentUser = user
+      vm.editVisible = true
     }
   },
   computed: {
     power () {
       return new Set(this.$store.state.power.powerList)
     }
+  },
+  components: {
+    editUser
   }
 }
 </script>

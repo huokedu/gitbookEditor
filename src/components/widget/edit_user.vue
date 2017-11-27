@@ -3,41 +3,52 @@
     <div class="line">
       <span class="title">头像:</span>
       <span class="content">
-        <span class="avatar"><img :src="avatar" alt=""></span>
+        <span class="avatar"><img :src="user.avatar | link" alt=""></span>
       </span>
     </div>
     <div class="line">
       <span class="title">用户名称:</span>
       <span class="content"><el-input v-model="name"></el-input></span>
     </div>
-    <div class="line">
-      <span class="title">用户密码:</span>
-      <span class="content"><el-input v-model="pwd"></el-input></span>
-    </div>
     <div class="line" style="text-align: center">
-      <el-button>保存</el-button>
+      <el-button @click="saveUser">保存</el-button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { editUser } from '../../api/member.js'
 export default {
   name: 'edit_user',
   props: ['user'],
   data () {
     return {
-      pwd: ''
+      name: ''
     }
   },
   mounted () {
+    const vm = this
+    vm.name = vm.user.name
   },
   methods: {
-  },
-  computed: {
-    ...mapState('power', [
-      'name', 'avatar'
-    ])
+    saveUser () {
+      const vm = this
+      editUser({id: vm.user._id, name: vm.name}).then(res => {
+        if (res.data.status === 200) {
+          vm.$message({
+            type: 'success',
+            message: '编辑成功'
+          })
+          vm.user.name = res.data.user
+          vm.$emit('update:visible', false)
+        } else {
+          vm.$message({
+            type: 'error',
+            message: res.data.message
+          })
+        }
+      })
+    }
   }
 }
 </script>
