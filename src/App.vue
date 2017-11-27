@@ -88,4 +88,7 @@ li {
 #APIPlusDocument .main-content {
   margin-left: 40px;
 }
+img[src=""] {
+  opacity: 0;
+}
 </style>
