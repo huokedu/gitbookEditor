@@ -109,7 +109,7 @@ export default {
   methods: {
     getShadowList (page) {
       const vm = this
-      getShadowList().then(res => {
+      getShadowList({page, user: vm.value}).then(res => {
         if (res.data.status === 200) {
           vm.list = res.data.data.shadowUsers.map(user => user.shadow_user)
           vm.count = res.data.data.count

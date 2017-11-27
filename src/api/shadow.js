@@ -16,8 +16,14 @@ function addComment ({uid, projId, content, isBuy}) {
   })
 }
 // 查询影子用户
-function getShadowList () {
-  return Axios.get('/shadow/user/query')
+function getShadowList ({page, user, limit = 10}) {
+  return Axios.get('/shadow/user/query', {
+    params: {
+      page,
+      user,
+      limit
+    }
+  })
 }
 export {
   generateUser,
