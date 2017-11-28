@@ -39,9 +39,17 @@
           >
         </el-table-column>
         <el-table-column
-          property="phone"
+          property="projects.length"
           header-align="center"
-          label="手机号"
+          label="购买项目数"
+          width="120"
+          >
+        </el-table-column>
+        <el-table-column
+          property="comments.length"
+          header-align="center"
+          label="评论数"
+          width="80"
           >
         </el-table-column>
         <el-table-column
@@ -54,8 +62,15 @@
           v-if="power.has('shadow/user/del')"
           label="操作"
           header-align="center"
-          width="200">
+          width="250">
           <template scope="scope">
+            <el-button
+              v-if="true"
+              type="text"
+              @click.native.prevent="$router.push({path: '/shadow/user/details', query: { id: scope.row._id }})"
+              size="small">
+              用户详情
+            </el-button>
             <el-button
               v-if="power.has('shadow/user/del') && scope.row.can_delete"
               type="text"
@@ -125,6 +140,8 @@ export default {
           vm.list = res.data.data.shadowUsers.map(user => {
             const obj = user.shadow_user
             obj.can_delete = user.can_delete
+            obj.comments = user.comments
+            obj.projects = user.projects
             return obj
           })
           vm.count = res.data.data.count

@@ -29,7 +29,7 @@ const ipDetails = () => import('../components/statistics/ip_details.vue')
 
 const shadowMemberList = () => import('../components/shadow/shadow_member_list.vue')
 const shadowCommentList = () => import('../components/shadow/shadow_comment_list.vue')
-
+const shadowUserDetails = () => import('../components/shadow/shadow_user_details.vue')
 const power = () => import('../components/power/power.vue')
 const powerEdit = () => import('../components/power/power_edit.vue')
 
@@ -161,6 +161,11 @@ export default new Router({
     name: '影子/评论列表',
     path: '/shadow/comment_list',
     component: shadowCommentList
+  },
+  {
+    name: '影子/用户列表/用户详情',
+    path: '/shadow/user/details',
+    component: shadowUserDetails
   },
   {
     name: '管理员',

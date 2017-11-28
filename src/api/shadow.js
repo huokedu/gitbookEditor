@@ -25,10 +25,19 @@ function getShadowList ({page, user, limit = 10}) {
     }
   })
 }
+// 编辑影子用户
 function editShadowUser ({id, name}) {
   return Axios.post('/shadow/user/edit', {
     id,
     name
+  })
+}
+// 影子用户详情
+function getShadowUserDetails ({id}) {
+  return Axios.get('/shadow/user/details', {
+    params: {
+      id
+    }
   })
 }
 export {
@@ -36,5 +45,6 @@ export {
   delUser,
   addComment,
   getShadowList,
-  editShadowUser
+  editShadowUser,
+  getShadowUserDetails
 }
