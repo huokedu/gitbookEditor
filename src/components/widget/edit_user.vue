@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { editUser } from '../../api/member.js'
+import { editShadowUser } from '../../api/shadow.js'
 export default {
   name: 'edit_user',
   props: ['user'],
@@ -33,7 +33,7 @@ export default {
   methods: {
     saveUser () {
       const vm = this
-      editUser({id: vm.user._id, name: vm.name}).then(res => {
+      editShadowUser({id: vm.user._id, name: vm.name}).then(res => {
         if (res.data.status === 200) {
           vm.$message({
             type: 'success',

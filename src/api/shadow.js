@@ -25,9 +25,16 @@ function getShadowList ({page, user, limit = 10}) {
     }
   })
 }
+function editShadowUser ({id, name}) {
+  return Axios.post('/shadow/user/edit', {
+    id,
+    name
+  })
+}
 export {
   generateUser,
   delUser,
   addComment,
-  getShadowList
+  getShadowList,
+  editShadowUser
 }
