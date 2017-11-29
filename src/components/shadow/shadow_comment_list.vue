@@ -41,6 +41,13 @@
           >
         </el-table-column>
         <el-table-column
+          property="hold"
+          :formatter="formatState"
+          header-align="center"
+          label="所属项目"
+          >
+        </el-table-column>
+        <el-table-column
           property="content"
           header-align="center"
           label="评论内容"
@@ -65,18 +72,18 @@
           width="200">
           <template scope="scope">
             <el-button
-              v-if="!scope.row.reply.length"
+              v-if="scope.row.state === 'wait'"
               @click.native.prevent="openReplyBox(scope.row)"
               type="text"
               size="small">
-              回复
+              修改评论内容
             </el-button>
             <el-button
               v-else
               disabled
               type="text"
               size="small">
-              已回复
+              {{scope.row.state === 'passed' ? '已审核通过' : '审核未通过'}}
             </el-button>
           </template>
         </el-table-column>
@@ -118,18 +125,12 @@
     <el-dialog
       :visible.sync="addVisible"
       >
-      <reply-comment @close="addVisible = false" @addUser="editVisible = true" :user="addUser"></reply-comment>
-    </el-dialog>
-    <el-dialog
-      :visible.sync="editVisible"
-      >
-       <add-user v-if="editVisible" @update="updateUser" user=""></add-user>   
+      <reply-comment @close="addVisible = false" :user="addUser"></reply-comment>
     </el-dialog>
   </div>
 </template>
 <script>
-import { getComments, setComment, addComment } from '../../api/comments.js'
-import addUser from '../widget/edit_shadow_user'
+import { getComments, addComment } from '../../api/comments.js'
 import { formatTime } from '../../utils/index.js'
 import replyComment from '../widget/shadow_comment_add'
 export default {
@@ -145,7 +146,6 @@ export default {
       user: '',
       content: '',
       dialogVisible: false,
-      editVisible: false,
       addVisible: false,
       textarea: '',
       addUser: {},
@@ -158,7 +158,7 @@ export default {
   methods: {
     getComments (page) {
       const vm = this
-      getComments({page, project: vm.proName, user: vm.userName, state: 'passed'}).then(res => {
+      getComments({page, project: vm.proName, user: vm.userName, shadow: true}).then(res => {
         if (res.data.status === 200) {
           vm.count = res.data.data.count
           vm.list = res.data.data.comments
@@ -171,9 +171,7 @@ export default {
     },
     // 格式化订单类型
     formatState (row) {
-      if (row.state === 'wait') return '待审核'
-      if (row.state === 'passed') return '审核通过'
-      return '审核不通过'
+      return row.hold ? '已购买' : '未购买'
     },
     // 评论状态搜索
     commentChange () {
@@ -186,33 +184,6 @@ export default {
       const vm = this
       vm.currentPage = 1
       vm.getComments(1)
-    },
-    // 审核评论
-    setComment (row, state) {
-      const vm = this
-      let message = ''
-      message = state === 'passed' ? '审核通过的评论将显示在项目评论中, 是否继续?' : '审核不通过的评论不会显示在项目评论中, 是否继续?'
-      vm.$confirm(message, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        const id = row._id
-        setComment({id, state}).then(res => {
-          if (res.data.status === 200) {
-            row.state = state
-            vm.$message({
-              type: 'success',
-              message: '审核成功'
-            })
-          }
-        })
-      }).catch(() => {
-        vm.$message({
-          type: 'info',
-          message: '已取消'
-        })
-      })
     },
     openReplyBox (row) {
       const vm = this
@@ -243,17 +214,10 @@ export default {
           })
         }
       })
-    },
-    // 添加新用户后刷新用户列表
-    updateUser (user) {
-      const vm = this
-      vm.editVisible = false
-      vm.addUser = user
     }
   },
   components: {
-    replyComment,
-    addUser
+    replyComment
   },
   computed: {
     power () {
