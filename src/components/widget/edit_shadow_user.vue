@@ -3,17 +3,11 @@
     <div class="line">
       <span class="title">用户名称:</span>
       <span class="content"><el-input v-model="name"></el-input></span>
-      <span class="handdle"><el-button @click="generateName" v-if="power.has('shadow/generate/name')">一键生成</el-button></span>
     </div>
     <div class="line">
       <span class="title">头像:</span>
       <span class="content">
         <span class="avatar"><img :src="avatar" alt=""></span>
-      </span>
-      <span class="handdle">
-        <el-button @click="generateAvatar" v-if="power.has('shadow/generate/avatar')">切换头像</el-button>
-        <span v-show="pending" style="display:inline; padding: 20px;">头像请求中...</span>
-        <span v-show="show" style="display:inline; color: red; padding: 20px;">图片加载失败，请切换头像</span>
       </span>
     </div>
     <div class="line" style="text-align: center">
@@ -23,11 +17,9 @@
 </template>
 
 <script>
-import {
-  generateName,
-  generateAvatar,
-  generateUser
-} from '../../api/shadow.js'
+// import {
+//   getShadowList
+// } from '../../api/shadow.js'
 export default {
   name: 'edit_shadow_user',
   props: ['user'],
@@ -64,43 +56,6 @@ export default {
         vm.show = true
       }
       image.src = avatar
-    },
-    generateName () {
-      const vm = this
-      generateName().then(res => {
-        if (res.data.status === 200) {
-          vm.name = res.data.data.user.name
-        }
-      })
-    },
-    generateAvatar () {
-      const vm = this
-      vm.show = false
-      generateAvatar().then(res => {
-        if (res.data.status === 200) {
-          vm.getImage(res.data.data.user.avatar)
-        }
-      })
-    },
-    generateUser () {
-      const vm = this
-      vm.errMsg = ''
-      if (!vm.name || !vm.avatar) {
-        return vm.$message({
-          type: 'warning',
-          message: '名字和头像不能为空'
-        })
-      }
-      generateUser({name: vm.name, avatar: vm.avatar, id: vm.id}).then(res => {
-        if (res.data.status === 200) {
-          const message = vm.id ? '修改成功' : '创建成功'
-          vm.$emit('update', res.data.data.user)
-          vm.$message({
-            type: 'success',
-            message
-          })
-        }
-      })
     }
   },
   computed: {

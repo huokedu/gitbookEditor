@@ -68,6 +68,7 @@
       <span slot="title">影子</span>
     </template>
     <el-menu-item index="/shadow/member_list" v-if="power.has('member/list')">用户列表</el-menu-item>
+    <el-menu-item index="/shadow/project_list" v-if="power.has('project/query')">项目列表</el-menu-item>
     <el-menu-item index="/shadow/comment_list" v-if="power.has('project/comment/query')">评论列表</el-menu-item>
   </el-submenu>
   <!-- <el-menu-item index="/customer" v-if="power.has('customer/session/query')">

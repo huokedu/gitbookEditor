@@ -40,11 +40,19 @@ function getShadowUserDetails ({id}) {
     }
   })
 }
+// 影子用户购买项目
+function shadowBuyProject ({project, users}) {
+  return Axios.post('/shadow/project/buy', {
+    project,
+    users
+  })
+}
 export {
   generateUser,
   delUser,
   addComment,
   getShadowList,
   editShadowUser,
-  getShadowUserDetails
+  getShadowUserDetails,
+  shadowBuyProject
 }

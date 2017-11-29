@@ -59,7 +59,7 @@
           label="注册时间">
         </el-table-column>
         <el-table-column
-          v-if="power.has('shadow/user/del')"
+          v-if="power.has('shadow/user/details')"
           label="操作"
           header-align="center"
           width="250">
@@ -72,7 +72,7 @@
               用户详情
             </el-button>
             <el-button
-              v-if="power.has('shadow/user/del') && scope.row.can_delete"
+              v-if="power.has('shadow/user/edit') && scope.row.can_delete"
               type="text"
               :disabled="!scope.row.can_delete"
               @click.native.prevent="editUser(scope.row)"

@@ -30,6 +30,7 @@ const ipDetails = () => import('../components/statistics/ip_details.vue')
 const shadowMemberList = () => import('../components/shadow/shadow_member_list.vue')
 const shadowCommentList = () => import('../components/shadow/shadow_comment_list.vue')
 const shadowUserDetails = () => import('../components/shadow/shadow_user_details.vue')
+const shadowProjectList = () => import('../components/shadow/shadow_project_list.vue')
 const power = () => import('../components/power/power.vue')
 const powerEdit = () => import('../components/power/power_edit.vue')
 
@@ -166,6 +167,11 @@ export default new Router({
     name: '影子/用户列表/用户详情',
     path: '/shadow/user/details',
     component: shadowUserDetails
+  },
+  {
+    name: '影子/项目列表',
+    path: '/shadow/project_list',
+    component: shadowProjectList
   },
   {
     name: '管理员',
