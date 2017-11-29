@@ -255,7 +255,7 @@ export default {
 }
 #shadowMemberList .list {
   margin-top: 30px;
-  height: 500px;  
+  height: 600px;  
 }
 #shadowMemberList .block {
   margin: 20px;

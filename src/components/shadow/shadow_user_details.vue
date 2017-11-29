@@ -12,7 +12,7 @@
     </div>
   </div>
   <div class="comment title">
-    <h2>项目信息</h2> <div class="bar"></div>
+    <h2>评论信息</h2> <div class="bar"></div>
     <div class="user-content">
       <table>
         <thead>
@@ -35,7 +35,7 @@
     </div>
   </div>
   <div class="project title">
-    <h2>评论信息</h2> <div class="bar"></div>
+    <h2>项目信息</h2> <div class="bar"></div>
     <div class="user-content">
       <table>
         <thead>
