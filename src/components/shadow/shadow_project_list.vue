@@ -131,40 +131,27 @@ export default {
       vm.checkList = []
       vm.defaultCheckList = []
       // 请求用户列表
-      if (!vm.userList) {
-        getShadowList({page, limit}).then(res => {
-          if (res.data.status === 200) {
-            vm.userList = res.data.data.shadowUsers.map(user => {
-              const obj = user.shadow_user
-              obj.projects = user.projects
-              // 默认选项
-              vm.userIds.push(obj._id)
-              // 判断是否购买项目
-              user.projects.map(project => {
-                if (project._id === pid) {
-                  console.log(obj._id)
-                  vm.checkList.push(obj._id)
-                  vm.defaultCheckList.push(obj._id)
-                  obj.isbuy = true
-                }
-              })
-              return obj
+      // 重置用户列表
+      getShadowList({page, limit}).then(res => {
+        if (res.data.status === 200) {
+          vm.userList = res.data.data.shadowUsers.map(user => {
+            const obj = user.shadow_user
+            obj.projects = user.projects
+            // 默认选项
+            vm.userIds.push(obj._id)
+            // 判断是否购买项目
+            user.projects.map(project => {
+              if (project._id === pid) {
+                console.log(obj._id)
+                vm.checkList.push(obj._id)
+                vm.defaultCheckList.push(obj._id)
+                obj.isbuy = true
+              }
             })
-          }
-        })
-      } else {
-         // 判断是否购买项目
-        vm.userList.map(user => {
-          user.isbuy = false
-          user.projects.map(project => {
-            if (project._id === pid) {
-              vm.checkList.push(user._id)
-              vm.defaultCheckList.push(user._id)
-              user.isbuy = true
-            }
+            return obj
           })
-        })
-      }
+        }
+      })
     },
     getProjectList (page, name) {
       const vm = this
@@ -216,11 +203,9 @@ export default {
             type: 'success',
             message: res.data.message
           })
-          // 重置用户列表
-          vm.userList = ''
+          vm.dialogVisible = false
           // 更新购买数量
           vm.$set(vm.selectedPro, 'count', vm.selectedPro.count + Object.keys(buyUsers).length)
-          vm.dialogVisible = false
         }
       })
     },

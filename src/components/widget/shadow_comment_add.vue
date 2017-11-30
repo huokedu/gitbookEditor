@@ -63,7 +63,6 @@ export default {
       isbuy: 'false'
     }
   },
-  props: ['user'],
   mounted () {
     const vm = this
     vm.getProjectList()
@@ -104,25 +103,34 @@ export default {
           message: '您未选择用户、项目或评论内容不全'
         })
       }
+      if (vm.textarea.length > 150) {
+        return vm.$message({
+          type: 'warning',
+          message: '评论内容过长'
+        })
+      }
       addComment({uid: vm.userId, projId: vm.proId, content: vm.textarea}).then(res => {
         if (res.data.status === 200) {
           vm.$message({
             type: 'success',
             message: '添加成功'
           })
+          vm.userList.some(user => {
+            if (user._id === vm.userId) {
+              res.data.comment.user = { _id: res.data.comment.user, name: user.name }
+            }
+          })
+          vm.proList.some(pro => {
+            if (pro._id === vm.proId) {
+              res.data.comment.project = { _id: res.data.comment.project, name: pro.name }
+            }
+          })
           vm.userId = ''
           vm.proId = ''
           vm.textarea = ''
-          vm.$emit('close')
+          vm.$emit('close', res.data.comment)
         }
       })
-    }
-  },
-  watch: {
-    user (val) {
-      const vm = this
-      vm.userList.push(val)
-      vm.userId = val._id
     }
   },
   computed: {

@@ -28,6 +28,7 @@
         ref="List"
         border
         :data="list"
+        max-height="560" 
        >
         <el-table-column
           type="index"
@@ -46,10 +47,11 @@
           property="content"
           header-align="center"
           label="评论内容"
+          width="500"
           >
         </el-table-column>  
         <el-table-column
-          property="update_time"
+          property="create_time"
           header-align="center"
           :formatter="formatTime"
           label="评论时间">
@@ -191,7 +193,7 @@ export default {
     },
     // 格式化购买时间
     formatTime (row) {
-      return formatTime(row.update_time / 1000, '{y}-{m}-{d} {h}:{i}')
+      return formatTime(row.create_time / 1000, '{y}-{m}-{d} {h}:{i}')
     },
     // 格式化订单类型
     formatState (row) {
@@ -239,7 +241,6 @@ export default {
       })
     },
     openReplyBox (row, index) {
-      console.log(row, index)
       const vm = this
       vm.dialogVisible = true
       vm.user = row.user.name
@@ -254,6 +255,12 @@ export default {
         return vm.$message({
           type: 'warning',
           message: '回复内容不能为空'
+        })
+      }
+      if (vm.textarea.length > 150) {
+        return vm.$message({
+          type: 'warning',
+          message: '回复内容长度小于150'
         })
       }
       addComment({commentId: vm.id, content: vm.textarea, token: vm.$store.state.power.token}).then(res => {

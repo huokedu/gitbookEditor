@@ -27,7 +27,7 @@
           <tr v-for="comment in commentList" :key="comment._id">
             <td>{{comment.project.name}}</td>
             <td>{{comment.content}}</td>
-            <td>{{comment.reply[0].content}}</td>
+            <td>{{comment.reply[0] && comment.reply[0].content}}</td>
             <td>{{formatTime(comment.create_time)}}</td>
           </tr>
         </tbody>

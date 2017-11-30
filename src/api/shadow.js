@@ -10,9 +10,9 @@ function delUser (id) {
   })
 }
 // 添加影子评论
-function addComment ({uid, projId, content, isBuy}) {
+function addComment ({uid, projId, content}) {
   return Axios.post('/shadow/generate/comment', {
-    uid, projId, content, isBuy
+    uid, projId, content
   })
 }
 // 查询影子用户
@@ -47,6 +47,12 @@ function shadowBuyProject ({project, users}) {
     users
   })
 }
+// 编辑影子评论内容
+function editComment ({commentId, content}) {
+  return Axios.post('/shadow/comment/edit', {
+    commentId, content
+  })
+}
 export {
   generateUser,
   delUser,
@@ -54,5 +60,6 @@ export {
   getShadowList,
   editShadowUser,
   getShadowUserDetails,
-  shadowBuyProject
+  shadowBuyProject,
+  editComment
 }

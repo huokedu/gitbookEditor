@@ -26,6 +26,7 @@
         ref="List"
         border
         :data="list"
+        max-height="560"        
        >
         <el-table-column
           type="index"
@@ -51,12 +52,14 @@
           property="content"
           header-align="center"
           label="评论内容"
+          width="500"
           >
         </el-table-column>  
         <el-table-column
-          property="update_time"
+          property="create_time"
           header-align="center"
           :formatter="formatTime"
+          width="120"
           label="评论时间">
         </el-table-column>
         <el-table-column
@@ -83,7 +86,7 @@
               disabled
               type="text"
               size="small">
-              {{scope.row.state === 'passed' ? '已审核通过' : '审核未通过'}}
+              {{scope.row.state === 'passed' ? '已审核通过，无法编辑' : '审核未通过，无法编辑'}}
             </el-button>
           </template>
         </el-table-column>
@@ -99,38 +102,15 @@
       </el-pagination>
     </div>
     <el-dialog
-      style="text-align: left"
-      title="回复评论"
-      :visible.sync="dialogVisible"
-      size="tiny"
-      @close="textarea = ''"
-      >
-      <div class="user-reply">
-        <span>{{user}}：</span>
-        <span>{{content}}</span>
-      </div>
-      <el-input
-        type="textarea"
-        :autosize="{ minRows: 4, maxRows: 10}"
-        resize="none"
-        autofocus
-        placeholder="请输入内容"
-        v-model="textarea">
-      </el-input>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="replyComment">回复</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog
       :visible.sync="addVisible"
       >
-      <reply-comment @close="addVisible = false" :user="addUser"></reply-comment>
+      <reply-comment @close="updateList"></reply-comment>
     </el-dialog>
   </div>
 </template>
 <script>
-import { getComments, addComment } from '../../api/comments.js'
+import { getComments } from '../../api/comments.js'
+import { editComment } from '../../api/shadow.js'
 import { formatTime } from '../../utils/index.js'
 import replyComment from '../widget/shadow_comment_add'
 export default {
@@ -142,14 +122,8 @@ export default {
       currentPage: 1,
       count: 0,
       list: [],
-      id: '',
-      user: '',
       content: '',
-      dialogVisible: false,
-      addVisible: false,
-      textarea: '',
-      addUser: {},
-      userId: ''
+      addVisible: false
     }
   },
   mounted () {
@@ -167,7 +141,7 @@ export default {
     },
     // 格式化购买时间
     formatTime (row) {
-      return formatTime(row.update_time / 1000, '{y}-{m}-{d} {h}:{i}')
+      return formatTime(row.create_time / 1000, '{y}-{m}-{d}')
     },
     // 格式化订单类型
     formatState (row) {
@@ -187,33 +161,34 @@ export default {
     },
     openReplyBox (row) {
       const vm = this
-      vm.dialogVisible = true
-      vm.user = row.user.name
-      vm.content = row.content
-      vm.id = row._id
-      vm.userId = row.user._id
-    },
-    // 回复评论
-    replyComment () {
-      const vm = this
-      if (vm.textarea === '') {
-        return vm.$message({
-          type: 'warning',
-          message: '回复内容不能为空'
+      vm.$prompt(`${row.project.name}:${row.content}`, '修改评论内容(长度小于150)', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputValidator: (val) => {
+          return val !== null && val.length < 150 && val.length !== 0
+        },
+        inputErrorMessage: '评论内容不符合要求'
+      }).then(({ value }) => {
+        editComment({commentId: row._id, content: value}).then(res => {
+          row.content = value
+          if (res.data.status === 200) {
+            vm.$message({
+              type: 'success',
+              message: '修改成功'
+            })
+          }
         })
-      }
-      addComment({commentId: vm.id, content: vm.textarea, userId: vm.userId}).then(res => {
-        if (res.data.status === 200) {
-          vm.textarea = ''
-          vm.dialogVisible = false
-          // 显示已回复
-          vm.list[vm.selectedIndex].reply = [1]
-          vm.$message({
-            type: 'success',
-            message: '回复成功'
-          })
-        }
+      }).catch(() => {
+        vm.$message({
+          type: 'info',
+          message: '取消输入'
+        })
       })
+    },
+    updateList (comment) {
+      const vm = this
+      vm.addVisible = false
+      vm.list.unshift(comment)
     }
   },
   components: {

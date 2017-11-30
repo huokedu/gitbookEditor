@@ -33,6 +33,18 @@ export default {
   methods: {
     saveUser () {
       const vm = this
+      if (vm.name.length === 0) {
+        return vm.$message({
+          type: 'warning',
+          message: '用户名长度不能为空'
+        })
+      }
+      if (vm.name.length > 20) {
+        return vm.$message({
+          type: 'warning',
+          message: '用户名长度小于20'
+        })
+      }
       editShadowUser({id: vm.user._id, name: vm.name}).then(res => {
         if (res.data.status === 200) {
           vm.$message({
