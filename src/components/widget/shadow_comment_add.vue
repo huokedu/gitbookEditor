@@ -78,6 +78,7 @@ export default {
     },
     getShadowList (pid) {
       const vm = this
+      vm.userId = ''
       getShadowList({page: 1, limit: 0}).then(res => {
         if (res.data.status === 200) {
           vm.userList = res.data.data.shadowUsers.map(user => {
