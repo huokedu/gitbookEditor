@@ -134,10 +134,11 @@ export default {
           .filter(ip => { return ip._id !== '' && ip._id !== null })
           .map(ip => {
             max = ip.value > max ? ip.value : max
-            let name = ip._id ? ip._id.split('省')[0] : ip._id
-            name = name === '宁夏回族自治区' ? '宁夏' : name
-            name = name === '新疆维吾尔自治区' ? '新疆' : name
-            name = name === '内蒙古自治区' ? '内蒙古' : name
+            let name = ip._id.slice(0, -1)
+            name = name === '宁夏回族自治' ? '宁夏' : name
+            name = name === '新疆维吾尔自治' ? '新疆' : name
+            name = name === '内蒙古自治' ? '内蒙古' : name
+            name = name === '广西壮族自治' ? '广西' : name
             return {name, value: ip.value}
           })
           vm.options.series[0].data = ips

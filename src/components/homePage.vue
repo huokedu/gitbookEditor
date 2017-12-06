@@ -74,13 +74,11 @@ export default {
   computed: {
     PV () {
       const vm = this
-      if (vm.generalData.viewNum) return vm.generalData.viewNum[vm.generalData.viewNum.length - 1].PV
-      return 0
+      return vm.generalData.viewNum && !!vm.generalData.viewNum.length ? vm.generalData.viewNum[vm.generalData.viewNum.length - 1].PV : 0
     },
     UV () {
       const vm = this
-      if (vm.generalData.viewNum) return vm.generalData.viewNum[vm.generalData.viewNum.length - 1].UV
-      return 0
+      return vm.generalData.viewNum && !!vm.generalData.viewNum.length ? vm.generalData.viewNum[vm.generalData.viewNum.length - 1].UV : 0
     },
     ...mapState('power', [
       'firstLogin', 'name'

@@ -69,7 +69,7 @@ export default {
         legend: {
           data: ['总PV', '总UV', '广告PV', '广告UV'],
           x: '10%',
-          y: '10%'
+          y: '0%'
         },
         tooltip: {
           trigger: 'axis',
@@ -170,11 +170,18 @@ export default {
       const pvList = []
       const adsUVList = []
       const adsPVList = []
+      let adsIndex = 0
       vm.options.xAxis[0].data = vm.list.map((value, index) => {
         uvList.push(value.UV)
         pvList.push(value.PV)
-        adsUVList.push(vm.adsList[index].UV)
-        adsPVList.push(vm.adsList[index].PV)
+        if (vm.adsList[adsIndex] && vm.adsList[adsIndex]._id === value._id) {
+          adsUVList.push(vm.adsList[adsIndex].UV)
+          adsPVList.push(vm.adsList[adsIndex].PV)
+          adsIndex++
+        } else {
+          adsUVList.push(0)
+          adsPVList.push(0)
+        }
         return value._id
       })
       vm.options.series[0].data = pvList
