@@ -9,11 +9,12 @@ import echarts from 'echarts'
 import 'echarts/lib/chart/line'
 // 引入提示框和标题组件
 import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/toolbox'
 import 'echarts/lib/component/visualMap'
 import 'echarts/lib/component/legend'
 export default {
   name: 'line_chart',
-  props: ['list'],
+  props: ['list', 'adsList'],
   data () {
     return {
       options: {
@@ -25,7 +26,7 @@ export default {
           min: 0,
           max: 200,
           inRange: {
-            color: ['rgba(29,144,230,.3)', 'rgba(29,144,230,1)'],
+            color: ['#f16d6d'],
             symbolSize: [0, 10]
           }
         }, {
@@ -35,17 +36,38 @@ export default {
           min: 0,
           max: 200,
           inRange: {
-            color: ['rgba(9,195,123,.3)', 'rgba(9,195,123,1)'],
+            color: ['rgba(9,195,123,1)'],
             symbolSize: [0, 10]
           }
-        }],
+        }, {
+          show: false,
+          type: 'continuous',
+          seriesIndex: 2,
+          min: 0,
+          max: 200,
+          inRange: {
+            color: ['#1d90e6'],
+            symbolSize: [0, 10]
+          }
+        }, {
+          show: false,
+          type: 'continuous',
+          seriesIndex: 3,
+          min: 0,
+          max: 200,
+          inRange: {
+            color: ['#9858f5'],
+            symbolSize: [0, 10]
+          }
+        }
+        ],
         title: [{
           left: 'center',
-          text: '流量统计'
+          text: ''
         }],
-        color: ['#1d90e6', 'rgba(9,195,123,1)'],
+        color: ['#f16d6d', 'rgba(9,195,123,1)', '#1d90e6', '#9858f5'],
         legend: {
-          data: ['PV', 'UV'],
+          data: ['总PV', '总UV', '广告PV', '广告UV'],
           x: '10%',
           y: '10%'
         },
@@ -55,31 +77,87 @@ export default {
             type: 'cross'
           }
         },
+        toolbox: {
+          feature: {
+            dataZoom: {
+              yAxisIndex: 'none'
+            },
+            restore: {},
+            saveAsImage: {}
+          }
+        },
+        dataZoom: [
+          {
+            type: 'slider',
+            show: true,
+            xAxisIndex: [0],
+            start: 85,
+            end: 100
+          },
+          {
+            type: 'inside',
+            xAxisIndex: [0],
+            start: 80,
+            end: 100
+          }
+        ],
         xAxis: [{
           data: []
         }],
-        yAxis: [{
-          splitLine: {
-            show: false
+        yAxis: [
+          {
+            name: 'PV',
+            type: 'value',
+            splitLine: {
+              show: false
+            }
+          },
+          {
+            name: 'UV',
+            nameLocation: 'start',
+            type: 'value',
+            splitLine: {
+              show: false
+            }
           }
-        }],
+        ],
         grid: [{
           left: '5%',
           right: '5%'
         }],
-        series: [{
-          name: 'PV',
-          type: 'line',
-          smooth: true,
-          showSymbol: true,
-          data: []
-        }, {
-          name: 'UV',
-          type: 'line',
-          smooth: true,
-          showSymbol: true,
-          data: []
-        }]
+        series: [
+          {
+            name: '总PV',
+            type: 'line',
+            yAxisIndex: 0,
+            smooth: true,
+            showSymbol: true,
+            data: []
+          },
+          {
+            name: '总UV',
+            type: 'line',
+            yAxisIndex: 1,
+            smooth: true,
+            showSymbol: true,
+            data: []
+          },
+          {
+            name: '广告PV',
+            type: 'line',
+            yAxisIndex: 0,
+            smooth: true,
+            showSymbol: true,
+            data: []
+          }, {
+            name: '广告UV',
+            type: 'line',
+            yAxisIndex: 1,
+            smooth: true,
+            showSymbol: true,
+            data: []
+          }
+        ]
       }
     }
   },
@@ -90,13 +168,19 @@ export default {
       // 组合参数
       const uvList = []
       const pvList = []
-      vm.options.xAxis[0].data = vm.list.map(value => {
+      const adsUVList = []
+      const adsPVList = []
+      vm.options.xAxis[0].data = vm.list.map((value, index) => {
         uvList.push(value.UV)
         pvList.push(value.PV)
-        return value.create_time.slice(0, 10)
+        adsUVList.push(vm.adsList[index].UV)
+        adsPVList.push(vm.adsList[index].PV)
+        return value._id
       })
       vm.options.series[0].data = pvList
       vm.options.series[1].data = uvList
+      vm.options.series[2].data = adsPVList
+      vm.options.series[3].data = adsUVList
       myChart.setOption(vm.options)
     }
   },
@@ -111,6 +195,6 @@ export default {
 <style scoped>
 #lineChart {
   width: 100%;
-  height: 300px;
+  height: 600px;
 }
 </style>

@@ -10,14 +10,21 @@ function getIncomings ({year, month, page}) {
   })
 }
 // 统计IP
-function getIPs (params) {
-  return Axios.get('/ip/query')
+function getIPs ({allIp}) {
+  return Axios.get('/ip/query', {
+    params: {
+      allIp
+    }
+  })
 }
 // ip详情
-function getIPsDetails (region) {
+function getIPsDetails ({region, page, limit = 10, allIp}) {
   return Axios.get('/ip/details', {
     params: {
-      region
+      region,
+      page,
+      limit,
+      allIp
     }
   })
 }

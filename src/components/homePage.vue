@@ -44,7 +44,7 @@
     </section>
     <section class="trendency">
       <h2>流量趋势</h2>
-      <line-chart :list="generalData.viewNum"></line-chart>
+      <line-chart :list="generalData.viewNum" :adsList="generalData.adsViews"></line-chart>
     </section>
   </div>
 </template>
@@ -73,11 +73,13 @@ export default {
   },
   computed: {
     PV () {
-      if (this.generalData.newView) return this.generalData.newView.PV
+      const vm = this
+      if (vm.generalData.viewNum) return vm.generalData.viewNum[vm.generalData.viewNum.length - 1].PV
       return 0
     },
     UV () {
-      if (this.generalData.newView) return this.generalData.newView.UV
+      const vm = this
+      if (vm.generalData.viewNum) return vm.generalData.viewNum[vm.generalData.viewNum.length - 1].UV
       return 0
     },
     ...mapState('power', [

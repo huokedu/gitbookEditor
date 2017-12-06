@@ -6,6 +6,7 @@
         ref="List"
         border
         :data="list"
+        v-loading="loading"
       >
         <el-table-column
           type="index"
@@ -16,7 +17,7 @@
           >
         </el-table-column>
         <el-table-column
-          property="city"
+          property="city.last"
           header-align="center"
           align="center"
           label="城市"
@@ -66,20 +67,23 @@ export default {
   data () {
     return {
       list: [],
-      count: 27
+      count: 0,
+      loading: true
     }
   },
   mounted () {
     const vm = this
-    vm.getIPsDetails()
+    vm.getIPsDetails(1)
   },
   methods: {
-    getIPsDetails () {
+    getIPsDetails (page) {
       const vm = this
-      getIPsDetails(vm.$route.query.region).then(res => {
+      vm.loading = true
+      getIPsDetails({region: vm.$route.query.region, page, allIp: vm.$route.query.allIp === '总UV'}).then(res => {
         if (res.data.status === 200) {
           vm.list = res.data.data.users
-          vm.count = res.data.data.users.length
+          vm.count = res.data.data.count
+          vm.loading = false
         }
       })
     },

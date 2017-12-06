@@ -1,11 +1,16 @@
 <template>
   <div id="ipStastics">
     <div id="map" ref="map"></div>
+    <el-radio-group v-model="ipStatus" @change="changeIP">
+      <el-radio-button label="总UV"></el-radio-button>
+      <el-radio-button label="注册UV"></el-radio-button>
+    </el-radio-group>
     <div class="list">
       <el-table
         ref="List"
         border
         :data="options.series[0].data"
+        v-loading="loading"
       >
         <el-table-column
           type="index"
@@ -37,7 +42,7 @@
           width="300">
           <template scope="scope">
             <el-button
-              @click.native.prevent="$router.push({path:'/statistics/ip_statistics/details', query: {region: scope.row.name}})"
+              @click.native.prevent="$router.push({path:'/statistics/ip_statistics/details', query: {region: scope.row.name, allIp: ipStatus}})"
               type="text"
               size="small">
               查看详情
@@ -65,6 +70,7 @@ export default {
   name: 'ip_statistics',
   data () {
     return {
+      mychart: null,
       options: {
         title: {
           text: 'IP统计',
@@ -103,7 +109,9 @@ export default {
             ]
           }
         ]
-      }
+      },
+      ipStatus: '总UV',
+      loading: true
     }
   },
   mounted () {
@@ -111,9 +119,14 @@ export default {
   },
   methods: {
     drawMap () {
-      let vm = this
-      let myChart = echarts.init(vm.$refs.map)
-      getIPs().then(res => {
+      const vm = this
+      vm.myChart = echarts.init(vm.$refs.map)
+      vm.getIPs()
+    },
+    getIPs (status) {
+      const vm = this
+      vm.loading = true
+      getIPs({allIp: status}).then(res => {
         if (res.data.status === 200) {
           // 生成ip数据组
           let max = 0
@@ -124,14 +137,21 @@ export default {
             let name = ip._id ? ip._id.split('省')[0] : ip._id
             name = name === '宁夏回族自治区' ? '宁夏' : name
             name = name === '新疆维吾尔自治区' ? '新疆' : name
+            name = name === '内蒙古自治区' ? '内蒙古' : name
             return {name, value: ip.value}
           })
           vm.options.series[0].data = ips
           vm.options.visualMap.max = max + 10
           echarts.registerMap('china', chinaJson)
-          myChart.setOption(vm.options)
+          vm.myChart.setOption(vm.options)
+          vm.loading = false
         }
       })
+    },
+    changeIP (label) {
+      const vm = this
+      const status = vm.ipStatus === '总UV'
+      vm.getIPs(status)
     }
   },
   computed: {
@@ -146,6 +166,9 @@ export default {
 #ipStastics {
   width: 1200px;
   margin: 20px auto 50px;
+}
+#ipStastics .list {
+  margin-top: 20px;
 }
 #map{
   display: inline-block;
