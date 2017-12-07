@@ -154,7 +154,6 @@ export default {
       })
     },
     delArticle (index, article) {
-      console.log(index)
       let vm = this
       vm.$msgbox.confirm('删除文档到回收站, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -177,14 +176,13 @@ export default {
     },
     // 格式化时间
     formatter (row) {
-      return formatTime(new Date(row.update_time).getTime() / 1000)
+      return formatTime(row.update_time / 1000)
     },
     // 过滤标签
     filterTag (value, row) {
     },
     // 重置标签过滤
     resetTable (filter) {
-      console.log(1)
       const vm = this
       const value = Object.values(filter)[0]
       vm.selectedTags.clear()
@@ -192,7 +190,6 @@ export default {
         vm.getAPIDoc(1)
         return true
       } else {
-        console.log(value)
         value.map(id => {
           if (!vm.selectedTags.has(id)) vm.selectedTags.add(id)
         })

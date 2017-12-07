@@ -107,7 +107,7 @@ export default {
     },
     // 格式化时间
     formatter (time) {
-      return formatTime(new Date(time).getTime() / 1000)
+      return formatTime(time / 1000)
     },
     // 保存状态
     saveContent () {
