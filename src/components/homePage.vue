@@ -34,10 +34,10 @@
             <span><strong>{{generalData.newUser}}</strong>&nbsp;个<br><span>新增会员</span></span>
           </li>
           <li>
-            <span><strong>{{PV}}</strong>&nbsp;次<br><span>今日浏览量(PV)</span></span>
+            <span><strong>{{views.PV}}</strong>&nbsp;次<br><span>今日浏览量(PV)</span></span>
           </li>
           <li>
-            <span><strong>{{UV}}</strong>&nbsp;次<br><span>今日访客数(UV)</span></span>
+            <span><strong>{{views.UV}}</strong>&nbsp;次<br><span>今日访客数(UV)</span></span>
           </li>
         </ul>
       </div>
@@ -72,13 +72,13 @@ export default {
     vm.getGeneralData()
   },
   computed: {
-    PV () {
+    views () {
       const vm = this
-      return vm.generalData.viewNum && !!vm.generalData.viewNum.length ? vm.generalData.viewNum[vm.generalData.viewNum.length - 1].PV : 0
-    },
-    UV () {
-      const vm = this
-      return vm.generalData.viewNum && !!vm.generalData.viewNum.length ? vm.generalData.viewNum[vm.generalData.viewNum.length - 1].UV : 0
+      const todayTimes = Date.parse(new Date(new Date().toLocaleDateString()))
+      return vm.generalData.viewNum &&
+      vm.generalData.viewNum.length &&
+      Date.parse(vm.generalData.viewNum.slice(-1)[0]._id) - todayTimes === 28800000
+      ? vm.generalData.viewNum[vm.generalData.viewNum.length - 1] : {PV: 0, UV: 0}
     },
     ...mapState('power', [
       'firstLogin', 'name'
