@@ -4,7 +4,10 @@ import router from './router'
 // mardown编辑器
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
+// 格式话css
 import 'normalize.css'
+// 引入图标
+import 'font-awesome/css/font-awesome.css'
 Vue.use(mavonEditor)
 Vue.config.productionTip = false
 // 状态管理
