@@ -1,7 +1,7 @@
 {
-  "name": "gitbookeditor",
+  "name": "vue-admin-apis",
   "version": "1.0.0",
-  "description": "a gitbookEditor based on vue 2.x",
+  "description": "backEnd for APIS",
   "author": "Vongola <1085280247@qq.com>",
   "private": true,
   "scripts": {
