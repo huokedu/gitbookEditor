@@ -15,7 +15,7 @@
       </el-dropdown-menu>
     </el-dropdown>
     <el-breadcrumb separator="/">
-      <el-breadcrumb-item v-for="(route, index) in routeList" :key="index">{{route}}</el-breadcrumb-item>
+      <el-breadcrumb-item v-for="(route, index) in routeList" :key="index" :to="route.path">{{route.name}}</el-breadcrumb-item>
     </el-breadcrumb>
     <el-dialog
       :visible.sync="editVisible"
@@ -39,8 +39,13 @@ export default {
   },
   computed: {
     routeList () {
-      if (!this.$route.name) return
-      return this.$route.name.split('/')
+      const vm = this
+      let matched = [{ name: vm.$route.name, path: vm.$route.fullPath }]
+      const first = matched[0]
+      if (first.name !== '首页' || first.path !== '/') {
+        matched = [{ name: '首页', path: '/' }].concat(matched)
+      }
+      return matched
     },
     ...mapState('power', [
       'avatar', 'name'
