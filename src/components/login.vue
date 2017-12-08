@@ -7,7 +7,7 @@
       <el-button type="primary" @click.stop="isLogin = true" v-if="!isLogin">来呀,快活呀</el-button>
       <section class="form-area" v-else @click.stop>
         <el-input v-model="phone" placeholder="用户名/手机号"></el-input>
-        <el-input v-model="pwd" placeholder="密码" type="password"></el-input>
+        <el-input v-model="pwd" placeholder="密码" type="password" @keyup.enter.native="validate"></el-input>
         <el-button type="success" @click="validate">要登就登,赶紧的</el-button>
       </section>
       </transition>
