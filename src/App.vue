@@ -41,6 +41,7 @@ export default {
       Axios.interceptors.response.use(function (res) {
         // 在发送请求之前做些什么
         if (res.data.status > 6000) {
+          if (res.data.message === '请求参数不完整') return vm.$router.replace('/404')
           vm.$confirm(`${res.data.message},是否返回登录页面`, '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
