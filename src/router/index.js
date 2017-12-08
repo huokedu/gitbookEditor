@@ -159,17 +159,17 @@ export default new Router({
     component: shadowMemberList
   },
   {
-    name: '评论列表',
+    name: '影子评论列表',
     path: '/shadow/comment_list',
     component: shadowCommentList
   },
   {
-    name: '用户详情',
+    name: '影子用户详情',
     path: '/shadow/user/details',
     component: shadowUserDetails
   },
   {
-    name: '项目列表',
+    name: '影子项目列表',
     path: '/shadow/project_list',
     component: shadowProjectList
   },
