@@ -51,7 +51,7 @@
         <tags v-if="visible" label="project"></tags>
       </el-dialog>
     </section>
-    <section v-if="power.has('project/part/query')">
+    <section v-if="power.has('project/part/query') && $route.path === '/repo/repo_edit'">
       <div class="title">
         <h2>项目套餐</h2> <div class="bar"></div>
       </div>
@@ -93,7 +93,7 @@
         </el-card><br>
       </div>
       <el-dialog title="添加套餐" :visible.sync="visiblePart" size="tiny" style="min-width: 1200px">
-        <parts v-if="visiblePart" @addPart="editPart" :part="choosePart"></parts>
+        <parts v-if="visiblePart" @addPart="editPart" :part="choosePart" :ProId="$route.query.id" :partId="partId" :parts="parts"></parts>
       </el-dialog>
     </section>
     <section class="part">
@@ -106,7 +106,7 @@
 import tags from '../widget/tag_select_box'
 import parts from '../widget/part_add'
 import { serverPath } from '../../../config/path.js'
-import { addProject, addPart, getDetails, editProject, editPart } from '../../api/projects.js'
+import { addProject, getDetails, editProject, editPart } from '../../api/projects.js'
 export default {
   name: 'repo_add',
   data () {
@@ -135,6 +135,7 @@ export default {
       parts: [
       ],
       delId: [],
+      partId: '',
       choosePart: {}
     }
   },
@@ -167,33 +168,48 @@ export default {
     },
     // 确保只有一个试用套餐
     checkTryStatus (index, val) {
-      if (val) {
-        this.parts.map((part, sort) => {
-          if (sort === index) return
-          part.status = part.trial ? false : part.status
-          part.trial = false
-        })
-      } else {
-        this.parts[index].status = false
-      }
+      const vm = this
+      editPart({id: vm.parts[index]._id, trial: val}).then(res => {
+        if (res.data.status === 200) {
+          vm.parts.map((part, sort) => {
+            if (sort === index) return
+            if (vm.parts.length >= 4 && part.trial) {
+              part.status = false
+            }
+            part.trial = false
+          })
+          const message = val ? '套餐已设置为试用套餐' : '套餐已取消试用'
+          vm.$message({
+            type: 'success',
+            message
+          })
+        }
+      })
     },
     // 确保最多只有三个套餐上线
     checkOnline (index, val) {
-      if (val) {
-        let count = 0
-        const vm = this
-        vm.parts.map((part, sort) => {
-          if (part.trial) return
-          count = part.status ? ++count : count
+      let count = 0
+      const vm = this
+      vm.parts.map((part, sort) => {
+        if (part.trial) return
+        count = part.status ? ++count : count
+      })
+      if (count === 4) {
+        vm.parts[index].status = false
+        return vm.$message({
+          type: 'warning',
+          message: '最多上线三个正式套餐'
         })
-        if (count === 4) {
-          vm.$message({
-            type: 'warning',
-            message: '最多上线三个正式套餐'
-          })
-          vm.parts[index].status = false
-        }
       }
+      editPart({id: vm.parts[index]._id, status: val}).then(res => {
+        if (res.data.status === 200) {
+          const message = val ? '套餐已上线' : '套餐已下线'
+          vm.$message({
+            type: 'success',
+            message
+          })
+        }
+      })
     },
     // 保存修改
     save (formName) {
@@ -222,19 +238,9 @@ export default {
         }
       })
     },
+    // 同步套餐编辑状态
     editPart (part) {
       const vm = this
-      const isDuplicate = vm.parts.some((savedPart, index) => {
-        if (part.index === index) return false
-        return savedPart.name === part.name
-      })
-      // 检查标题重复
-      if (isDuplicate) {
-        return vm.$message({
-          type: 'warning',
-          message: '套餐名重复'
-        })
-      }
       vm.visiblePart = false
       if (part.index || part.index === 0) {
         const index = part.index
@@ -243,6 +249,7 @@ export default {
       }
       vm.parts.push(part)
     },
+    // 传递参数给套餐编辑窗口
     changePart (index) {
       const vm = this
       if (index === -1) {
@@ -251,6 +258,7 @@ export default {
         // 复制对象，防止双向绑定
         const {count, name, price, status, trial} = vm.parts[index]
         vm.choosePart = {count, name, price, status, trial, index}
+        vm.partId = vm.parts[index]._id
       }
       vm.visiblePart = true
     },
@@ -262,11 +270,7 @@ export default {
       })
       addProject(vm.form).then(res => {
         if (res.data.status === 200) {
-          if (vm.parts.length) {
-            vm.addPart(res.data.data.project._id)
-          } else {
-            vm.$router.push('/repo/repo_list')
-          }
+          vm.$router.push('/repo/repo_list')
         } else {
           vm.$message({
             type: 'error',
@@ -278,10 +282,21 @@ export default {
     // 删除套餐
     delPart (index) {
       const vm = this
-      if (vm.parts[index]._id) {
-        vm.delId.push(vm.parts[index]._id)
-      }
-      vm.parts.splice(index, 1)
+      const delId = vm.parts[index]._id
+      editPart({delId}).then(res => {
+        if (res.data.status === 200) {
+          vm.parts.splice(index, 1)
+          vm.$message({
+            type: 'success',
+            message: '删除套餐成功'
+          })
+        } else {
+          vm.$message({
+            type: 'error',
+            message: '删除失败'
+          })
+        }
+      })
     },
     // 编辑项目
     editProject (id) {
@@ -292,9 +307,6 @@ export default {
       vm.form.id = id
       editProject(vm.form).then(res => {
         if (res.data.status === 200) {
-          if (vm.parts.length || vm.delId.length) {
-            vm.addPart(id)
-          }
           vm.$message({
             type: 'success',
             message: res.data.message
@@ -305,50 +317,6 @@ export default {
             message: res.data.message
           })
         }
-      })
-    },
-    // 添加套餐
-    addPart (id) {
-      const vm = this
-      // 删除套餐
-      if (vm.delId.length) {
-        vm.delId.map(delId => {
-          editPart({delId})
-        })
-      }
-      // 修改套餐
-      vm.parts.map(part => {
-        part.salePrice = part.price
-        if (part._id) {
-          part.id = part._id
-          return editPart(part).then(res => {
-            if (res.data.status === 200) {
-              vm.$message({
-                type: 'success',
-                message: '保存成功'
-              })
-            }
-          })
-        }
-        part.id = id
-        // 添加套餐
-        addPart(part).then(res => {
-          if (res.data.status === 200) {
-            if (vm.$route.path === '/repo/repo_edit') {
-              vm.$message({
-                type: 'success',
-                message: '保存成功'
-              })
-              return
-            }
-            vm.$router.push('/repo/repo_list')
-          } else {
-            vm.$message({
-              type: 'error',
-              message: '保存失败'
-            })
-          }
-        })
       })
     }
   },

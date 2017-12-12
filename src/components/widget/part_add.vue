@@ -10,7 +10,7 @@
       <el-input v-model.number="form.price" ></el-input>
     </el-form-item>
       <div class="handdle">
-        <el-button @click="submitForm('partForm')">
+        <el-button @click="checkStatus">
           保存
         </el-button>
       </div>    
@@ -18,9 +18,10 @@
 </template>
 
 <script>
+import { addPart, editPart } from '../../api/projects.js'
 export default {
   name: 'part_add',
-  props: ['part'],
+  props: ['part', 'ProId', 'partId', 'parts'],
   data () {
     var checkNum = (rule, value, callback) => {
       if (!value) {
@@ -53,24 +54,70 @@ export default {
         price: [
           { validator: checkNum, trigger: 'blur' }
         ]
-      }
+      },
+      status: 'add'
     }
   },
   mounted () {
     const vm = this
     if (vm.part) {
       vm.form = vm.part
+      vm.status = 'edit'
     }
   },
   methods: {
-    submitForm (formName) {
+    checkStatus () {
       const vm = this
-      vm.$refs[formName].validate((valid) => {
-        if (valid) {
+      const isDuplicate = vm.parts.some((savedPart, index) => {
+        if (savedPart._id === vm.partId) return false
+        return savedPart.name === vm.form.name
+      })
+      // 检查标题重复
+      if (isDuplicate) {
+        return vm.$message({
+          type: 'warning',
+          message: '套餐名重复'
+        })
+      }
+      if (vm.status === 'add') vm.addPart()
+      if (vm.status === 'edit') vm.editPart()
+    },
+    // 添加套餐
+    addPart () {
+      const vm = this
+      vm.form.id = vm.ProId
+      vm.form.salePrice = vm.form.price
+      // 添加套餐
+      addPart(vm.form).then(res => {
+        if (res.data.status === 200) {
+          vm.form._id = res.data.id
+          delete vm.form.id
           vm.$emit('addPart', vm.form)
+          return vm.$message({
+            type: 'success',
+            message: '添加套餐成功'
+          })
         } else {
-          console.log('error submit!!')
-          return false
+          vm.$message({
+            type: 'error',
+            message: '保存失败'
+          })
+        }
+      })
+    },
+    editPart () {
+      const vm = this
+      vm.form.id = vm.partId
+      vm.form.salePrice = vm.form.price
+      return editPart(vm.form).then(res => {
+        if (res.data.status === 200) {
+          vm.form._id = vm.form.id
+          delete vm.form.id
+          vm.$emit('addPart', vm.form)
+          vm.$message({
+            type: 'success',
+            message: '编辑套餐成功'
+          })
         }
       })
     }
