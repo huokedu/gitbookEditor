@@ -7,7 +7,7 @@
 <script>
 import { getContent, saveContent, getReArticle } from '../../api/articles.js'
 export default {
-  name: 'hello',
+  name: 'editor',
   data () {
     return {
       value: '',
@@ -48,9 +48,12 @@ export default {
     vm.toolbars.save = vm.power.has('article/edit')
     // 监听刷新
     window.onbeforeunload = vm.reload
-    // 失焦时取消自动保存
-    document.querySelector('.auto-textarea-input').onblur = () => {
+    // 输入时自动保存
+    document.querySelector('.auto-textarea-input').oninput = () => {
       clearTimeout(vm.clearOut)
+      vm.clearOut = setTimeout(() => {
+        vm.save(vm.value)
+      }, 3000)
     }
   },
   methods: {
@@ -147,6 +150,7 @@ export default {
   watch: {
     id (id) {
       const vm = this
+      clearTimeout(vm.clearOut)
       if (!id) {
         vm.value = ''
         return
@@ -167,13 +171,6 @@ export default {
       } else {
         vm.getContent(id)
       }
-    },
-    value (content) {
-      const vm = this
-      clearTimeout(vm.clearOut)
-      vm.clearOut = setTimeout(() => {
-        vm.save(content)
-      }, 10000)
     }
   },
   beforeDestroy () {
