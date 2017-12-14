@@ -15,10 +15,6 @@ function addAdmin (id) {
 function delAdmin (id) {
   return Axios.post('/power/admin/del', {id})
 }
-// 查询管理员权限
-function queryPower (id) {
-  return Axios.post('/power/admin/query', {id})
-}
 // 查询权限列表
 function getPowerList () {
   return Axios.get('/power/list')
@@ -39,7 +35,6 @@ export {
   getAdminList,
   addAdmin,
   delAdmin,
-  queryPower,
   getPowerList,
   getUserPower,
   editPower

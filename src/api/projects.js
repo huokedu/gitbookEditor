@@ -22,7 +22,7 @@ function addProject ({ name, details, tag, serverUrl, cover }) {
 }
 // 添加新套餐
 function addPart (data) {
-  return Axios.post('project/part/add', data)
+  return Axios.post('/project/part/add', data)
 }
 // 编辑套餐
 function editPart (data) {
@@ -30,7 +30,7 @@ function editPart (data) {
 }
 // 获取项目详情
 function getDetails (id) {
-  return Axios.get('project/details', {
+  return Axios.get('/project/details', {
     params: {
       id
     }
