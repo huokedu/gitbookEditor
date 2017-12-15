@@ -4,8 +4,13 @@ function Login ({phone, password}) {
   return Axios.post('/account/login', {phone, password})
 }
 // 管理员列表
-function getAdminList (params) {
-  return Axios.get('/power/admin/list')
+function getAdminList ({page, limit = 10}) {
+  return Axios.get('/power/admin/list', {
+    params: {
+      page,
+      limit
+    }
+  })
 }
 // 添加管理员
 function addAdmin (id) {
