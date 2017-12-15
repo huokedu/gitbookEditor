@@ -51,7 +51,7 @@
         <tags v-if="visible" label="project"></tags>
       </el-dialog>
     </section>
-    <section v-if="power.has('project/part/query') && $route.path === '/repo/repo_edit'">
+    <section v-if="$route.path === '/repo/repo_edit'">
       <div class="title">
         <h2>项目套餐</h2> <div class="bar"></div>
       </div>
