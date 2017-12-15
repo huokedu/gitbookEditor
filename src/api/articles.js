@@ -88,7 +88,7 @@ function editSort ({name, id, fromId, toId, articleId}) {
 // 删除分类
 function delSort (id) {
   return Axios.post('/sort/del', {
-    sort_id: id
+    sortId: id
   })
 }
 // 获取标签列表
