@@ -69,7 +69,7 @@ export default {
       })
     },
     saveContent () {
-      if (document.querySelector('.fa-floppy-o')) document.querySelector('.fa-floppy-o').click()
+      if (document.querySelector('.fa-mavon-floppy-o')) document.querySelector('.fa-mavon-floppy-o').click()
       if (this.$route.path === '/tech_list/add' || this.$route.path === '/tech_list/edit' || !this.power.has('pub/release')) return
       this.pubBook(true)
     },
