@@ -24,12 +24,12 @@ router.beforeEach((to, from, next) => {
   }
   next()
 })
-import {serverPath} from '../config/path'
+import {staticPath} from '../config/path'
 // 注册全局过滤函数
 Vue.filter('link', function (value) {
   // 返回处理后的值
   if (!value) return ''
-  return value.indexOf('http') === -1 ? `${serverPath}/${value}` : value
+  return value.indexOf('http') === -1 ? `${staticPath}/${value}` : value
 })
 
 new Vue({

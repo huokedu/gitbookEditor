@@ -10,7 +10,7 @@ import {
   DEL_UI,
   CHANGE_PROGRESS
 } from '../mutations'
-import {serverPath} from '../../../config/path'
+import {staticPath} from '../../../config/path'
 const state = {
   platform: 'android',
   clients: [],
@@ -28,7 +28,7 @@ const mutations = {
       client.delShow = []
       client.link.ui = {url: client.link.ui}
       client.show = client.show.map(pic => {
-        const url = pic.indexOf('http') === -1 ? `${serverPath}/${pic}` : pic
+        const url = pic.indexOf('http') === -1 ? `${staticPath}/${pic}` : pic
         return {url}
       })
       return true
@@ -47,10 +47,18 @@ const mutations = {
     state.isSave = status
   },
   [SAVE_SHOW] (state, show) {
-    state.clients[state.checkIndex].show = show
+    state.clients[state.checkIndex].show.push(show)
   },
-  [DEL_SHOW] (state, url) {
-    state.clients[state.checkIndex].delShow.push(url)
+  [DEL_SHOW] (state, file) {
+    if (file.name) {
+      return state.clients[state.checkIndex].show.some((pic, index) => {
+        if (pic.uid === file.uid) {
+          state.clients[state.checkIndex].show.splice(index, 1)
+          return true
+        }
+      })
+    }
+    state.clients[state.checkIndex].delShow.push(file.url)
   },
   [CHANGE_LINK] (state, url) {
     state.clients[state.checkIndex].link.model = url

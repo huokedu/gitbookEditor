@@ -5,7 +5,7 @@ import {
   SELECTED_POWER,
   DELETE_POWER
 } from '../mutations'
-import { staticPath } from '../../../config/path'
+import { hostPath } from '../../../config/path'
 const state = {
   token: localStorage.token || '',
   powerList: localStorage.powers ? JSON.parse(localStorage.powers) : '',
@@ -25,7 +25,7 @@ const actions = {
 const mutations = {
   [GET_POWER_LIST] (state, user) {
     state.token = localStorage.token = user.user.token
-    state.avatar = localStorage.avatar = user.user.avatar || `${staticPath}/static/avatar/user.svg`
+    state.avatar = localStorage.avatar = user.user.avatar || `${hostPath}/static/avatar/user.svg`
     state.powerList = new Set(user.powers)
     localStorage.powers = JSON.stringify(user.powers)
     state.name = localStorage.name = user.user.name

@@ -105,7 +105,7 @@
 <script>
 import tags from '../widget/tag_select_box'
 import parts from '../widget/part_add'
-import { serverPath } from '../../../config/path.js'
+import { staticPath } from '../../../config/path.js'
 import { addProject, getDetails, editProject, editPart } from '../../api/projects.js'
 export default {
   name: 'repo_add',
@@ -148,7 +148,7 @@ export default {
           const dt = res.data.data.project
           vm.form.name = dt.name
           vm.form.serverUrl = dt.server.host
-          vm.imageUrl = dt.cover.indexOf('http') === -1 ? `${serverPath}/${dt.cover}` : dt.cover
+          vm.imageUrl = dt.cover.indexOf('http') === -1 ? `${staticPath}/${dt.cover}` : dt.cover
           vm.form.details = dt.details
           // 获取标签
           vm.$store.dispatch('article/getTags', dt.tag)

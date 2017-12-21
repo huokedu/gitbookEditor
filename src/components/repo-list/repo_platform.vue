@@ -75,7 +75,7 @@
 <script>
 import { getClientDetials, editClient } from '../../api/projects.js'
 import { deepClone } from '../../utils/index.js'
-import { serverPath } from '../../../config/path.js'
+import { staticPath } from '../../../config/path.js'
 import { mapState } from 'vuex'
 export default {
   name: 'repo_platform',
@@ -98,7 +98,7 @@ export default {
     cover () {
       const vm = this
       const cover = vm.clients[vm.checkIndex].cover
-      return cover && (cover.indexOf('http') !== -1 ? cover : `${serverPath}/${cover}`)
+      return cover && (cover.indexOf('http') !== -1 ? cover : `${staticPath}/${cover}`)
     },
     power () {
       return new Set(this.$store.state.power.powerList)
@@ -155,16 +155,14 @@ export default {
       vm.$store.commit('project/CHANGE_COVER', file.raw)
     },
     // 保存照片墙
-    saveFileList () {
+    saveFileList (file, fileList) {
       const vm = this
-      vm.$store.commit('project/SAVE_SHOW', arguments[1])
+      vm.$store.commit('project/SAVE_SHOW', file)
     },
     // 保存删除文件
     saveDel (file, fileList) {
       const vm = this
-      vm.$store.commit('project/SAVE_SHOW', fileList)
-      if (file.name) return
-      vm.$store.commit('project/DEL_SHOW', file.url)
+      vm.$store.commit('project/DEL_SHOW', file)
     },
     // 保存UI组件
     saveUI (file, fileList) {
