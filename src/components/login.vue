@@ -47,7 +47,7 @@ export default {
           //     }
           //   })
           // }
-          vm.$router.push({path: '/'})
+          vm.$router.push({path: '/home'})
         } else {
           vm.$message({
             type: 'error',

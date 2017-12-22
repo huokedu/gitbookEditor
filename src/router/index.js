@@ -44,12 +44,13 @@ Vue.use(Router)
 export default new Router({
   mode: 'history',
   routes: [{
-    path: '/',
+    path: '/home',
     name: '首页',
     component: homePage
   },
   {
     path: '/login',
+    alias: '/',
     name: '登录',
     component: Login
   },

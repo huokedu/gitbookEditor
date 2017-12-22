@@ -2,7 +2,7 @@
 <div class="wrapper">
   <el-menu :default-active="activeRoute" class="el-menu-vertical-demo el-icon-" theme="dark" 
   @select=changeView :unique-opened="true" :collapse="isCollapse">
-  <el-menu-item index="/" v-if="power.has('general/data/query')">
+  <el-menu-item index="/home" v-if="power.has('general/data/query')">
       <i class="fa fa-home" aria-hidden="true"></i>
       <span slot="title">首页</span>
   </el-menu-item>
